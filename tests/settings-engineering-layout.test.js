@@ -52,5 +52,5 @@ test('backup and offline controls retain their actual existing actions, not dumm
  assert.match(html,/<button id="update"/);
  assert.match(css,/#settings \.panel:has\(> #export\) > \.lcars-info \{order:3;\}/);
  assert.match(css,/#settings #offlineStatus,#settings #storageStatus/);
- assert.match(sw,/lcars-core-v2-rc25-paintable-viewport-[0-9]+-/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
 });

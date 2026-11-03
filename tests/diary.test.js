@@ -89,6 +89,6 @@ test('diary purge dialog has modal accessibility roles and session-running safet
  assert.match(css,/lcars-danger-dialog::backdrop/);
  assert.match(css,/#diaryDangerCancel/);
  assert.match(css,/#diaryDangerConfirm/);
- assert.match(sw,/const CACHE=PREFIX\+'lcars-core-v2-rc\d+/); // Version rotates for each release.
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/); // Version rotates for each release.
  assert.match(sw,/\.\/v2-diary-maintenance\.css/);
 });

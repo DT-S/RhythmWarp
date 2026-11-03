@@ -8,7 +8,7 @@ const sw=read('sw.js');
 test('Voyager archive is a separate, theme-aware, offline preview skin',()=>{
  assert.match(html,/href="\.\/v2-diary-archive\.css"/);
  assert.match(sw,/\.\/v2-diary-archive\.css/);
- assert.match(sw,/lcars-core-v2-rc25-paintable-viewport-[0-9]+-/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
  assert.match(css,/#diary #diaryList \.log-entry/);
  assert.match(css,/var\(--padd-orange/);
  assert.match(css,/var\(--padd-lavender/);

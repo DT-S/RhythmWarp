@@ -79,5 +79,5 @@ test('launch wiring includes independent decoding and service-worker offline pre
  assert.match(app,/bootDurationMs:LCARS_BOOT_DURATION_MS/);
  assert.match(audio,/if\(key==='lcars-launch'\)this\.launchReady=task/);
  assert.match(sw,/\.\/src\/launch-cue\.js/);
- assert.match(sw,/lcars-core-v2-rc25-paintable-viewport-\d+/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
 });

@@ -35,12 +35,12 @@ test('Tactical is presentation only; hit timestamps share the AudioContext timeb
 });
 test('Voyager bloom, blue grid, 320px fallback and offline assets',()=>{
  assert.match(css,/#tactical \.tac-lane-grid/);
- assert.match(css,/#tactical #tacticalPlot \.mic-sensor-grid/);
+ assert.match(css,/#tactical \.tac-plot-shell \.mic-sensor-grid/);
  assert.match(css,/drop-shadow/);
  assert.match(css,/@keyframes tac-sweep/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
  assert.match(css,/@media\(max-width:360px\)/);
- assert.match(sw,/paintable-viewport-19-tactical-inline-controls/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
  assert.match(sw,/\.\/v2-tactical\.css/);
  assert.match(sw,/\.\/src\/tactical-view\.js/);
  assert.match(html,/href="\.\/v2-tactical\.css"/);
