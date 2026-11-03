@@ -57,15 +57,15 @@ try{
       innerWidth:innerWidth};
    });
    assert.ok(layout.rail.w<=17,'decorative app rail too wide: '+JSON.stringify(layout));
-   assert.ok(layout.buttons.every(b=>b.w>=(phone?70:105)),
+   assert.ok(layout.buttons.every(b=>b.w>=(phone?(width<=350?63:69):105)),
       'main navigation buttons are squeezed: '+JSON.stringify(layout));
    assert.ok(layout.buttons.every(b=>b.h>=44),
       'main navigation hit targets too small: '+JSON.stringify(layout));
    if(phone){
-    assert.ok(layout.buttons[0].y===layout.buttons[1].y,
-      'on phones the menu must be a horizontal grid: '+JSON.stringify(layout));
-    assert.ok(layout.buttons[3].y>layout.buttons[0].y,
-      'on phones the second row must be visible: '+JSON.stringify(layout));
+    assert.ok(layout.buttons[1].y>layout.buttons[0].y,
+      'on phones the navigation stays a vertical menu: '+JSON.stringify(layout));
+    assert.ok(layout.buttons[5].y>layout.buttons[3].y,
+      'all six phone buttons need their own rows: '+JSON.stringify(layout));
    }
    await page.locator('[data-tab="settings"]').click();
    await page.screenshot({path:path.join(shots,'settings-'+width+'.png')});

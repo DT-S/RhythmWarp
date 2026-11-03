@@ -20,13 +20,13 @@ test('the launch screen keeps readable theme buttons but the filler becomes a 14
  assert.match(theme,/\.lcars-start-screen \.lcars-side-filler > span \{ display:none!important; \}/);
  assert.match(theme,/\.lcars-start-screen \.lcars-side-block \{[\s\S]*?min-height:44px!important;/);
 });
-test('mobile nav remains a 3-column grid with a slender 11px rib and tappable buttons', () => {
+test('iPhone keeps a vertical six-button nav, restores its width, but leaves a thin empty rib', () => {
  const theme=read('rhythm-warp.css');
- const layout=read('style.css');
- assert.match(theme,/\.app-shell > aside nav::before \{[\s\S]*?width:11px!important;/);
- assert.match(theme,/\.app-shell > aside nav \.nav \{[\s\S]*?min-height:48px;/);
- assert.match(layout,/grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+ assert.match(theme,/--rw-mobile-sidebar:clamp\\(76px,21vw,86px\\)/);
+ assert.match(theme,/grid-template-columns:var\\(--rw-mobile-sidebar\\) minmax\\(0,1fr\\)!important/);
+ assert.match(theme,/\\.app-shell > aside nav \\{[\\s\\S]*?flex-direction:column!important/);
+ assert.match(theme,/\\.app-shell > aside nav \\.nav \\{[\\s\\S]*?min-height:49px!important/);
 });
 test('offline cache rotates when the screen frame changes', () => {
- assert.match(read('sw.js'),/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-3'/);
+ assert.match(read('sw.js'),/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-4'/);
 });

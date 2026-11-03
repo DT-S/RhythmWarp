@@ -131,7 +131,7 @@ html,body,.app-shell{background:#0e1714!important;color:#f2f0e8;}
  .app-shell .panel{border-radius:30px 5px 5px 18px!important}
 }
 
-/* Rhythm Warp v0.3: narrow ONLY the decorative vertical rails.
+/* Rhythm Warp v0.4: narrow ONLY the decorative vertical rails.
    Keep navigation controls and theme selection wide enough for real text. */
 @media (min-width:641px) {
  .app-shell { --v2-sidebar:clamp(118px,11vw,160px); }
@@ -146,6 +146,8 @@ html,body,.app-shell{background:#0e1714!important;color:#f2f0e8;}
 .app-shell > aside .rail-end {
   width:14px!important;
   min-width:14px;
+  box-sizing:border-box!important;
+  padding:0!important;
   align-self:flex-start;
   border:2px solid #365544!important;
   background:var(--rw-rail)!important;
@@ -163,22 +165,40 @@ html,body,.app-shell{background:#0e1714!important;color:#f2f0e8;}
 }
 .lcars-start-screen .lcars-side-filler > span { display:none!important; }
 @media (max-width:640px) {
- /* On actual mobile layouts, retain the full-width 3 x 2 navigation grid. */
+ /* Mobile is intentionally a FIXED VERTICAL nav; do not force a 3-column
+    dock onto it. Decouple the button width from the narrow empty rib instead. */
+ .app-shell {
+   --rw-mobile-sidebar:clamp(76px,21vw,86px);
+   grid-template-columns:var(--rw-mobile-sidebar) minmax(0,1fr)!important;
+   column-gap:clamp(6px,2vw,10px)!important;
+ }
+ .app-shell > aside {
+   width:var(--rw-mobile-sidebar)!important;
+   min-width:0!important;
+ }
  .app-shell > aside nav {
-   padding-left:14px;
-   border-left:0!important;
+   display:flex!important;
+   flex-direction:column!important;
+   width:100%!important;
+   padding:0!important;
+   border:0!important;
+   background:transparent!important;
  }
- .app-shell > aside nav::before {
-   width:11px!important;
-   border-radius:11px 0 0 11px!important;
-   background:var(--rw-rail)!important;
-   border-left:2px solid var(--rw-neon);
- }
- .app-shell > aside nav::after { left:0; }
+ .app-shell > aside nav::before,
+ .app-shell > aside nav::after {content:none!important;display:none!important;}
  .app-shell > aside nav .nav {
-   min-height:48px;
-   font-size:clamp(10px,2.7vw,12px);
-   padding-inline:5px;
+   width:100%!important;
+   min-width:0!important;
+   min-height:49px!important;
+   padding:4px 7px 8px 5px!important;
+   font-size:0!important;
+   overflow:hidden;
+ }
+ .app-shell > aside nav .nav::after {
+   width:100%;
+   text-align:center;
+   font:900 clamp(9px,2.45vw,11px)/1.1 "Arial Narrow",Arial,sans-serif;
+   letter-spacing:-.025em;
  }
  .lcars-start-screen { --elbow-w:clamp(78px,21vw,88px); }
  .lcars-start-screen .lcars-side-block {
