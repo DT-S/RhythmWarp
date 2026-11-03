@@ -22,3 +22,26 @@ jobs:
           node-version: '22'
       - name: Run rhythm engine and branding tests
         run: npm test
+
+  color-system-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium for color and layout checks
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Render and verify Rhythm Warp pages
+        run: node tests/rhythm-warp-colors-browser.mjs
+      - name: Save visual review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhythm-warp-color-system-screenshots
+          path: artifacts/rhythm-warp-colors/*.png
+          if-no-files-found: ignore
+          retention-days: 14
