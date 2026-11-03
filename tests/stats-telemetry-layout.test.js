@@ -14,7 +14,7 @@ test('stats preview is isolated and preserves all five real KPI sources',()=>{
   assert.ok(app.includes("['"+label+"'"),'missing real analytics metric '+label);
  assert.match(app,/analyticsCharts\(entries,range,historyEntries/);
  assert.match(app,/summarize\(entries\)/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-\d+'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
  assert.match(polish,/RC16 · READABILITY SYSTEM/);
 });
 

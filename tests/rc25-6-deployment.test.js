@@ -10,6 +10,6 @@ test('RC25.13.5 Tactical preview identifies itself and retains RC25.6 deployment
  assert.equal(pkg.version,'2.0.0-rc.25.13.5');
  assert.equal((html.match(/CORE 2\.0\.0 RC25\.13\.5/g)||[]).length,2);
  assert.doesNotMatch(html,/CORE 2\.0\.0 RC25\.(?:5|6|7|8|9|10)/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-\d+'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
  assert.match(marker,/opaque-statusbar-rc25-6-20261026/);
 });

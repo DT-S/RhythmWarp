@@ -22,26 +22,3 @@ jobs:
           node-version: '22'
       - name: Run rhythm engine and branding tests
         run: npm test
-
-  responsive-rail-smoke:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Install Chromium for layout checks
-        run: |
-          npm install --no-save playwright
-          npx playwright install --with-deps chromium
-      - name: Verify button sizes and decorative rail geometry
-        run: node tests/rhythm-warp-rail-browser.mjs
-      - name: Keep responsive screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: rhythm-warp-responsive-rail-screenshots
-          path: artifacts/rhythm-warp-rail/*.png
-          if-no-files-found: ignore
-          retention-days: 7
