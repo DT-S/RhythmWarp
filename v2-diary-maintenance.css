@@ -1,0 +1,103 @@
+/* Rhythm PADD RC5 / practice archive: compact session threshold and
+   an explicit Starfleet red-alert confirmation for destructive operations. */
+#diary .diary-minimum{
+ margin:11px 0 13px;padding:10px 8px 9px;
+ background:#130f18;border-left:7px solid #9ba0dc;
+ display:flex;flex-direction:column;gap:7px;
+}
+#diary .diary-minimum>.field-name{
+ display:block;color:#f5c967;font:900 clamp(11px,1.2vw,14px)/1.2 'Arial Narrow',Arial,sans-serif;
+ letter-spacing:.07em;
+}
+#diary .diary-minimum-choices{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:4px;min-width:0;
+}
+#diary .diary-minimum-choices button{
+ border:0;min-width:0;min-height:39px;
+ padding:5px 2px;margin:0;
+ border-radius:16px 0 0 16px;background:#655389;
+ color:#0b0912;font:900 12px/1 'Arial Narrow',Arial,sans-serif;
+ letter-spacing:.03em;touch-action:manipulation;
+}
+#diary .diary-minimum-choices button:last-child{border-radius:0 18px 18px 0;}
+#diary .diary-minimum-choices button:not(:first-child){border-radius:0;}
+#diary .diary-minimum-choices button:last-child{border-radius:0 18px 18px 0;}
+#diary .diary-minimum-choices button[aria-pressed=true]{
+ background:#f5c967;color:#000;box-shadow:inset 0 -4px #ef9a39;
+}
+#diary .diary-minimum-note{margin:0;color:#dfd2b3;font-size:11px;line-height:1.3;}
+#diary .diary-maintenance{
+ margin:10px 0 14px;padding:8px 10px;background:#0c090d;
+ border-left:7px solid #d4847c;border-bottom:2px solid #403038;
+}
+#diary .diary-maintenance summary{
+ color:#f5c967;font:800 13px/1.3 'Arial Narrow',Arial,sans-serif;letter-spacing:.04em;
+}
+#diary .diary-maintenance p{color:#e5d2c5;font-size:12px;line-height:1.45;margin:9px 0;}
+#diary .diary-maintenance-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:4px 0;
+}
+#diary .diary-maintenance-actions button{
+ min-width:0;min-height:43px;padding:8px 5px;margin:0;
+ border:0;border-radius:18px 2px 2px 18px;
+ font:900 clamp(10px,1.15vw,14px)/1.15 'Arial Narrow',Arial,sans-serif;
+ letter-spacing:.025em;background:#9ba0dc;color:#000;
+ touch-action:manipulation;
+}
+#diary .diary-maintenance-actions .diary-erase-action{
+ background:#d4847c;color:#090304;border-radius:2px 18px 18px 2px;
+}
+#diary .diary-maintenance-actions button:disabled{opacity:.4;cursor:not-allowed;}
+/* Native dialog is a top-layer modal, unaffected by the iPhone PADD's
+   inner scrolling area. It provides Escape, focus control and backdrop. */
+.lcars-danger-dialog{
+ box-sizing:border-box;position:fixed;inset:0;margin:auto;
+ width:min(460px,calc(100vw - 26px));max-width:460px;max-height:min(86vh,620px);
+ padding:0;background:#000;color:#ef7770;
+ border:3px solid #f5c967;border-radius:3px;
+ box-shadow:0 0 0 4px #000,0 0 22px #f5c96766;
+ overflow:auto;overscroll-behavior:contain;
+ font-family:'Arial Narrow',Arial,sans-serif;
+}
+.lcars-danger-dialog::backdrop{background:#000c;backdrop-filter:blur(3px);}
+.lcars-danger-heading{
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+ gap:3px;background:#f5c967;color:#000;
+ font:900 10px/1.15 ui-monospace,monospace;letter-spacing:.04em;
+ padding:8px 10px;
+}
+.lcars-danger-body{padding:17px 18px 21px;}
+.lcars-danger-alert{
+ background:#9d2027;color:#fff3b4;display:inline-block;
+ padding:6px 9px;margin:1px 0 17px;
+ font:900 11px/1.3 ui-monospace,monospace;letter-spacing:.05em;
+}
+.lcars-danger-body h2{
+ font:900 clamp(18px,4.2vw,25px)/1.13 Impact,'Arial Narrow',Arial,sans-serif;
+ color:#ff746d;letter-spacing:.035em;margin:0 0 13px;
+ text-shadow:0 0 10px #b32d3b50;
+}
+.lcars-danger-count{display:block;color:#f5c967;font:900 14px/1.2 ui-monospace,monospace;margin-bottom:13px;}
+.lcars-danger-body p{font:700 14px/1.42 'Arial Narrow',Arial,sans-serif;margin:0 0 11px;color:#ebc8c4;}
+.lcars-danger-body .lcars-danger-backup{
+ color:#f5c967;border-top:1px solid #795e37;
+ margin-top:14px;padding-top:13px;font:800 11px/1.35 ui-monospace,monospace;
+}
+.lcars-danger-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 15px 15px;}
+.lcars-danger-actions button{
+ min-width:0;min-height:48px;border:0!important;margin:0!important;
+ padding:10px 4px!important;border-radius:23px 2px 2px 23px!important;
+ font:900 clamp(12px,2.6vw,16px)/1.1 Impact,'Arial Narrow',Arial,sans-serif;
+ letter-spacing:.05em;touch-action:manipulation;
+}
+#diaryDangerCancel{background:#9ba0dc!important;color:#000!important;}
+#diaryDangerConfirm{background:#e05f62!important;color:#120709!important;border-radius:2px 23px 23px 2px!important;}
+.lcars-danger-actions button:focus-visible{outline:3px solid #fff!important;outline-offset:2px;}
+@media(max-width:640px){
+ .lcars-danger-dialog{width:calc(100vw - 22px);max-height:calc(100dvh - 45px);}
+ .lcars-danger-body{padding:13px 13px 18px;}
+ .lcars-danger-actions{padding:0 10px 10px;}
+ #diary .diary-minimum-choices button{font-size:11px;min-height:37px;}
+}
+@media(prefers-reduced-motion:reduce){.lcars-danger-dialog::backdrop{backdrop-filter:none;}}

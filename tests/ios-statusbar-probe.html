@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="./ios-statusbar-probe.webmanifest">
+<link rel="apple-touch-icon" href="../assets/icon-192.png">
+<title>LCARS iOS Frame Probe</title>
+<style>
+:root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif;--accent:#9373d2}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100dvh;min-height:100dvh;background:#000;color:#d6c8f1}
+body{display:grid;grid-template-rows:54px minmax(0,1fr) 38px;padding:8px 8px 0;overflow:hidden}
+header{display:flex;align-items:center;gap:9px;background:var(--accent);color:#000;font-size:16px;font-weight:900;border-radius:30px 0 0 0;padding:8px}
+header span{border-left:6px solid #000;padding-left:10px}
+main{min-height:0;overflow-y:auto;border-left:16px solid var(--accent);padding:18px 12px;background:#000}
+h1{font-size:21px;margin:0 0 12px}
+p{font-size:15px;line-height:1.5}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font:700 13px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace}
+button{color:#000;background:var(--accent);border:0;border-radius:22px;padding:10px 16px;font-weight:bold}
+footer{display:flex;align-items:center;justify-content:center;background:#ecb768;border-left:45px solid #6f8fce;border-right:45px solid #9373d2;color:#000;font-size:11px;font-weight:900;border-radius:0 0 0 22px}
+.marker{height:7px;background:#ff3ed8;position:relative;margin-top:10px}
+.safe{padding-bottom:env(safe-area-inset-bottom,0px)}
+</style>
+</head>
+<body>
+<header><strong>47-01</strong><span>LCARS / FRAME TEST</span></header>
+<main>
+<h1>iOS Fullscreen Test</h1>
+<p>Diese separate Test-PWA verwendet eine schwarze, nicht transparente iOS-Statusleiste. Der farbige untere LCARS-Balken sollte knapp am physischen unteren Bildschirmrand enden. Der pinke Marker zeigt den unteren Rand des Inhaltsbereichs.</p>
+<button type="button" id="refresh">MESSWERTE AKTUALISIEREN</button>
+<pre id="out">Lade Messwerte …</pre>
+<div class="marker"></div>
+<p>Wichtig: Im Safari-Tab gelten andere Werte. Zur verlässlichen Prüfung über Safari „Zum Home-Bildschirm“ installieren und das neue Symbol öffnen. Die Haupt-App muss dafür nicht deinstalliert werden.</p>
+<div class="safe"></div>
+</main>
+<footer>PHYSICAL EDGE / LCARS LOWER RAIL</footer>
+<script>
+function measure(){
+ const p=document.createElement('div');
+ p.style.cssText='position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);height:100vh';
+ document.body.appendChild(p);
+ const css=getComputedStyle(p), rect=document.body.getBoundingClientRect();
+ const dv=document.createElement('div');dv.style.cssText='position:absolute;visibility:hidden;height:100dvh';document.body.appendChild(dv);
+ document.getElementById('out').textContent=[
+ 'STANDALONE: '+(navigator.standalone===true||matchMedia('(display-mode: standalone)').matches),
+ 'META STATUS: black (opaque)',
+ 'SCREEN: '+screen.width+' x '+screen.height,
+ 'INNER: '+innerWidth+' x '+innerHeight,
+ 'DOC: '+document.documentElement.clientWidth+' x '+document.documentElement.clientHeight,
+ 'VISUAL: '+(visualViewport?visualViewport.width+' x '+visualViewport.height+' / TOP '+visualViewport.offsetTop:'n/a'),
+ '100vh: '+p.getBoundingClientRect().height,
+ '100dvh: '+dv.getBoundingClientRect().height,
+ 'SAFE TOP: '+css.paddingTop+' / BOTTOM: '+css.paddingBottom,
+ 'BODY RECT: '+rect.top.toFixed(1)+' … '+rect.bottom.toFixed(1),
+ 'SCREEN - WEB: '+(screen.height-innerHeight)+'px'
+ ].join('\n');
+ p.remove();dv.remove();
+}
+document.getElementById('refresh').addEventListener('click',measure);
+window.addEventListener('resize',measure,{passive:true});
+measure();
+</script>
+</body>
+</html>

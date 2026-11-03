@@ -1,0 +1,754 @@
+/* Scoped Voyager launch screen adapted from the user's prototype.
+ No global page CSS, no external fonts/CDNs and no borrowed audio code. */
+
+  .lcars-start-screen {
+    color-scheme: dark;
+    --padd-bg: #000000;
+    --padd-orange: #ff9900;
+    --padd-amber: #ffcc66;
+    --padd-peach: #ff9966;
+    --padd-lavender: #cc99cc;
+    --padd-blue: #9999ff;
+    --padd-ice: #99ccff;
+    --padd-tan: #cc6666;
+    --padd-red: #cc4444;
+    --padd-cream: #ffeecc;
+    --elbow-w: clamp(92px, 13vw, 158px);
+    --bar-h: clamp(22px, 3.2vh, 32px);
+    --radius-outer: clamp(34px, 4.5vw, 56px);
+    --radius-inner: clamp(18px, 2.4vw, 30px);
+    --bpm-duration: 0.5s; /* 120 BPM default */
+  }
+
+  /* Elite Force Hazard Team Tactical Theme */
+  .lcars-start-screen[data-theme="elite"] {
+    --padd-orange: #9069db;
+    --padd-amber: #e4c76b;
+    --padd-peach: #b8a3e6;
+    --padd-lavender: #7f56c8;
+    --padd-blue: #79b8f0;
+    --padd-ice: #aed6ff;
+    --padd-tan: #507fc8;
+    --padd-red: #8464cc;
+    --padd-cream: #ede4ff;
+  }
+
+  /* Red Alert Tactical Theme */
+  .lcars-start-screen[data-theme="redalert"] {
+    --padd-orange: #ea3c43;
+    --padd-amber: #f5b470;
+    --padd-peach: #f87957;
+    --padd-lavender: #d85751;
+    --padd-blue: #f7a36a;
+    --padd-tan: #b8313f;
+    --padd-red: #d72d37;
+    --padd-cream: #ffe2cf;
+  }
+
+.lcars-start-screen,.lcars-start-screen * { box-sizing:border-box;-webkit-tap-highlight-color:transparent; }
+
+.lcars-start-screen{margin:0;width:100%;height:100%;font-family:"Arial Narrow","Liberation Sans Narrow",Arial,sans-serif;user-select:none;}
+
+  /* ==========================================================================
+     V2-STARTUP.CSS — VOYAGER / ELITE FORCE 2370s LAUNCH CONSOLE
+     Drop-in replacement for #lcarsStartup in index.html
+     ========================================================================== */
+  .lcars-start-screen[hidden] {
+    display: none !important;
+  }
+
+  .lcars-start-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: clamp(6px, 1vh, 10px);
+    background:
+      radial-gradient(circle at 54% 48%, rgba(255, 153, 0, 0.08) 0%, rgba(204, 153, 204, 0.04) 36%, transparent 70%),
+      #000;
+    color: var(--padd-amber);
+    padding:
+      max(12px, env(safe-area-inset-top))
+      clamp(12px, 2.6vw, 34px)
+      max(12px, env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+
+  /* Subtle CRT/PADD scanline overlay */
+  .lcars-start-screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(255, 204, 102, 0.018) 3px,
+      rgba(255, 204, 102, 0.018) 4px
+    );
+    z-index: 2;
+  }
+
+  /* --- TOP LCARS ELBOW & SEGMENTED RAIL --- */
+  .lcars-start-top {
+    display: grid;
+    grid-template-columns: var(--elbow-w) minmax(0, 1fr);
+    column-gap: 8px;
+    min-height: clamp(58px, 8vh, 82px);
+    position: relative;
+  }
+
+  .lcars-elbow-top {
+    position: relative;
+    background: var(--padd-amber);
+    border-radius: var(--radius-outer) 0 0 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 0 10px 6px 0;
+    color: #000;
+    font: 900 clamp(10px, 1.1vw, 14px)/1 Impact, "Arial Narrow", sans-serif;
+    letter-spacing: 0.08em;
+    transition: background-color 0.25s;
+  }
+
+  /* Inner cutout of the top elbow */
+  .lcars-elbow-top::after {
+    content: "";
+    position: absolute;
+    top: var(--bar-h);
+    right: -12px;
+    width: 24px;
+    bottom: 0;
+    background: #000;
+    border-radius: var(--radius-inner) 0 0 0;
+    box-shadow: -8px -8px 0 0 var(--padd-amber);
+    pointer-events: none;
+  }
+
+  .lcars-top-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  .lcars-rail-segments {
+    display: grid;
+    grid-template-columns: 1.2fr 0.7fr 2.4fr 0.9fr 1.1fr;
+    gap: 6px;
+    height: var(--bar-h);
+  }
+
+  .lcars-seg {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 10px;
+    color: #000;
+    font: 900 clamp(9px, 1vw, 13px)/1 "Arial Narrow", sans-serif;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: background-color 0.25s, filter 0.2s;
+  }
+  .lcars-seg.s1 { background: var(--padd-amber); }
+  .lcars-seg.s2 { background: var(--padd-peach); }
+  .lcars-seg.s3 { background: var(--padd-orange); justify-content: space-between; }
+  .lcars-seg.s4 { background: var(--padd-lavender); }
+  .lcars-seg.s5 {
+    background: var(--padd-blue);
+    border-radius: 0 999px 999px 0;
+  }
+
+  .lcars-top-subbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 4px 0 12px;
+    flex-wrap: wrap;
+  }
+
+  .lcars-sub-title {
+    font: 900 clamp(11px, 1.35vw, 15px)/1.1 "Arial Narrow", sans-serif;
+    letter-spacing: 0.18em;
+    color: var(--padd-orange);
+  }
+  .lcars-sub-title strong {
+    color: var(--padd-cream);
+  }
+
+  /* Animated Bio-Neural Data Cascade */
+  .lcars-cascade {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    gap: 3px 10px;
+    font: 700 clamp(9px, 0.9vw, 11px)/1.15 ui-monospace, SFMono-Regular, Consolas, monospace;
+    color: var(--padd-amber);
+    letter-spacing: 0.08em;
+    text-align: right;
+  }
+  .lcars-cascade span:nth-child(odd) { color: var(--padd-lavender); }
+  .lcars-cascade span:nth-child(3n) { color: var(--padd-ice); }
+  .lcars-cascade span.lit { color: #fff; text-shadow: 0 0 6px var(--padd-amber); }
+
+  /* --- MIDDLE BODY: LEFT FASCIA COLUMN + CENTER CONSOLE --- */
+  .lcars-start-body {
+    display: grid;
+    grid-template-columns: var(--elbow-w) minmax(0, 1fr);
+    column-gap: clamp(12px, 2.2vw, 28px);
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  .lcars-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+  }
+
+  .lcars-side-block {
+    border: 0;
+    width: 100%;
+    padding: 8px 10px 7px 6px;
+    text-align: right;
+    color: #000;
+    font: 900 clamp(10px, 1.05vw, 13px)/1.1 "Arial Narrow", sans-serif;
+    letter-spacing: 0.06em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    cursor: pointer;
+    transition: filter 0.15s, transform 0.12s;
+  }
+  .lcars-side-block:hover { filter: brightness(1.15); }
+  .lcars-side-block:active { transform: scale(0.98); }
+  .lcars-side-block small {
+    font: 800 9px/1 ui-monospace, monospace;
+    opacity: 0.72;
+    align-self: flex-start;
+  }
+
+  .lcars-side-block.b1 { background: var(--padd-peach); min-height: 44px; }
+  .lcars-side-block.b2 { background: var(--padd-lavender); min-height: 44px; }
+  .lcars-side-block.b3 { background: var(--padd-blue); min-height: 44px; }
+  .lcars-side-block.b4 { background: var(--padd-tan); min-height: 44px; }
+  .lcars-side-block[aria-pressed="true"] {
+    background: var(--padd-cream) !important;
+    box-shadow: inset -6px 0 0 var(--padd-orange);
+  }
+
+  .lcars-side-filler {
+    flex: 1;
+    background: var(--padd-orange);
+    padding: 10px 10px 10px 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    color: #000;
+    font: 900 clamp(9px, 0.95vw, 11px)/1.2 "Arial Narrow", sans-serif;
+    letter-spacing: 0.08em;
+    min-height: 36px;
+  }
+
+  /* --- MAIN LAUNCH CONSOLE --- */
+  .lcars-start-console {
+    position: relative;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: clamp(8px, 1.8vh, 18px);
+    padding: clamp(6px, 1.5vh, 20px) clamp(8px, 2vw, 24px);
+    border-left: 2px solid rgba(255, 204, 102, 0.14);
+  }
+
+  /* Tactical Corner Brackets around Console */
+  .lcars-console-frame {
+    position: relative;
+    width: min(100%, 680px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(8px, 1.7vh, 16px);
+    padding: clamp(12px, 2.2vh, 26px) clamp(12px, 3vw, 32px);
+  }
+
+  .lcars-console-frame::before,
+  .lcars-console-frame::after {
+    content: "";
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-color: var(--padd-lavender);
+    border-style: solid;
+    opacity: 0.65;
+    pointer-events: none;
+  }
+  .lcars-console-frame::before {
+    top: 0; left: 0;
+    border-width: 3px 0 0 6px;
+    border-radius: 10px 0 0 0;
+  }
+  .lcars-console-frame::after {
+    bottom: 0; right: 0;
+    border-width: 0 6px 3px 0;
+    border-radius: 0 0 10px 0;
+  }
+
+  .lcars-start-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--padd-lavender);
+    font-weight: 900;
+    letter-spacing: 0.24em;
+    font-size: clamp(10px, 1.4vw, 13px);
+  }
+  .lcars-start-kicker::before,
+  .lcars-start-kicker::after {
+    content: "";
+    width: clamp(18px, 4vw, 42px);
+    height: 4px;
+    background: var(--padd-lavender);
+    border-radius: 99px;
+  }
+
+  /* --- ANIMATED VOYAGER / RHYTHM PADD EMBLEM --- */
+  .lcars-emblem-wrap {
+    position: relative;
+    width: clamp(136px, 24vmin, 220px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    filter: drop-shadow(0 0 26px rgba(255, 153, 0, 0.22));
+  }
+
+  .lcars-start-logo {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .emblem-ring-outer {
+    transform-origin: 120px 120px;
+    animation: lcars-spin-cw 28s linear infinite;
+  }
+  .emblem-ring-inner {
+    transform-origin: 120px 120px;
+    animation: lcars-spin-ccw 18s linear infinite;
+  }
+  .emblem-pulse-core {
+    transform-origin: 120px 120px;
+    animation: lcars-beat-pulse var(--bpm-duration) cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  .emblem-pendulum {
+    transform-origin: 120px 168px;
+    animation: lcars-pendulum-swing calc(var(--bpm-duration) * 2) ease-in-out infinite;
+  }
+
+  @keyframes lcars-spin-cw {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes lcars-spin-ccw {
+    to { transform: rotate(-360deg); }
+  }
+  @keyframes lcars-beat-pulse {
+    0% { transform: scale(1.06); filter: brightness(1.35); }
+    35% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1); filter: brightness(1); }
+  }
+  @keyframes lcars-pendulum-swing {
+    0%, 100% { transform: rotate(-24deg); }
+    50% { transform: rotate(24deg); }
+  }
+
+  /* --- BRANDING: RHYTHM PADD + LCARS METRONOME + DRUMTRACK STUDIOS --- */
+  .lcars-title-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .lcars-start-console h2 {
+    font: 900 clamp(34px, 6.8vw, 68px)/0.96 Impact, "Arial Narrow", sans-serif;
+    margin: 0;
+    color: var(--padd-orange);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-shadow: 0 0 24px rgba(255, 153, 0, 0.28);
+  }
+
+  .lcars-start-console h2 span {
+    color: var(--padd-amber);
+  }
+
+  /* Pill Banner for LCARS METRONOME */
+  .lcars-subbrand-bar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: min(100%, 500px);
+    padding: 5px 16px;
+    background: linear-gradient(
+      90deg,
+      var(--padd-lavender) 0 14%,
+      #000 14% 15.5%,
+      var(--padd-amber) 15.5% 84.5%,
+      #000 84.5% 86%,
+      var(--padd-peach) 86% 100%
+    );
+    border-radius: 999px;
+    color: #000;
+    font: 900 clamp(12px, 1.9vw, 17px)/1.15 "Arial Narrow", Arial, sans-serif;
+    letter-spacing: 0.18em;
+  }
+
+  /* DRUMTRACK STUDIOS Badge */
+  .lcars-studio-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+    padding: 4px 14px;
+    border-left: 6px solid var(--padd-blue);
+    border-right: 6px solid var(--padd-blue);
+    background: rgba(153, 153, 255, 0.1);
+    color: var(--padd-ice);
+    font: 900 clamp(11px, 1.5vw, 14px)/1.1 "Arial Narrow", Arial, sans-serif;
+    letter-spacing: 0.28em;
+  }
+  .lcars-studio-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--padd-orange);
+    box-shadow: 0 0 8px var(--padd-orange);
+    animation: lcars-beat-pulse var(--bpm-duration) infinite;
+  }
+
+  #lcarsStartupNote {
+    margin: 2px 0 0;
+    color: var(--padd-cream);
+    font: 700 clamp(11px, 1.4vw, 14px)/1.3 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: 0.09em;
+    opacity: 0.9;
+  }
+
+  /* --- INITIALIZE LCARS BUTTON --- */
+  .lcars-activate-wrap {
+     display: flex;
+     align-items: stretch;
+     justify-content: center;
+     gap: 6px;
+     width: min(100%, 460px);
+     margin-top: 4px;
+  }
+
+  .lcars-activate-cap {
+    width: clamp(22px, 4vw, 36px);
+    background: var(--padd-lavender);
+    border-radius: 999px 0 0 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font: 900 11px/1 ui-monospace, monospace;
+  }
+
+  .lcars-start-activate {
+    flex: 1;
+    min-height: clamp(58px, 8.8vh, 80px);
+    border: 0;
+    border-radius: 4px 999px 999px 4px;
+    background: linear-gradient(90deg, var(--padd-orange) 0%, var(--padd-amber) 100%);
+    color: #050408;
+    cursor: pointer;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font: 900 clamp(18px, 2.8vw, 28px)/1 Impact, "Arial Narrow", sans-serif;
+    letter-spacing: 0.08em;
+    box-shadow: 0 0 28px rgba(255, 153, 0, 0.28);
+    transition: filter 0.14s, transform 0.14s, box-shadow 0.2s;
+  }
+
+  .lcars-start-activate .btn-sub {
+    font: 900 clamp(10px, 1.1vw, 12px)/1.1 ui-monospace, monospace;
+    letter-spacing: 0.06em;
+    padding: 5px 8px;
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 999px;
+  }
+
+  .lcars-start-activate:hover {
+    filter: brightness(1.14);
+    box-shadow: 0 0 36px rgba(255, 204, 102, 0.5);
+  }
+  .lcars-start-activate:active {
+    transform: scale(0.985);
+  }
+  .lcars-start-activate:focus-visible {
+    outline: 3px solid var(--padd-cream);
+    outline-offset: 4px;
+  }
+  .lcars-start-activate:disabled {
+    cursor: progress;
+    filter: brightness(1.2);
+  }
+
+  /* Boot progress bar (visible during initialization sequence) */
+  .lcars-boot-bar {
+    width: min(100%, 460px);
+    height: 8px;
+    background: #1a1423;
+    border-radius: 999px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .lcars-boot-bar.active {
+    opacity: 1;
+  }
+  .lcars-boot-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--padd-lavender), var(--padd-orange), var(--padd-amber));
+    transition: width 0.12s linear;
+  }
+
+  .lcars-start-footer {
+    color: var(--padd-lavender);
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    font-size: clamp(9px, 1.2vw, 12px);
+  }
+
+  /* --- BOTTOM LCARS ELBOW & RAIL --- */
+  .lcars-start-bottom-wrap {
+    display: grid;
+    grid-template-columns: var(--elbow-w) minmax(0, 1fr);
+    column-gap: 8px;
+    min-height: clamp(44px, 6vh, 62px);
+    align-items: end;
+  }
+
+  .lcars-elbow-bottom {
+    position: relative;
+    height: 100%;
+    background: var(--padd-tan);
+    border-radius: 0 0 0 var(--radius-outer);
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 6px 10px 0 0;
+    color: #000;
+    font: 900 clamp(10px, 1.1vw, 13px)/1 Impact, "Arial Narrow", sans-serif;
+    letter-spacing: 0.08em;
+  }
+
+  .lcars-elbow-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: var(--bar-h);
+    right: -12px;
+    width: 24px;
+    top: 0;
+    background: #000;
+    border-radius: 0 0 0 var(--radius-inner);
+    box-shadow: -8px 8px 0 0 var(--padd-tan);
+    pointer-events: none;
+  }
+
+  .lcars-bottom-segments {
+    display: grid;
+    grid-template-columns: 1.8fr 0.8fr 1.4fr 1fr;
+    gap: 6px;
+    height: var(--bar-h);
+  }
+
+  .lcars-bottom-segments .s-b1 { background: var(--padd-tan); }
+  .lcars-bottom-segments .s-b2 { background: var(--padd-amber); }
+  .lcars-bottom-segments .s-b3 { background: var(--padd-lavender); }
+  .lcars-bottom-segments .s-b4 {
+    background: var(--padd-orange);
+    border-radius: 0 999px 999px 0;
+  }
+
+  /* Responsive Mobile Adjustments (iPhone PADD fit) */
+  @media (max-width: 640px) {
+    .lcars-start-screen {
+      --elbow-w: 74px;
+      --bar-h: 20px;
+    }
+    .lcars-cascade {
+      display: none;
+    }
+    .lcars-rail-segments {
+      grid-template-columns: 1fr 2fr 1fr;
+    }
+    .lcars-rail-segments .s2,
+    .lcars-rail-segments .s4 {
+      display: none;
+    }
+    .lcars-bottom-segments {
+      grid-template-columns: 1.5fr 1fr 1fr;
+    }
+    .lcars-bottom-segments .s-b2 {
+      display: none;
+    }
+    .lcars-start-console {
+      padding: 4px 4px;
+    }
+    .lcars-console-frame {
+      padding: 8px 6px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html:not([data-lcars-motion="force"]) .emblem-ring-outer,
+    html:not([data-lcars-motion="force"]) .emblem-ring-inner,
+    html:not([data-lcars-motion="force"]) .emblem-pulse-core,
+    html:not([data-lcars-motion="force"]) .emblem-pendulum,
+    html:not([data-lcars-motion="force"]) .lcars-studio-dot {
+      animation: none !important;
+    }
+  }
+
+/* Integration and legibility corrections */
+.lcars-start-screen { isolation:isolate;min-height:100dvh;overflow-x:hidden;overflow-y:auto; }
+.lcars-start-screen[hidden] {display:none!important}
+.lcars-start-console,.lcars-console-frame{min-width:0;}
+.lcars-console-frame{max-width:min(100%,680px)}
+.lcars-title-stack{gap:clamp(10px,1.5vh,16px)}
+.lcars-start-console h2{line-height:1.12;white-space:normal}
+.lcars-subbrand-bar{width:min(100%,520px);max-width:100%;min-height:26px;line-height:1.25;padding:5px 12px;font-size:clamp(10px,1.25vw,15px);text-wrap:balance}
+.lcars-studio-badge{max-width:100%;font-size:clamp(10px,1.1vw,13px);white-space:nowrap}
+.lcars-start-activate{max-width:100%;touch-action:manipulation}
+.lcars-start-activate #lcarsInitText{min-width:0;text-align:center}
+.lcars-start-activate .btn-sub{flex-shrink:0}
+.lcars-side-block{touch-action:manipulation}
+.lcars-side-block:focus-visible{outline:3px solid var(--padd-cream);outline-offset:3px}
+@media(max-width:640px){
+ .lcars-start-screen{padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom));--elbow-w:clamp(55px,16vw,74px)}
+ .lcars-start-top,.lcars-start-body,.lcars-start-bottom-wrap{column-gap:5px}
+ .lcars-side-block{min-height:38px!important;padding:5px 4px;font-size:clamp(7px,2vw,10px)}
+ .lcars-side-block small{font-size:7px}
+ .lcars-side-filler{padding:4px;font-size:7px}
+ .lcars-sub-title{font-size:clamp(9px,2.5vw,12px);line-height:1.3}
+ .lcars-start-console{padding:3px}
+ .lcars-console-frame{gap:clamp(7px,1vh,12px);padding:10px 7px}
+ .lcars-start-kicker{font-size:clamp(8px,2vw,10px);letter-spacing:.05em}
+ .lcars-start-kicker::before,.lcars-start-kicker::after{width:12px;height:2px}
+ .lcars-start-console h2{font-size:clamp(25px,7vw,36px);letter-spacing:.015em}
+ .lcars-emblem-wrap{width:clamp(95px,28vw,152px)}
+ .lcars-subbrand-bar{font-size:clamp(8px,2vw,11px);letter-spacing:.035em;min-height:23px;padding:3px 7px}
+ .lcars-studio-badge{font-size:9px;letter-spacing:.08em;padding:3px 6px}
+ #lcarsStartupNote{font-size:clamp(9px,2vw,11px);letter-spacing:0}
+ .lcars-activate-wrap{width:min(100%,360px)}
+ .lcars-start-activate{min-height:55px;padding:7px 8px;font-size:clamp(14px,4vw,19px);letter-spacing:.02em}
+ .lcars-start-activate .btn-sub{font-size:8px;padding:4px}
+ .lcars-start-footer{font-size:8px;letter-spacing:.04em;line-height:1.4}
+ .lcars-rail-segments .lcars-seg{font-size:8px;padding:0 4px}
+ .lcars-top-subbar{padding-left:2px}
+ .lcars-bottom-segments .lcars-seg{font-size:7px;padding:0 4px}
+ .lcars-elbow-top,.lcars-elbow-bottom{font-size:9px}
+}
+@media(max-height:520px) and (orientation:landscape){
+ .lcars-start-screen{overflow-y:auto}
+ .lcars-start-body{min-height:370px}
+ .lcars-emblem-wrap{width:110px}
+ .lcars-console-frame{gap:6px;padding:5px}
+ .lcars-start-console h2{font-size:clamp(26px,4vw,44px)}
+ .lcars-start-activate{min-height:46px}
+}
+
+/* RC20: Keep colored LCARS caps outside the actual title. The old gradient
+   placed a black segment across the last letters of RHYTHM SYSTEM.
+   Real grid segments allow the center text to wrap on narrow displays. */
+.lcars-title-stack {
+  gap: clamp(12px, 1.8vh, 18px);
+}
+.lcars-subbrand-bar {
+  display: grid;
+  grid-template-columns: minmax(16px, 1fr) minmax(0, auto) minmax(16px, 1fr);
+  align-items: stretch;
+  justify-content: normal;
+  column-gap: 5px;
+  width: min(100%, 570px);
+  min-height: 32px;
+  padding: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #09060b;
+  font: inherit;
+  letter-spacing: normal;
+  text-wrap: initial;
+}
+.lcars-subbrand-bar::before,
+.lcars-subbrand-bar::after {
+  content: '';
+  display: block;
+  min-width: 0;
+}
+.lcars-subbrand-bar::before {
+  background: var(--padd-lavender);
+  border-radius: 999px 0 0 999px;
+}
+.lcars-subbrand-bar::after {
+  background: var(--padd-peach);
+  border-radius: 0 999px 999px 0;
+}
+.lcars-subbrand-label {
+  min-width: 0;
+  max-width: 100%;
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--padd-amber);
+  color: #080608;
+  font: 900 clamp(11px, 1.12vw, 15px)/1.25 "Arial Narrow", "Liberation Sans Narrow", Arial, sans-serif;
+  letter-spacing: 0.09em;
+  white-space: normal;
+  text-wrap: balance;
+  overflow-wrap: normal;
+}
+.lcars-studio-badge {
+  margin-top: 0;
+  min-height: 24px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  line-height: 1.35;
+  text-align: center;
+}
+@media (max-width:640px) {
+  .lcars-title-stack { gap: 9px; }
+  .lcars-subbrand-bar {
+    grid-template-columns: minmax(10px, 1fr) minmax(0, auto) minmax(10px, 1fr);
+    column-gap: 3px;
+    min-height: 27px;
+  }
+  .lcars-subbrand-label {
+    font-size: clamp(9px, 2.25vw, 11px);
+    padding: 6px 5px;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+  .lcars-studio-badge { min-height: 20px; }
+}

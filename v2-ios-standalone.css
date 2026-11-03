@@ -1,0 +1,33 @@
+/* RC25.5: iOS 26 Home Screen apps may have a system-owned bottom strip
+ * OUTSIDE the paintable web viewport. screen.height includes this strip but
+ * window.innerHeight / visualViewport / 100dvh do not. The LCARS chassis must
+ * fit inside the real web viewport rather than hiding its bottom border.
+ *
+ * Retain a five-CSS-pixel decorative margin. The scrollable workspace gets
+ * its own home-indicator safe padding, so controls are never pushed offscreen.
+ */
+@media (max-width:640px) {
+ .app-shell.ios-standalone-viewport {
+  padding-bottom:calc(5px * var(--mobile-zoom-inverse,1));
+ }
+ .app-shell.ios-standalone-viewport > main {
+  padding-bottom:max(8px,calc(env(safe-area-inset-bottom,0px) * var(--mobile-zoom-inverse,1)));
+ }
+ #viewportMetrics {
+  display:block;white-space:pre-wrap;overflow-wrap:anywhere;
+  font:700 11px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color:var(--text);background:#121019;padding:9px;margin:8px 0;
+  border-left:5px solid var(--padd-blue);
+ }
+}
+
+/* RC25.6 iOS fullscreen geometry trial. The opaque black system status bar
+ * lives ABOVE the standalone web view, so its 47/62px belongs at the top,
+ * rather than being silently left as an unpaintable black band at the bottom.
+ * Keep document roots in normal flow, never position:fixed, and size the app
+ * strictly to the browser's *paintable* dvh. On pre-existing Home Screen icons
+ * iOS can keep the old status-bar mode until the icon is reinstalled.
+ */
+@media (max-width:640px) {
+ html,body { height:100dvh; min-height:100dvh; }
+}

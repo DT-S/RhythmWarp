@@ -1,0 +1,843 @@
+/* P6: motion is a short acknowledgement of actual interaction.
+   No simulated sensor readouts, scanlines, blinking side rails or idle loops. */
+@keyframes lcars-page-build {
+  /* Never clip or translate the whole page: both can alter touch hit targets. */
+  0% {opacity:.78;}
+  100% {opacity:1;}
+}
+@keyframes lcars-view-build {
+  from {opacity:.6;transform:translateX(-7px);}
+  to {opacity:1;transform:none;}
+}
+@keyframes lcars-mode-confirm {
+  0% {box-shadow:inset 0 0 0 0 #ffe5b3;}
+  42% {box-shadow:inset 0 -5px 0 0 #ffe5b3;}
+  100% {box-shadow:inset 0 -4px 0 0 var(--padd-amber,#ffcc66);}
+}
+@keyframes lcars-status-confirm {
+  0% {filter:brightness(1.2);}
+  100% {filter:brightness(1);}
+}
+/* The former 210ms full-page fade/slide was masking the LCARS sequence.
+   Only actual rails, sections, panels and details animate on page changes. */
+.page.lcars-page-enter {
+  position:relative;
+  animation:none;
+}
+#metronome #dial.lcars-view-enter,
+#metronome #linear.lcars-view-enter{
+  /* The permanent control frame stays put. Animate only view children. */
+  animation:none;
+}
+#modeButtons button.lcars-mode-ack[aria-pressed=true] {
+  animation:lcars-mode-confirm 220ms ease-out;
+}
+#start.lcars-status-confirm {
+  animation:lcars-status-confirm 230ms ease-out;
+}
+/* The plot remains factual. These indicators are positioned ONLY by
+   actual stored session measurements or user selections. */
+.xy-plot .chart-probe-line{
+  stroke:#ffb45e;
+  stroke-width:1.6;
+  stroke-dasharray:3 6;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 125ms ease-out;
+}
+.xy-plot .chart-probe-line.is-visible{opacity:.78;}
+.xy-plot .chart-dot.chart-inspected,
+.xy-plot .chart-bar.chart-inspected {
+  stroke:#ffe8b4;
+  stroke-width:3;
+  filter:drop-shadow(0 0 4px rgba(255,180,94,.65));
+}
+@keyframes lcars-chart-trace {
+  from {stroke-dashoffset:1;}
+  to {stroke-dashoffset:0;}
+}
+@keyframes lcars-chart-bar {
+  from {transform:scaleY(.13);}
+  to {transform:scaleY(1);}
+}
+@keyframes lcars-chart-point {
+  from {opacity:.35;}
+  to {opacity:1;}
+}
+.xy-plot:not(.chart-motion-static) .chart-line {
+  animation:lcars-chart-trace 460ms ease-out both;
+}
+.xy-plot:not(.chart-motion-static) .chart-bar {
+  transform-box:fill-box;transform-origin:center bottom;
+  animation:lcars-chart-bar 350ms ease-out both;
+}
+.xy-plot:not(.chart-motion-static) .chart-dot {
+  animation:lcars-chart-point 260ms ease-out both;
+}
+/* Large histories must remain responsive; not thousands of marker animations. */
+.xy-plot.chart-motion-static .chart-line,
+.xy-plot.chart-motion-static .chart-bar,
+.xy-plot.chart-motion-static .chart-dot {
+  animation:none!important;
+}
+@media (prefers-reduced-motion:reduce){
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter,
+  html:not([data-lcars-motion="force"]) #metronome #dial.lcars-view-enter,
+  html:not([data-lcars-motion="force"]) #metronome #linear.lcars-view-enter,
+  html:not([data-lcars-motion="force"]) #modeButtons button.lcars-mode-ack,
+  html:not([data-lcars-motion="force"]) #start.lcars-status-confirm,
+  html:not([data-lcars-motion="force"]) .xy-plot .chart-line,
+  html:not([data-lcars-motion="force"]) .xy-plot .chart-bar,
+  html:not([data-lcars-motion="force"]) .xy-plot .chart-dot {
+    animation:none!important;transform:none!important;clip-path:none!important;
+  }
+  html:not([data-lcars-motion="force"]) .xy-plot .chart-probe-line {transition:none!important;}
+}
+
+/* ==========================================================================
+   LCARS SEQUENCED SYSTEM LAUNCH · 2.0.0 RC7
+   Decorative only: no geometry/layout changes, no pointer blocking, no sound.
+   Real SVG beat geometry and persistent user controls remain interactive.
+   CSS animation is scoped to the one-shot `.lcars-booting` shell class.
+   ========================================================================== */
+@keyframes lcars-launch-elbow {
+  0% {clip-path:inset(0 95% 97% 0);filter:brightness(1.7);}
+  48% {clip-path:inset(0 0 76% 0);}
+  100% {clip-path:inset(0 0 0 0);filter:brightness(1);}
+}
+@keyframes lcars-launch-bar-x {
+  0% {clip-path:inset(0 100% 0 0);filter:brightness(1.55);}
+  100% {clip-path:inset(0 0 0 0);filter:brightness(1);}
+}
+@keyframes lcars-launch-bar-y {
+  0% {clip-path:inset(0 0 100% 0);filter:brightness(1.4);}
+  100% {clip-path:inset(0 0 0 0);filter:brightness(1);}
+}
+@keyframes lcars-launch-border {
+  0% {border-left-color:transparent;border-top-color:transparent;border-bottom-color:transparent;}
+  45% {border-left-color:var(--padd-amber,#ffcc66);border-top-color:transparent;border-bottom-color:transparent;}
+  100% {border-left-color:var(--padd-amber,#ffcc66);border-top-color:var(--padd-amber,#ffcc66);border-bottom-color:var(--padd-peach,#ff9966);}
+}
+@keyframes lcars-launch-panel-border {
+  0% {border-left-color:transparent;border-top-color:transparent;border-bottom-color:transparent;}
+  55% {border-left-color:var(--panel-accent,var(--padd-lavender,#cc99cc));border-top-color:transparent;border-bottom-color:transparent;}
+  100% {border-left-color:var(--panel-accent,var(--padd-lavender,#cc99cc));border-top-color:var(--panel-accent,var(--padd-lavender,#cc99cc));border-bottom-color:var(--panel-accent,var(--padd-lavender,#cc99cc));}
+}
+@keyframes lcars-launch-pop {
+  /* Never clip real buttons: clip-path alters the pointer hit region in Safari
+     and Chromium even when pointer-events is left alone. */
+  0% {opacity:0;filter:brightness(1.65);}
+  55% {opacity:1;filter:brightness(1.22);}
+  100% {opacity:1;filter:brightness(1);}
+}
+@keyframes lcars-launch-details {
+  /* Opacity preserves the full physical touch/click region of a control. */
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+@keyframes lcars-launch-ring {
+  0% {opacity:.05;stroke-dashoffset:var(--boot-circumference);}
+  100% {opacity:1;stroke-dashoffset:0;}
+}
+@keyframes lcars-launch-node {
+  0% {opacity:0;filter:brightness(1.7);}
+  55% {opacity:1;filter:brightness(1.25);}
+  100% {opacity:1;filter:brightness(1);}
+}
+
+/* I. Structural elbow and system rails (0–500ms). */
+.app-shell.lcars-booting > header .elbow {
+  animation:lcars-launch-elbow 360ms cubic-bezier(.16,1,.3,1) both;
+}
+.app-shell.lcars-booting > header::after {
+  animation:lcars-launch-bar-x 410ms cubic-bezier(.22,1,.36,1) 70ms both;
+}
+.app-shell.lcars-booting::after {
+  animation:lcars-launch-bar-x 390ms cubic-bezier(.22,1,.36,1) 110ms both;
+}
+.app-shell.lcars-booting > header .heading,
+.app-shell.lcars-booting > header::before {
+  animation:lcars-launch-details 280ms ease-out 180ms both;
+}
+
+/* II. Sidebar and engineering borders (120–720ms).
+   Animate border colors, NOT the whole instrument: clipping the parent would
+   conceal the ring and intercept the carefully staggered child reveals. */
+.app-shell.lcars-booting > aside .rail {
+  animation:lcars-launch-bar-y 370ms cubic-bezier(.22,1,.36,1) 130ms both;
+}
+.app-shell.lcars-booting > aside .rail-end {
+  animation:lcars-launch-bar-y 230ms ease-out 300ms both;
+}
+.app-shell.lcars-booting #metronome .section-heading {
+  animation:lcars-launch-details 340ms cubic-bezier(.22,1,.36,1) 175ms both;
+}
+.app-shell.lcars-booting #metronome .instrument {
+  animation:lcars-launch-border 440ms ease-out 170ms both;
+}
+.app-shell.lcars-booting #metronome .side-controls > .panel {
+  animation:lcars-launch-panel-border 400ms ease-out 235ms both;
+}
+.app-shell.lcars-booting #metronome .side-controls > .panel:nth-of-type(2) {
+  animation-delay:330ms;
+}
+.app-shell.lcars-booting #metronome .side-controls > .operation-info {
+  animation:lcars-launch-details 310ms ease-out 420ms both;
+}
+
+/* III. Navigation and operating modes, discrete LCARS staccato. */
+.app-shell.lcars-booting > aside nav .nav {
+  animation:lcars-launch-pop 220ms steps(5,end) both;
+}
+.app-shell.lcars-booting > aside nav .nav:nth-child(1) {animation-delay:210ms;}
+.app-shell.lcars-booting > aside nav .nav:nth-child(2) {animation-delay:250ms;}
+.app-shell.lcars-booting > aside nav .nav:nth-child(3) {animation-delay:290ms;}
+.app-shell.lcars-booting > aside nav .nav:nth-child(4) {animation-delay:330ms;}
+.app-shell.lcars-booting > aside nav .nav:nth-child(5) {animation-delay:370ms;}
+.app-shell.lcars-booting > aside nav .nav:nth-child(6) {animation-delay:410ms;}
+.app-shell.lcars-booting #metronome .mode-heading {
+  animation:lcars-launch-details 200ms ease-out 290ms both;
+}
+.app-shell.lcars-booting #modeButtons button {
+  animation:lcars-launch-pop 210ms steps(5,end) both;
+}
+.app-shell.lcars-booting #modeButtons button:nth-child(1) {animation-delay:310ms;}
+.app-shell.lcars-booting #modeButtons button:nth-child(2) {animation-delay:350ms;}
+.app-shell.lcars-booting #modeButtons button:nth-child(3) {animation-delay:390ms;}
+.app-shell.lcars-booting #modeButtons button:nth-child(4) {animation-delay:430ms;}
+.app-shell.lcars-booting #modeButtons button:nth-child(5) {animation-delay:470ms;}
+.app-shell.lcars-booting #modeButtons button:nth-child(6) {animation-delay:510ms;}
+.app-shell.lcars-booting #modeButtons button:nth-child(7) {animation-delay:550ms;}
+.app-shell.lcars-booting #modeButtons button:nth-child(8) {animation-delay:590ms;}
+
+/* IV. SVG rings traced in place. Never translate/scale the beat hit targets.
+   Circumferences are 2π×212 ≈ 1332px and 2π×149 ≈ 936px. */
+.app-shell.lcars-booting #rings circle.track:not(.inner-track) {
+  --boot-circumference:1333;
+  stroke-dasharray:1333 1333;
+  animation:lcars-launch-ring 440ms cubic-bezier(.22,1,.36,1) 390ms both;
+}
+.app-shell.lcars-booting #rings circle.track.inner-track {
+  --boot-circumference:937;
+  stroke-dasharray:937 937;
+  animation:lcars-launch-ring 400ms cubic-bezier(.22,1,.36,1) 485ms both;
+}
+.app-shell.lcars-booting #rings .dial-ticks {
+  animation:lcars-launch-details 250ms ease-out 520ms both;
+}
+.app-shell.lcars-booting #tempo {
+  animation:lcars-launch-details 280ms cubic-bezier(.22,1,.36,1) 535ms both;
+}
+.app-shell.lcars-booting #rings g[data-index] {
+  animation:lcars-launch-node 200ms ease-out var(--boot-delay,610ms) both;
+}
+
+/* V. Status, metering, transport and fine controls (570–1260ms). */
+.app-shell.lcars-booting #metronome .legend {
+  animation:lcars-launch-details 230ms ease-out 610ms both;
+}
+.app-shell.lcars-booting #metronome .play-status {
+  animation:lcars-launch-details 255ms ease-out 670ms both;
+}
+.app-shell.lcars-booting #metronome .pattern-counts {
+  animation:lcars-launch-details 260ms ease-out 720ms both;
+}
+.app-shell.lcars-booting #metronome .transport #tap {
+  animation:lcars-launch-pop 230ms steps(5,end) 795ms both;
+}
+.app-shell.lcars-booting #metronome .transport #start {
+  animation:lcars-launch-pop 230ms steps(5,end) 855ms both;
+}
+.app-shell.lcars-booting #metronome .side-controls > .panel > .eyebrow,
+.app-shell.lcars-booting #metronome .side-controls > .panel > h3,
+.app-shell.lcars-booting #metronome .side-controls > .panel > .mode-help,
+.app-shell.lcars-booting #metronome .side-controls > .panel > .lcars-info {
+  animation:lcars-launch-details 280ms ease-out 585ms both;
+}
+.app-shell.lcars-booting #metronome .side-controls .training-fields,
+.app-shell.lcars-booting #metronome .side-controls .swing-control,
+.app-shell.lcars-booting #metronome .side-controls label {
+  animation:lcars-launch-details 270ms ease-out 650ms both;
+}
+.app-shell.lcars-booting > main > footer {
+  animation:lcars-launch-details 250ms ease-out 885ms both;
+}
+
+/* Never suppress layout transforms from the original app when motion is
+   reduced. Only disable the launch animations and their temporary masks. */
+@media (prefers-reduced-motion:reduce) {
+  html:not([data-lcars-motion="force"]) .app-shell.lcars-booting *,
+  html:not([data-lcars-motion="force"]) .app-shell.lcars-booting::after,
+  html:not([data-lcars-motion="force"]) .app-shell.lcars-booting > header::before,
+  html:not([data-lcars-motion="force"]) .app-shell.lcars-booting > header::after {
+    animation:none!important;
+    clip-path:none!important;
+  }
+}
+
+/* ================================================================
+   LCARS TAB BUILD: the short sibling of the five-stage launch.
+   Replays ONLY on an actual page switch. Structural frames precede
+   content and controls; no transforming/clipping interactive targets.
+   Hidden pages stay hidden; JS removes the class after 1.15 seconds.
+   ================================================================ */
+@keyframes lcars-tab-frame {
+  0% {opacity:.08;filter:brightness(1.4);}
+  36% {opacity:.65;filter:brightness(1.4);}
+  100% {opacity:1;filter:brightness(1);}
+}
+@keyframes lcars-tab-element {
+  0% {opacity:0;filter:brightness(1.65);}
+  65% {opacity:1;filter:brightness(1.15);}
+  100% {opacity:1;filter:brightness(1);}
+}
+/* 1. Primary page title: LCARS header bar powers up. */
+.page.lcars-page-enter > .section-heading {
+  animation:lcars-tab-frame 220ms ease-out 30ms both;
+}
+/* 2. Main console bodies and original panel borders. */
+.page.lcars-page-enter > .panel,
+.page.lcars-page-enter > .cards > :nth-child(-n+12),
+.page.lcars-page-enter > .lcars-info,
+.page.lcars-page-enter > .diary-maintenance {
+  animation:lcars-tab-frame 310ms cubic-bezier(.22,1,.36,1) 145ms both;
+}
+.page.lcars-page-enter > .cards > :nth-child(2) {animation-delay:205ms;}
+.page.lcars-page-enter > .cards > :nth-child(3) {animation-delay:260ms;}
+.page.lcars-page-enter > .cards > :nth-child(4) {animation-delay:315ms;}
+.page.lcars-page-enter > .cards > :nth-child(5) {animation-delay:370ms;}
+.page.lcars-page-enter > .cards > :nth-child(n+6):nth-child(-n+12) {animation-delay:405ms;}
+/* 3. Important data and controls, slightly after the outer structures. */
+.page.lcars-page-enter > .preset-actions,
+.page.lcars-page-enter > .panel > :is(h3, .eyebrow, label, form),
+.page.lcars-page-enter > .section-heading > *,
+.page.lcars-page-enter > :is(.analytics-filters,.chart-modes) {
+  animation:lcars-tab-element 255ms ease-out 360ms both;
+}
+.page.lcars-page-enter #mixer .matrix-housing,
+.page.lcars-page-enter .master .lcars-slide,
+.page.lcars-page-enter #presetList > :nth-child(-n+12) :is(h3,button),
+.page.lcars-page-enter #diaryControls,
+.page.lcars-page-enter #diaryList > :nth-child(-n+12),
+.page.lcars-page-enter #analyticsContent > :nth-child(-n+8) {
+  animation:lcars-tab-element 240ms ease-out 445ms both;
+}
+
+/* The metronome gets the same detailed short choreography as the others. */
+#metronome.lcars-page-enter .instrument {
+  animation:lcars-launch-border 300ms ease-out 95ms both;
+}
+#metronome.lcars-page-enter .side-controls > .panel {
+  animation:lcars-launch-panel-border 310ms ease-out 165ms both;
+}
+#metronome.lcars-page-enter .side-controls > .panel:nth-of-type(2) {
+  animation-delay:245ms;
+}
+#metronome.lcars-page-enter :is(.mode-heading,.operation-info) {
+  animation:lcars-tab-element 200ms ease-out 210ms both;
+}
+#metronome.lcars-page-enter #modeButtons button {
+  animation:lcars-tab-element 185ms steps(5,end) both;
+}
+#metronome.lcars-page-enter #modeButtons button:nth-child(1) {animation-delay:240ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(2) {animation-delay:275ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(3) {animation-delay:310ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(4) {animation-delay:345ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(5) {animation-delay:380ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(6) {animation-delay:415ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(7) {animation-delay:450ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(8) {animation-delay:485ms;}
+#metronome.lcars-page-enter #rings circle.track:not(.inner-track) {
+  --boot-circumference:1333;stroke-dasharray:1333 1333;
+  animation:lcars-launch-ring 330ms ease-out 280ms both;
+}
+#metronome.lcars-page-enter #rings circle.track.inner-track {
+  --boot-circumference:937;stroke-dasharray:937 937;
+  animation:lcars-launch-ring 330ms ease-out 355ms both;
+}
+#metronome.lcars-page-enter #rings :is(.dial-ticks,g[data-index]) {
+  animation:lcars-launch-node 205ms ease-out 515ms both;
+}
+#metronome.lcars-page-enter :is(#tempo,#linear,.legend,.play-status,.pattern-counts,.transport) {
+  animation:lcars-tab-element 280ms ease-out 535ms both;
+}
+#metronome.lcars-page-enter .side-controls :is(.training-fields,.swing-control,label,.mode-help) {
+  animation:lcars-tab-element 250ms ease-out 560ms both;
+}
+
+/* JS skips its class entirely under reduced motion; this rule provides
+   immediate visibility if OS preference changes during a transition. */
+@media (prefers-reduced-motion:reduce) {
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter,
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter *,
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter::before,
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter::after {
+    animation:none!important;
+    clip-path:none!important;
+  }
+}
+
+/* ======================================================================
+   RC9 · THE CHASSIS STAYS ON, THE CONTENT POWERS UP
+   Initial launch remains .app-shell.lcars-booting above.
+   For navigation ONLY the destination .page gets the build class.
+   No header, outer sidebar, nav strip, fixed footer or perimeter rails
+   ever restart. No new decorative perimeter bars are injected.
+   All timing is viewport-independent; touch targets stay in place.
+   ====================================================================== */
+@keyframes lcars-content-title {
+  0% {opacity:0;filter:brightness(1.65);}
+  55% {opacity:.9;filter:brightness(1.25);}
+  100% {opacity:1;filter:brightness(1);}
+}
+@keyframes lcars-content-frame {
+  0% {opacity:.02;border-left-color:transparent;border-top-color:transparent;border-bottom-color:transparent;}
+  45% {opacity:.9;border-left-color:var(--panel-accent,var(--padd-lavender,#aa9add));border-top-color:transparent;border-bottom-color:transparent;}
+  100% {opacity:1;border-left-color:var(--panel-accent,var(--padd-lavender,#aa9add));border-top-color:var(--panel-accent,var(--padd-lavender,#aa9add));border-bottom-color:var(--panel-accent,var(--padd-lavender,#aa9add));}
+}
+@keyframes lcars-content-plate {
+  0% {opacity:0;filter:brightness(1.75);}
+  58% {opacity:1;filter:brightness(1.2);}
+  100% {opacity:1;filter:brightness(1);}
+}
+@keyframes lcars-content-data {
+  0% {opacity:0;}
+  65% {opacity:.88;}
+  100% {opacity:1;}
+}
+/* Phase I: actual title INSIDE the tab, not the permanent top rail. */
+.page.lcars-page-enter > .section-heading {
+  animation:lcars-content-title 260ms ease-out 35ms both;
+}
+/* Phase II: panels/cassettes initialize after the title. */
+.page.lcars-page-enter > .panel,
+.page.lcars-page-enter > .cards > .panel,
+.page.lcars-page-enter > #mixer > .panel,
+.page.lcars-page-enter > .cards > .log-entry,
+.page.lcars-page-enter > #analyticsContent > .panel {
+  animation:lcars-content-frame 340ms cubic-bezier(.22,1,.36,1) 200ms both;
+}
+.page.lcars-page-enter > .cards > .panel:nth-child(2) {animation-delay:255ms;}
+.page.lcars-page-enter > .cards > .panel:nth-child(3) {animation-delay:305ms;}
+.page.lcars-page-enter > .cards > .panel:nth-child(4) {animation-delay:355ms;}
+.page.lcars-page-enter > .cards > .panel:nth-child(5) {animation-delay:405ms;}
+.page.lcars-page-enter > .cards > .panel:nth-child(6) {animation-delay:455ms;}
+.page.lcars-page-enter > .cards > .panel:nth-child(7) {animation-delay:505ms;}
+.page.lcars-page-enter > .cards > .panel:nth-child(8) {animation-delay:555ms;}
+/* Phase III: interior page blocks load in sequence.
+   Large lists are bounded to the first 8 items, never hundreds of animations. */
+.page.lcars-page-enter > :is(.mode-heading,#modeButtons,.instrument-layout,.preset-actions,.diary-actions,.diary-maintenance,.lcars-info),
+.page.lcars-page-enter > #analyticsContent,
+.page.lcars-page-enter > #diaryList,
+.page.lcars-page-enter > #presetList {
+  animation:lcars-content-plate 330ms ease-out 205ms both;
+}
+.page.lcars-page-enter > #analyticsContent > :nth-child(-n+8),
+.page.lcars-page-enter #diaryList > :nth-child(-n+8),
+.page.lcars-page-enter #presetList > :nth-child(-n+8) {
+  animation:lcars-content-plate 245ms ease-out 340ms both;
+}
+.page.lcars-page-enter > #analyticsContent > :nth-child(2),
+.page.lcars-page-enter #diaryList > :nth-child(2),
+.page.lcars-page-enter #presetList > :nth-child(2) {animation-delay:395ms;}
+.page.lcars-page-enter > #analyticsContent > :nth-child(3),
+.page.lcars-page-enter #diaryList > :nth-child(3),
+.page.lcars-page-enter #presetList > :nth-child(3) {animation-delay:450ms;}
+.page.lcars-page-enter > #analyticsContent > :nth-child(4),
+.page.lcars-page-enter #diaryList > :nth-child(4),
+.page.lcars-page-enter #presetList > :nth-child(4) {animation-delay:505ms;}
+.page.lcars-page-enter > #analyticsContent > :nth-child(n+5):nth-child(-n+8),
+.page.lcars-page-enter #diaryList > :nth-child(n+5):nth-child(-n+8),
+.page.lcars-page-enter #presetList > :nth-child(n+5):nth-child(-n+8) {animation-delay:560ms;}
+/* Phase IV: titles and readouts. Do not clip or move controls. */
+.page.lcars-page-enter .panel > :is(h3,.eyebrow,label,button,.lcars-slide),
+.page.lcars-page-enter #diaryControls,
+.page.lcars-page-enter #analyticsContent :is(.stat-grid,.analytics-filters,.chart-modes),
+.page.lcars-page-enter > :is(.preset-actions,.diary-actions),
+.page.lcars-page-enter #mixer .matrix-led-instrument {
+  animation:lcars-content-data 265ms ease-out 590ms both;
+}
+/* Metronome content: draw the *internal* console and real beat tracks. */
+#metronome.lcars-page-enter .instrument {
+  animation:lcars-launch-border 345ms ease-out 180ms both;
+}
+#metronome.lcars-page-enter .side-controls > .panel {
+  animation:lcars-launch-panel-border 340ms ease-out 260ms both;
+}
+#metronome.lcars-page-enter .side-controls > .panel:nth-of-type(2) {animation-delay:340ms;}
+#metronome.lcars-page-enter :is(.mode-heading,.operation-info) {
+  animation:lcars-content-title 210ms ease-out 195ms both;
+}
+#metronome.lcars-page-enter #modeButtons button {
+  animation:lcars-launch-node 190ms steps(5,end) var(--page-mode-delay,350ms) both;
+}
+#metronome.lcars-page-enter #modeButtons button:nth-child(1) {--page-mode-delay:350ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(2) {--page-mode-delay:390ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(3) {--page-mode-delay:430ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(4) {--page-mode-delay:470ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(5) {--page-mode-delay:510ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(6) {--page-mode-delay:550ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(7) {--page-mode-delay:590ms;}
+#metronome.lcars-page-enter #modeButtons button:nth-child(8) {--page-mode-delay:630ms;}
+#metronome.lcars-page-enter #rings circle.track:not(.inner-track) {
+  --boot-circumference:1333;stroke-dasharray:1333 1333;
+  animation:lcars-launch-ring 470ms cubic-bezier(.22,1,.36,1) 405ms both;
+}
+#metronome.lcars-page-enter #rings circle.track.inner-track {
+  --boot-circumference:937;stroke-dasharray:937 937;
+  animation:lcars-launch-ring 430ms cubic-bezier(.22,1,.36,1) 475ms both;
+}
+#metronome.lcars-page-enter #rings :is(.dial-ticks,g[data-index]) {
+  animation:lcars-launch-node 215ms ease-out 680ms both;
+}
+#metronome.lcars-page-enter :is(#tempo,#linear,.legend,.play-status,.pattern-counts,.transport) {
+  animation:lcars-content-data 265ms ease-out 745ms both;
+}
+#metronome.lcars-page-enter .side-controls :is(.training-fields,.swing-control,label,.mode-help) {
+  animation:lcars-content-data 260ms ease-out 755ms both;
+}
+/* Existing hands-on acknowledgements always beat the decorative build. */
+#metronome.lcars-page-enter #modeButtons button.lcars-mode-ack[aria-pressed=true] {
+  animation:lcars-mode-confirm 220ms ease-out;
+}
+#metronome.lcars-page-enter #dial.lcars-view-enter,
+#metronome.lcars-page-enter #linear.lcars-view-enter {
+  animation:none; /* Do not translate the view while its beats are rebuilding. */
+}
+/* OS reduced-motion: skip this choreography without affecting page state. */
+@media (prefers-reduced-motion:reduce) {
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter,
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter *,
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter::before,
+  html:not([data-lcars-motion="force"]) .page.lcars-page-enter::after {
+    animation:none!important;
+    clip-path:none!important;
+  }
+}
+
+/* =========================================================================
+   RC10 · VIEW-SPECIFIC BEAT ASSEMBLY
+   The navigation/sidebar, panel chrome, transport, mode buttons, BPM and
+   clock remain completely static when Circular ↔ Linear is toggled.
+   Only the newly displayed beat graphic assembles. No transform, geometry
+   changes, continuous animation, or loss of touch hit targets.
+   ========================================================================= */
+@keyframes lcars-view-ticks {
+  0% {opacity:0;filter:brightness(1.6);}
+  100% {opacity:1;filter:brightness(1);}
+}
+@keyframes lcars-view-beat {
+  0% {opacity:0;filter:brightness(1.65);}
+  58% {opacity:1;filter:brightness(1.3);}
+  100% {opacity:1;filter:brightness(1);}
+}
+/* No animation on the two root containers: the user can tap/drag at once. */
+#metronome #dial.lcars-view-enter,
+#metronome #linear.lcars-view-enter,
+#metronome.lcars-page-enter #dial.lcars-view-enter,
+#metronome.lcars-page-enter #linear.lcars-view-enter {
+  animation:none;
+}
+/* CIRCULAR: first the two stroke paths, then the calibration ticks,
+   then each outer/inner beat group according to its real channel/index. */
+#metronome #dial.lcars-view-enter #rings circle.track:not(.inner-track) {
+  --boot-circumference:1333;
+  stroke-dasharray:1333 1333;
+  animation:lcars-launch-ring 420ms cubic-bezier(.22,1,.36,1) 70ms both;
+}
+#metronome #dial.lcars-view-enter #rings circle.track.inner-track {
+  --boot-circumference:937;
+  stroke-dasharray:937 937;
+  animation:lcars-launch-ring 410ms cubic-bezier(.22,1,.36,1) 175ms both;
+}
+#metronome #dial.lcars-view-enter #rings .dial-ticks {
+  animation:lcars-view-ticks 215ms ease-out 300ms both;
+}
+#metronome #dial.lcars-view-enter #rings g[data-index] {
+  animation:lcars-view-beat 195ms steps(5,end) var(--view-delay,425ms) both;
+}
+/* LINEAR: the existing OUTER / INNER PATTERN labels light up, followed by
+   real individual beat buttons. CSS custom delays survive mobile line wraps. */
+#metronome #linear.lcars-view-enter > h3 {
+  animation:lcars-content-title 230ms ease-out 45ms both;
+}
+#metronome #linear.lcars-view-enter > h3:nth-of-type(2) {
+  animation-delay:175ms;
+}
+#metronome #linear.lcars-view-enter .pattern-row[data-channel="0"] .step,
+#metronome #linear.lcars-view-enter .pattern-row[data-channel="1"] .step {
+  animation:lcars-view-beat 195ms steps(5,end) var(--view-delay,425ms) both;
+}
+/* Motion preferences can change at any time and must reveal everything. */
+@media (prefers-reduced-motion:reduce) {
+  html:not([data-lcars-motion="force"]) #metronome #dial.lcars-view-enter,
+  html:not([data-lcars-motion="force"]) #metronome #linear.lcars-view-enter,
+  html:not([data-lcars-motion="force"]) #metronome #dial.lcars-view-enter *,
+  html:not([data-lcars-motion="force"]) #metronome #linear.lcars-view-enter * {
+    animation:none!important;
+    opacity:1;
+    filter:none;
+  }
+}
+
+/* ======================================================================
+   RC11 · AUDIO MATRIX / INSTRUMENT POWER-UP
+   When #audio gains .lcars-page-enter, only the real channel faders,
+   source controls and master/UI output instruments assemble. The permanent
+   LCARS shell and real audio signal state do not change.
+   Geometry and touch hit regions are never animated. 
+   ====================================================================== */
+@keyframes lcars-mixer-rail-on {
+  0%   {opacity:0;filter:brightness(1.7);}
+  64%  {opacity:1;filter:brightness(1.2);}
+  100% {opacity:1;filter:brightness(1);}
+}
+@keyframes lcars-mixer-capsule-on {
+  0%   {opacity:0;filter:brightness(1.8);}
+  58%  {opacity:1;filter:brightness(1.3);}
+  100% {opacity:1;filter:brightness(1);}
+}
+@keyframes lcars-mixer-readout-on {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+/* The old blanket fade kept the precise capsules invisible until 590ms.
+   Give the real components their own timeline instead. */
+#audio.lcars-page-enter #mixer .matrix-housing,
+#audio.lcars-page-enter #mixer .matrix-led-instrument {
+  animation:none;
+}
+/* Four actual modules: outer volume -> outer pan -> inner volume -> inner pan.
+   Delays are computed once from channel/kind when the panels are built. */
+#audio.lcars-page-enter #mixer .matrix-module .matrix-label {
+  animation:lcars-mixer-rail-on 215ms ease-out var(--matrix-build-start) both;
+}
+#audio.lcars-page-enter #mixer .matrix-module .matrix-titlebar {
+  animation:lcars-mixer-rail-on 190ms ease-out
+   calc(var(--matrix-build-start) + 75ms) both;
+}
+#audio.lcars-page-enter #mixer .matrix-module .matrix-led-ruler {
+  animation:lcars-mixer-rail-on 190ms ease-out
+   calc(var(--matrix-build-start) + 140ms) both;
+}
+#audio.lcars-page-enter #mixer .matrix-module .matrix-led-ruler-bottom {
+  animation-delay:calc(var(--matrix-build-start) + 195ms);
+}
+#audio.lcars-page-enter #mixer .matrix-module .matrix-segments {
+  animation:lcars-mixer-rail-on 230ms ease-out
+   calc(var(--matrix-build-start) + 175ms) both;
+}
+/* 24 genuine LED capsules per fader, in their real left-to-right order.
+   Existing .lit, .wave-peak and color gradients remain authoritative. */
+#audio.lcars-page-enter #mixer .matrix-module .matrix-segment {
+  animation:lcars-mixer-capsule-on 165ms steps(5,end)
+    var(--matrix-led-build-delay) both;
+}
+/* Orange LCARS brackets emerge only after their underlying capsule rails. */
+#audio.lcars-page-enter #mixer .matrix-module .matrix-bracket {
+  animation:lcars-mixer-rail-on 210ms ease-out
+   calc(var(--matrix-build-start) + 435ms) both;
+}
+#audio.lcars-page-enter #mixer .matrix-module .matrix-fine-row {
+  animation:lcars-mixer-rail-on 190ms ease-out
+   calc(var(--matrix-build-start) + 500ms) both;
+}
+#audio.lcars-page-enter #mixer .matrix-module .matrix-pan-micro {
+  animation:lcars-mixer-rail-on 185ms ease-out
+   calc(var(--matrix-build-start) + 550ms) both;
+}
+#audio.lcars-page-enter #mixer .matrix-module .matrix-readout {
+  animation:lcars-mixer-readout-on 190ms ease-out
+   calc(var(--matrix-build-start) + 580ms) both;
+}
+/* Channel-level panorama presets, mute/solo and sound options cascade after
+   the first capsule rail.  Their native buttons remain clickable throughout. */
+#audio.lcars-page-enter #mixer > .matrix-channel .pan-scale {
+  animation:lcars-mixer-rail-on 205ms ease-out 545ms both;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel:nth-child(2) .pan-scale {
+  animation-delay:695ms;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel .mixer-buttons {
+  animation:lcars-mixer-rail-on 205ms ease-out 635ms both;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel:nth-child(2) .mixer-buttons {
+  animation-delay:785ms;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel .accent-sound-row {
+  animation:lcars-mixer-rail-on 215ms ease-out 710ms both;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel .accent-sound-row:nth-last-child(2) {
+  animation-delay:785ms;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel .accent-sound-row:last-child {
+  animation-delay:860ms;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel:nth-child(2) .accent-sound-row {
+  animation-delay:870ms;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel:nth-child(2) .accent-sound-row:nth-last-child(2) {
+  animation-delay:945ms;
+}
+#audio.lcars-page-enter #mixer > .matrix-channel:nth-child(2) .accent-sound-row:last-child {
+  animation-delay:1020ms;
+}
+/* Existing master/UI faders use the same shared 24-pill LCARS component,
+   so their track, bracket and readout can boot in the same visual language. */
+#audio.lcars-page-enter .master > .lcars-slide {
+  animation:none; /* Real slider replaces the original label at mount. */
+}
+#audio.lcars-page-enter .master > .lcars-slide:nth-of-type(1) {
+  --audio-output-start:300ms;
+}
+#audio.lcars-page-enter .master > .lcars-slide:nth-of-type(2) {
+  --audio-output-start:505ms;
+}
+#audio.lcars-page-enter .master .lcars-slide-label {
+  animation:lcars-mixer-rail-on 210ms ease-out
+   var(--audio-output-start,300ms) both;
+}
+#audio.lcars-page-enter .master .lcars-calibration {
+  animation:lcars-mixer-rail-on 215ms ease-out
+   calc(var(--audio-output-start,300ms) + 100ms) both;
+}
+#audio.lcars-page-enter .master .lcars-slide-cap {
+  animation:lcars-mixer-rail-on 205ms ease-out
+   calc(var(--audio-output-start,300ms) + 135ms) both;
+}
+#audio.lcars-page-enter .master .lcars-ruler {
+  animation:lcars-mixer-rail-on 195ms ease-out
+   calc(var(--audio-output-start,300ms) + 190ms) both;
+}
+#audio.lcars-page-enter .master .lcars-ruler-bottom {
+  animation-delay:calc(var(--audio-output-start,300ms) + 230ms);
+}
+/* Only this decorative rail is masked: no range inputs or touch surfaces. */
+#audio.lcars-page-enter .master .lcars-pill-housing {
+  animation:lcars-mixer-rail-on 230ms ease-out
+   calc(var(--audio-output-start,300ms) + 235ms) both;
+}
+#audio.lcars-page-enter .master .lcars-pill {
+  animation:lcars-mixer-capsule-on 195ms ease-out
+   calc(var(--audio-output-start,300ms) + 285ms) both;
+}
+#audio.lcars-page-enter .master .lcars-bracket {
+  animation:lcars-mixer-rail-on 210ms ease-out
+   calc(var(--audio-output-start,300ms) + 425ms) both;
+}
+#audio.lcars-page-enter .master .lcars-slide-telemetry {
+  animation:lcars-mixer-readout-on 200ms ease-out
+   calc(var(--audio-output-start,300ms) + 490ms) both;
+}
+/* A subsequent page switch removes .lcars-page-enter and restores all
+   existing interactive scrubbing/LED animations without sticky classes. */
+@media (prefers-reduced-motion:reduce) {
+  html:not([data-lcars-motion="force"]) #audio.lcars-page-enter #mixer *,
+  html:not([data-lcars-motion="force"]) #audio.lcars-page-enter .master * {
+    animation:none!important;
+  }
+}
+
+
+/* ==========================================================================
+   RC15 · LINEAR SUBROUTINE / FULL INSTRUMENT CONSTRUCTION
+   Both entry paths use #linear.lcars-view-enter: tapping LINEAR VIEW and
+   returning from another menu while Linear is already active.
+   The permanent PADD chassis, transport, BPM state and touch geometry stay
+   fixed. A page return gets a small staging offset for mode-panel buildup.
+   ========================================================================== */
+@keyframes lcars-linear-instrument-outline {
+  0% {
+    border-top-color:transparent;
+    border-left-color:transparent;
+    border-bottom-color:transparent;
+    background-color:transparent;
+  }
+  55% {
+    border-top-color:var(--padd-amber);
+    border-left-color:var(--padd-amber);
+    border-bottom-color:transparent;
+    background-color:#08060a;
+  }
+  100% {
+    border-top-color:var(--padd-amber);
+    border-left-color:var(--padd-amber);
+    border-bottom-color:var(--padd-peach);
+    background-color:#09070c;
+  }
+}
+@keyframes lcars-linear-element-online {
+  0% {opacity:0;filter:brightness(1.7);}
+  60% {opacity:.95;filter:brightness(1.27);}
+  100% {opacity:1;filter:brightness(1);}
+}
+@keyframes lcars-linear-number-online {
+  0% {opacity:0;filter:brightness(1.7);}
+  40% {opacity:1;filter:brightness(1.35);}
+  100% {opacity:1;filter:brightness(1);}
+}
+/* Returning through navigation already builds the mode panel. Let its
+   headings appear before the Linear instruments start illuminating. */
+#metronome.lcars-page-enter #linear.lcars-view-enter {
+  --linear-return-offset:180ms;
+  animation:none; /* Never fade the entire view or its click targets. */
+}
+/* Tempo console: real colored border, then station ID, labels, numeric
+   readout, and finally the +/- operator controls. */
+#metronome #linear.lcars-view-enter .linear-tempo-console {
+  animation:lcars-linear-instrument-outline 330ms ease-out
+    calc(var(--linear-return-offset,0ms) + 100ms) both;
+}
+#metronome #linear.lcars-view-enter .linear-tempo-code {
+  animation:lcars-linear-element-online 190ms ease-out
+    calc(var(--linear-return-offset,0ms) + 220ms) both;
+}
+#metronome #linear.lcars-view-enter .linear-tempo-id strong {
+  animation:lcars-linear-element-online 215ms ease-out
+    calc(var(--linear-return-offset,0ms) + 315ms) both;
+}
+#metronome #linear.lcars-view-enter .linear-tempo-hint {
+  animation:lcars-linear-element-online 205ms ease-out
+    calc(var(--linear-return-offset,0ms) + 390ms) both;
+}
+#metronome #linear.lcars-view-enter .linear-tempo-control {
+  animation:lcars-linear-element-online 240ms ease-out
+    calc(var(--linear-return-offset,0ms) + 430ms) both;
+}
+#metronome #linear.lcars-view-enter #linearTempoValue,
+#metronome #linear.lcars-view-enter #linearBpm:not([hidden]) {
+  animation:lcars-linear-number-online 220ms ease-out
+    calc(var(--linear-return-offset,0ms) + 570ms) both;
+}
+#metronome #linear.lcars-view-enter .linear-tempo-steps button:first-child {
+  animation:lcars-linear-element-online 200ms ease-out
+    calc(var(--linear-return-offset,0ms) + 640ms) both;
+}
+#metronome #linear.lcars-view-enter .linear-tempo-steps button:last-child {
+  animation:lcars-linear-element-online 200ms ease-out
+    calc(var(--linear-return-offset,0ms) + 690ms) both;
+}
+/* Purple LCARS elbow/label before its corresponding rhythm row.
+   Do not fade the parent row, or it would mask staggered child beats. */
+#metronome #linear.lcars-view-enter > h3 {
+  animation:lcars-linear-element-online 250ms ease-out
+    calc(var(--linear-return-offset,0ms) + 630ms) both;
+}
+#metronome #linear.lcars-view-enter > h3:nth-of-type(2) {
+  animation-delay:calc(var(--linear-return-offset,0ms) + 910ms);
+}
+/* Each actual beat button has its own numeric delay in src/app.js.
+   The fixed offset is shared by both direct toggle and page re-entry. */
+#metronome #linear.lcars-view-enter .pattern-row[data-channel="0"] .step,
+#metronome #linear.lcars-view-enter .pattern-row[data-channel="1"] .step {
+  animation:lcars-view-beat 190ms steps(5,end)
+    calc(var(--linear-return-offset,0ms) + var(--view-delay,820ms)) both;
+}
+/* iOS WebKit also honors reduced motion when the preference changes
+   during a gesture. Never keep inputs or beat controls invisible. */
+@media (prefers-reduced-motion:reduce) {
+  html:not([data-lcars-motion="force"]) #metronome #linear.lcars-view-enter,
+  html:not([data-lcars-motion="force"]) #metronome #linear.lcars-view-enter * {
+    animation:none!important;
+  }
+}

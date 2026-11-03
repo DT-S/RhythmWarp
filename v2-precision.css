@@ -1,0 +1,66 @@
+/* Rhythm PADD V2 / Phase P3: non-layout-shifting precision sliders.
+   Native range controls remain keyboard- and mouse-operable. */
+.precision-slider-label {
+  position:relative;
+  isolation:isolate;
+  overflow:visible;
+}
+.precision-slider-label input.precision-slider {
+  touch-action:none;
+  transform-origin:center;
+  transition:transform .18s ease,filter .18s ease;
+  will-change:transform;
+}
+.precision-slider-label.precision-active input.precision-slider {
+  transform:scaleY(1.34);
+  filter:drop-shadow(0 0 5px var(--padd-orange,#ff9900));
+}
+.precision-readout {
+  position:absolute;
+  z-index:25;
+  /* Float just above the real thumb, not up over the preceding fader. */
+  top:calc(50% - 7px);
+  left:50%;
+  transform:translate(-50%,-80%) scale(.88);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  min-width:96px;
+  min-height:33px;
+  padding:6px 12px 5px;
+  background:var(--padd-orange,#ff9900);
+  color:#000;
+  border-left:8px solid var(--padd-peach,#ff9966);
+  border-radius:13px 13px 13px 2px;
+  box-shadow:0 3px 0 #000;
+  white-space:nowrap;
+  text-align:center;
+  font:900 14px/1.35 'Arial Narrow',Arial,sans-serif;
+  letter-spacing:.065em;
+  transition:opacity .14s ease,transform .14s ease,visibility .14s;
+}
+/* A short targeting stem ties the readout to its active fader. */
+.precision-readout::after {
+  content:'';
+  position:absolute;
+  left:calc(50% - 2px);
+  bottom:-9px;
+  width:4px;height:9px;
+  background:var(--padd-orange,#ff9900);
+  border-radius:0 0 3px 3px;
+}
+.precision-slider-label.precision-active .precision-readout {
+  visibility:visible;
+  opacity:1;
+  transform:translate(-50%,-100%) scale(1);
+}
+.precision-slider-label.precision-focused input.precision-slider:focus-visible {
+  outline:2px solid var(--padd-amber,#ffcc66);
+  outline-offset:3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .precision-slider-label input.precision-slider,
+  .precision-readout {
+    transition:none!important;
+  }
+}

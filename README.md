@@ -1,25 +1,29 @@
 # Rhythm Warp
 
-**Rhythm Warp** ist die eigenständige, offlinefähige Rhythmus-Trainings-App von Drum Track Studio.
+**Independent, offline-first rhythm training by Drum Track Studio.**
 
-Status: **Entwicklung / noch nicht für Schüler freigegeben**.
+Rhythm Warp is a student edition derived from our separately maintained private metronome. The original project is not modified.
 
-Die vollständige Metronom-Engine wird aus dem privaten Ursprung `DT-S/LCARSmetronome` übernommen, **ohne dort Dateien oder Historie zu verändern**. Diese öffentliche Repository-Fassung erhält vor der Codeübernahme eine eigene Marken-/Asset-Prüfung.
+## Status
 
-## Design
+**Work in progress. Not yet approved for public distribution.** The functional app code, tests, icons and audio assets are staged in this development branch. UI/asset provenance and real-device regressions must be completed before an official student release.
 
-- Dunkelgrüne Flächen und warme Textfarbe direkt aus der Drum Track Studio Website.
-- Konturierte, steilere Bögen statt mehrfarbiger Vollflächen.
-- Eigenständiges Rhythmus-Symbol statt Franchise-Emblem.
-- Keine Star-Trek-Bezeichnungen, Franchisegrafiken oder ungeprüften UI-Sounds in der öffentlichen App.
-- Trainingsfunktionen, Audiosynthese und lokale Datenspeicherung werden nicht bewusst eingeschränkt.
+The UI uses the Drum Track Studio dark-green palette and neon outlined controls. The musical engine, transport, microphone analysis, practice log and local storage are preserved from the source.
 
-[Designvorschau](preview/index.html) · [Designsystem](docs/DESIGN_SYSTEM.md) · [Migrationsplan](docs/MIGRATION.md)
+## Run locally
 
-> **Wichtiger Hinweis:** Diese öffentliche Entwicklungsbasis enthält noch keine vollständige Metronom-App. Die Vorschau ist eine statische Designstudie, kein Funktions- oder Rechtsnachweis.
+```sh
+python3 -m http.server 8080
+```
 
-## Technisches Freigabegate
+Open `http://localhost:8080` on the same computer. For mobile installation and microphone permissions, use an HTTPS origin or the platform's relevant secure-context setup.
 
-`node scripts/audit-public.mjs`
+## Development
 
-Der Audit überprüft sichtbare Altmarken und blockiert Audio-Dateien, für die keine dokumentierte Freigabe vorliegt. Er ersetzt weder Tests im Browser noch eine Rechteprüfung.
+```sh
+npm test
+```
+
+See [Designsystem](docs/DESIGN_SYSTEM.md), [Migration plan](docs/MIGRATION.md), and [public asset audit](docs/V2_ASSET_AUDIT.md).
+
+**Licensing warning:** Bundled UI MP3 files remain in original filenames for backwards compatibility. Their public redistribution rights have not been verified. Do not treat the existing MIT software license as permission to redistribute third-party audio. Review/replace these files before release.

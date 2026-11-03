@@ -1,0 +1,18 @@
+{
+  "id": "./ios-statusbar-probe",
+  "name": "LCARS iOS Frame Probe",
+  "short_name": "LCARS Probe",
+  "description": "Isolated iOS 26 opaque status-bar geometry test",
+  "start_url": "./ios-statusbar-probe.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "../assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

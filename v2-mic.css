@@ -1,0 +1,663 @@
+/* Experimental LCARS mic console. Reuses current palette in every theme. */
+#micConsole{margin:12px 0 18px;--panel-accent:var(--purple);min-width:0}
+#micConsole>h3,#micAnalytics>h3{margin:0 0 8px;background:var(--padd-lavender,var(--purple));color:#000;
+ padding:10px 14px;font-weight:900;font-size:13px;text-align:right;border-radius:0 22px 22px 0}
+.mic-mode{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:8px 0}
+.mic-mode button{min-width:0;min-height:44px;font-size:10px;padding:8px 6px;border-radius:0;background:var(--padd-tan,var(--salmon));color:#000}
+.mic-mode button:first-child{border-radius:22px 0 0 22px}
+.mic-mode button:last-child{border-radius:0 22px 22px 0}
+.mic-mode button[aria-pressed=true]{background:var(--padd-amber,var(--orange));box-shadow:inset 0 -5px var(--text)}
+#micConsole #micArm{width:100%;margin:6px 0 8px;min-height:50px}
+#micConsole #micArm[aria-pressed=true]{background:var(--padd-peach,var(--pink))}
+#micConsole #micStatus{display:block;background:var(--padd-blue,var(--purple));color:#000;padding:9px;font-size:10px;font-weight:900;min-height:38px}
+#micConsole .mic-sens-row{margin:5px 0;min-height:40px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+#micConsole .mic-sens-row label{font-size:10px;margin:0;min-height:30px}
+#micSensitivity,#micGridDivision{color:var(--text);background:#261e30;border:1px solid var(--line);padding:8px;border-radius:0 16px 16px 0;max-width:60%;min-width:0}
+.mic-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:4px;margin:6px 0}
+.mic-metric{min-width:0;background:var(--padd-tan,var(--salmon));color:#000;padding:9px 12px;border-radius:0 0 15px 0}
+.mic-metric:nth-child(2n){background:var(--padd-amber,var(--orange))}
+.mic-metric>span{display:block;font-size:10px;font-weight:800}
+.mic-metric>strong{display:block;font-size:16px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.mic-chart{display:block;width:100%;max-width:100%;height:auto;background:#050307;border-bottom:8px solid var(--padd-peach,var(--pink));border-radius:0 0 20px 0}
+.mic-grid{stroke:#494057;stroke-width:1;stroke-dasharray:3 5}
+.mic-zero{stroke:var(--padd-amber,var(--orange));stroke-width:1.6}
+.mic-trace{fill:none;stroke:var(--padd-blue,var(--purple));stroke-width:2;stroke-linejoin:round}
+.mic-hit{fill:var(--padd-amber,var(--orange))}
+.mic-axis{fill:#bfb7c9;font:11px sans-serif}
+.mic-hist-bar{fill:var(--padd-lavender,var(--purple))}
+#micConsole .hint{font-size:10px;line-height:1.45;margin:6px 0}
+#micAnalytics{min-width:0;margin-top:20px}
+.mic-session-chooser{display:flex;gap:4px;overflow-x:auto;max-width:100%;padding:8px 0}
+.mic-session-chooser button{flex:0 0 180px;font-size:10px;padding:10px 8px;border-radius:0}
+.mic-session-chooser button[aria-pressed=true]{background:var(--padd-amber,var(--orange))}
+.mic-archive-plot{margin:14px 0}
+.mic-archive-plot h4{margin:0;padding:8px 12px;color:#000;background:var(--padd-tan,var(--salmon));font-size:11px}
+@media(max-width:640px){
+ #micConsole{padding:3px 0 12px 5px}
+ #micConsole>h3{font-size:11px;min-height:42px}
+ .mic-metrics{grid-template-columns:1fr 1fr}
+ .mic-metric{padding:8px}
+ .mic-metric>strong{font-size:15px}
+ #micAnalytics .mic-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Keep the existing primary sequencer usable when no microphone is armed. */
+#micConsole:not(.mic-active) .mic-metrics{display:none}
+
+
+
+/* MIC LAB 03: Sensor is a grid sibling, not a child of the large dial
+   instrument. It can't shrink the XL Starfleet sequencer or cover controls. */
+#metronome .instrument-layout > #micVisual,
+#metronome .instrument-layout > #micConsole {
+  min-width:0;
+  max-width:100%;
+  margin:12px 0 12px;
+  grid-column:1/-1;
+}
+@media (min-width:1140px) {
+  #metronome .instrument-layout > .instrument {
+    grid-column:1;grid-row:1;
+  }
+  #metronome .instrument-layout > .side-controls {
+    grid-column:2;grid-row:1;
+  }
+  #metronome .instrument-layout > #micVisual {grid-column:1/-1;grid-row:2;}
+  #metronome .instrument-layout > #micConsole {grid-column:1/-1;grid-row:3;}
+}
+@media (min-width:641px) and (max-width:1139px) {
+  #metronome .instrument-layout > .instrument {order:0;}
+  #metronome .instrument-layout > #micVisual {order:1;}
+  #metronome .instrument-layout > #micConsole {order:2;}
+  #metronome .instrument-layout > .side-controls {order:3;}
+}
+@media (max-width:640px) {
+  #metronome .instrument-layout > .instrument {order:0;}
+  #metronome .instrument-layout > #micVisual {order:1;width:100%;margin:5px 0;}
+  #metronome .instrument-layout > #micConsole {
+    order:2;
+    width:100%;
+    margin:12px 0 8px;
+  }
+  #metronome .instrument-layout > .side-controls {order:3;}
+  /* Both main metronome views keep START/TAP above the visualization,
+     independent of the sensor's enabled or disabled state. */
+  #metronome .instrument > .transport {order:0;margin:7px 0 10px;}
+  #metronome .instrument > #dial,
+  #metronome .instrument > #linear {order:1;}
+  #metronome .instrument > .legend {order:2;}
+  #metronome .instrument > .play-status {order:3;}
+  #metronome .instrument > .pattern-counts {order:4;}
+  #metronome .instrument > .transport button {min-height:50px;}
+}
+
+/* Mic input delay calibration retains classic LCARS accents. */
+#micConsole .mic-calibration-row{display:grid;grid-template-columns:minmax(0,1fr) 88px auto;gap:5px;}
+#micConsole .mic-calibration-row label{align-self:center;}
+#micInputDelay{min-width:0;width:100%;padding:9px;color:var(--text);background:#261e30;border:1px solid var(--padd-blue,var(--purple));border-radius:2px;font:700 16px/1 Arial,sans-serif;}
+#micDelayReset{min-width:0;min-height:42px;padding:6px 10px;font-size:10px;}
+#micConsole #micCalibrationNote{font-size:10px;line-height:1.45;margin:0 0 8px;}
+@media(max-width:640px){#micConsole .mic-calibration-row{grid-template-columns:minmax(0,1fr) 75px auto;}#micInputDelay{font-size:14px;}}
+
+#micConsole #micGridNote{font-size:10px;line-height:1.4;margin:0 0 9px;}
+
+/* Fixed-size LCARS telemetry. A changing status never reflows the plot. */
+#micConsole .mic-metrics{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;}
+#micConsole .mic-metric{min-width:0;}
+#micConsole .mic-timing-metric{display:flex;flex-direction:column;}
+#micOffset{display:block;height:1.5em;line-height:1.5;white-space:nowrap;
+ font-size:clamp(13px,2.7vw,18px);font-variant-numeric:tabular-nums;
+ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+#micConsole .mic-metric #micRate{font-size:clamp(12px,2.7vw,16px);font-variant-numeric:tabular-nums;line-height:1.45;}
+#micHitLeds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;
+ height:20px;min-height:20px;align-items:center;margin-top:3px;overflow:hidden;}
+#micHitLeds [data-led]{display:flex;align-items:center;justify-content:center;min-width:0;height:17px;
+ border-radius:7px;background:#292330;color:#cec4d1;
+ font:700 clamp(5px,1vw,7px)/1 Arial,sans-serif;}
+#micHitLeds [data-led].is-lit{background:var(--padd-blue,#9494ee);color:#000;}
+#micHitLeds [data-led="early"].is-lit{background:var(--padd-amber,#ffce69);}
+#micHitLeds [data-led="late"].is-lit{background:var(--padd-peach,#ff9766);}
+#micHitLeds [data-led="extra"].is-lit{background:var(--padd-tan,#d1b68b);}
+#micHitLeds [data-led="outside"].is-lit{background:var(--padd-lavender,#cb94c9);}
+@media(max-width:640px){
+ #micConsole .mic-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;}
+ #micConsole .mic-metric{padding:8px 6px;}
+ #micHitLeds{gap:2px;}
+ #micHitLeds [data-led]{font-size:5px;}
+}
+
+#micConsole .mic-metric #micRate{display:block;min-height:1.5em;white-space:nowrap;
+ overflow:hidden;font-size:clamp(10px,2.4vw,15px);font-variant-numeric:tabular-nums;}
+
+/* Compact grid-window accounting, not a grade/score. All values have fixed geometry. */
+#micSlotStrip {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;min-width:0;margin:5px 0 8px;}
+#micSlotStrip[hidden]{display:none!important;}
+#micSlotStrip>div {min-width:0;padding:7px 8px;background:var(--padd-blue,var(--purple));
+ color:#000;border-radius:0 0 10px 0;}
+#micSlotStrip>div:nth-child(2) {background:var(--padd-tan,var(--salmon));}
+#micSlotStrip>div:nth-child(3) {background:var(--padd-peach,var(--pink));}
+#micSlotStrip span {display:block;font:800 9px/1.2 Arial,sans-serif;white-space:nowrap;}
+#micSlotStrip output {display:block;font:800 16px/1.35 ui-monospace,SFMono-Regular,Consolas,monospace;
+ font-variant-numeric:tabular-nums;white-space:nowrap;}
+@media(max-width:640px) {
+ #micSlotStrip {gap:3px;}
+ #micSlotStrip>div {padding:6px 5px;}
+ #micSlotStrip span {font-size:8px;}
+ #micSlotStrip output {font-size:14px;}
+}
+
+/* LCARS sensor science panel: the plot belongs immediately below the sequencer. */
+#metronome #micVisual[hidden]{display:none!important;}
+#metronome #micVisual{min-width:0;box-sizing:border-box;width:100%;margin:7px 0 6px;padding:5px 9px 10px 12px;
+ background:#05060d;border:0;border-left:8px solid var(--padd-lavender,var(--purple));
+ border-bottom:9px solid var(--padd-peach,var(--pink));border-radius:0 0 23px 0;}
+#metronome .mic-visual-title{display:flex;align-items:center;justify-content:space-between;
+ gap:8px;min-height:27px;color:var(--padd-blue,#92a6d8);
+ font:800 10px/1.2 Arial,sans-serif;letter-spacing:.06em;}
+#micVisualInfo{max-width:52%;overflow:hidden;text-align:right;white-space:nowrap;
+ font:700 10px/1.2 ui-monospace,monospace;color:var(--padd-amber,var(--orange));}
+#metronome .mic-plot-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:3px 0 5px;}
+#metronome .mic-plot-buttons button{min-width:0;min-height:43px;padding:5px 3px;border:0;border-radius:0!important;
+ background:var(--padd-lavender,var(--purple));color:#09040b;
+ font:800 clamp(8px,1.9vw,11px)/1.2 Arial,sans-serif;}
+#metronome .mic-plot-buttons button:first-child{border-radius:18px 0 0 18px!important;}
+#metronome .mic-plot-buttons button:last-child{border-radius:0 18px 18px 0!important;}
+#metronome .mic-plot-buttons button[aria-pressed=true]{
+ background:var(--padd-amber,var(--orange));box-shadow:inset 0 -5px var(--padd-peach,var(--pink));}
+#metronome .mic-plot-buttons button:disabled{opacity:.45;}
+#metronome #micVisual .mic-chart{display:block;width:100%;height:auto;aspect-ratio:480/168;max-width:100%;
+ border-bottom:0;border-radius:0;background:#030713;overflow:visible;}
+#metronome #micVisual .hint{font-size:10px;min-height:16px;line-height:1.35;margin:5px 0 0;color:#b5b9d9;}
+/* Pale Voyager blue with a subtle violet touch. */
+#micVisual .mic-sensor-grid{stroke:#6880b5;stroke-width:.85;opacity:.45;stroke-dasharray:2 5;}
+#micVisual .mic-sensor-vertical{opacity:.25;}
+#micVisual .mic-sensor-reference{stroke:var(--padd-amber,#ffce69);stroke-width:1.6;stroke-dasharray:7 3;}
+#micVisual .mic-sensor-line{stroke:#9baddf;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+#micVisual .mic-sensor-dot{fill:var(--padd-peach,#ff9766);stroke:#d7e3ff;stroke-width:.65;}
+#micVisual .mic-sensor-clipped{fill:var(--padd-lavender,#dba8e4);}
+#micVisual .mic-sensor-histogram{fill:#8ca4da;stroke:#b5bef0;stroke-width:.5;}
+#micVisual .mic-sensor-axis{fill:#c5cce4;font:10px/1 Arial,sans-serif;letter-spacing:.04em;}
+@media(max-width:640px){
+ #metronome.mic-telemetry-on #dial{width:min(100%,210px);max-width:210px;}
+ #metronome #micVisual{padding:4px 5px 7px 8px;border-left-width:7px;border-bottom-width:7px;}
+ #metronome #micVisual .mic-plot-buttons button{min-height:39px;font-size:9px;}
+ #metronome .mic-visual-title{font-size:9px;min-height:23px;}
+ #micVisualInfo{font-size:9px;}
+}
+
+
+/* ==========================================================================
+   RC25 · Phone command deck and Voyager tactical microphone HUD
+   All rules scoped to the Metronome page; desktop remains unchanged.
+   ========================================================================== */
+#metronome .lcars-mode-trigger{
+ display:inline-flex;align-items:center;gap:8px;min-height:28px;
+ padding:0;border:0;background:transparent;color:var(--padd-peach);
+ font:900 12px/1.1 'Arial Narrow',Arial,sans-serif;
+}
+#metronome .lcars-mode-trigger .trigger-chevron{display:none;}
+#metronome .mode-heading .lcars-mode-trigger{display:none;}
+#metronome .lcars-deck-bar{display:none;}
+#micConsole .mic-cfg-drawer{margin:8px 0;}
+#micConsole .mic-cfg-drawer summary{
+ min-height:34px;padding:9px 12px;background:var(--padd-lavender);
+ color:#000;font:900 11px/1.2 'Arial Narrow',Arial,sans-serif;
+ border-radius:16px 0 0 16px;cursor:pointer;
+}
+#micConsole .mic-cfg-body{padding:8px 8px 5px;background:#0a0912;
+ border-left:6px solid var(--padd-lavender);}
+#micConsole .mic-bottom-deck{display:grid;gap:6px;}
+#micConsole .mic-bottom-deck #micArm{margin:0;min-width:0;}
+#micVisual .mic-tolerance-corridor{fill:var(--padd-blue,#99ccff);opacity:.13;pointer-events:none;}
+#micVisual .mic-sensor-stem{stroke:var(--padd-blue,#99ccff);
+ stroke-width:1.8;opacity:.85;pointer-events:none;}
+#micVisual .mic-sensor-stem.mic-sensor-clipped{stroke:var(--padd-red,#cc4444);}
+#rings .point.lock-grid{stroke:var(--padd-blue,#99ccff);stroke-width:8px;
+ filter:drop-shadow(0 0 9px var(--padd-blue,#99ccff));}
+#rings .point.lock-early{stroke:var(--padd-amber,#ffcc66);stroke-width:8px;
+ filter:drop-shadow(0 0 9px var(--padd-amber,#ffcc66));}
+#rings .point.lock-late{stroke:var(--padd-peach,#ff9966);stroke-width:8px;
+ filter:drop-shadow(0 0 9px var(--padd-peach,#ff9966));}
+@media(max-width:640px){
+ /* A single horizontal LCARS command strip replaces the always-open 2×4 grid. */
+ #metronome .section-heading{min-height:28px;margin:0 0 5px;padding:0 0 4px;}
+ #metronome .section-heading h2{font-size:15px;}
+ #metronome .section-heading .outline{min-height:27px;padding:3px 9px;font-size:9px;}
+ #metronome .mode-heading{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  align-items:stretch;gap:4px;margin:0 0 5px;min-height:34px;
+ }
+ #metronome .mode-heading .desktop-mode-label{display:none;}
+ #metronome .mode-heading .lcars-mode-trigger{
+  display:flex;min-width:0;min-height:34px;gap:4px;
+  padding:0 10px 0 0;border:0;border-radius:17px 0 0 17px;
+  color:#000;background:var(--padd-lavender);
+  font:900 11px/1 'Arial Narrow',Arial,sans-serif;
+ }
+ #metronome .lcars-mode-trigger .trigger-tag{
+  display:flex;align-items:center;align-self:stretch;
+  padding:0 9px 0 12px;border-radius:17px 0 0 17px;
+  border-right:3px solid #000;background:var(--padd-peach);
+  font-size:9px;
+ }
+ #metronome .lcars-mode-trigger strong{flex:1;min-width:0;
+  text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+ #metronome .lcars-mode-trigger .trigger-chevron{
+  display:block;font-size:12px;transition:transform .18s ease;
+ }
+ #metronome.mode-drawer-open .lcars-mode-trigger{background:var(--padd-orange);}
+ #metronome.mode-drawer-open .trigger-chevron{transform:rotate(180deg);}
+ #metronome .mode-heading #liveTempo{
+  display:flex;align-items:center;justify-content:center;
+  min-width:74px;padding:0 8px;border-radius:0 17px 17px 0;
+  background:var(--padd-amber);color:#000;
+  font:900 13px/1 Impact,'Arial Narrow',sans-serif;
+ }
+ #metronome:not(.mode-drawer-open) #modeButtons{display:none!important;}
+ #metronome.mode-drawer-open #modeButtons{display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;margin:0 0 7px;
+  transform-origin:top;animation:lcars-rc25-open .22s cubic-bezier(.22,1,.36,1) both;
+ }
+ @keyframes lcars-rc25-open{
+  from{opacity:.4;transform:scaleY(.87);}
+  to{opacity:1;transform:scaleY(1);}
+ }
+ #metronome .instrument-layout{gap:5px;}
+ #metronome .instrument{
+  display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
+  gap:5px;align-items:center;padding:8px 0 0;max-width:none;
+ }
+ #metronome .instrument::before,#metronome .instrument::after{display:none;}
+ #metronome .instrument > #dial{
+  grid-column:1/-1;grid-row:1;order:1!important;
+  width:min(100%,236px);max-width:236px;margin:0 auto;
+ }
+ #metronome .instrument > #linear{
+  grid-column:1/-1;grid-row:1;order:1!important;
+  min-width:0;width:100%;max-width:100%;margin:0;padding-top:5px;
+ }
+ #metronome .instrument > .legend,
+ #metronome .pattern-counts #meterNote{display:none!important;}
+ #metronome .instrument > .pattern-counts{
+  grid-column:1/-1;grid-row:2;order:2!important;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:4px;width:100%;margin:0;padding:0;border:0;
+ }
+ #metronome .pattern-counts label{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 43px;
+  gap:2px;align-items:stretch;min-width:0;min-height:36px;margin:0;
+ }
+ #metronome .pattern-counts label>span:first-child{
+  display:flex;align-items:center;justify-content:flex-end;
+  min-height:36px!important;overflow:hidden;
+  padding:3px 5px!important;border-radius:18px 0 0 18px;
+  font-size:8.5px!important;text-align:right;
+ }
+ #metronome .pattern-counts label:nth-child(2)>span:first-child{
+  background:var(--padd-peach);border-radius:0;
+ }
+ #metronome .pattern-counts :is(.number-control,.value-dial,.number-control input[type=text]){
+  min-width:0!important;width:100%!important;min-height:36px!important;
+  height:36px!important;padding:0 3px!important;
+  font-size:17px!important;border-radius:0!important;
+ }
+ #metronome .pattern-counts label:nth-child(2) :is(.value-dial,.number-control input[type=text]){
+  border-radius:0 18px 18px 0!important;
+ }
+ #metronome .instrument > .transport{
+  grid-column:1;grid-row:3;order:3!important;
+  display:grid;grid-template-columns:1fr 1.12fr;
+  gap:3px;width:100%;margin:0;padding:0;border:0;
+ }
+ #metronome .transport button{
+  min-width:0;min-height:43px!important;height:43px!important;
+  padding:2px 3px!important;font:900 10px/1 Impact,'Arial Narrow',sans-serif!important;
+  border-radius:0!important;
+ }
+ #metronome .transport #tap{
+  grid-column:1;grid-row:1;border-radius:22px 0 0 22px!important;
+  background:var(--padd-peach);
+ }
+ #metronome .transport #start{
+  grid-column:2;grid-row:1;background:var(--padd-red);
+ }
+ #metronome .instrument > .play-status{
+  grid-column:2;grid-row:3;order:3!important;display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:3px;min-width:0;height:43px;margin:0;padding:0;
+ }
+ #metronome .play-status>span,#metronome .play-status time{
+  display:flex;align-items:center;min-height:43px!important;
+  height:43px;padding:2px 5px!important;border-radius:0!important;
+  font-variant-numeric:tabular-nums;
+ }
+ #metronome .play-status>span{
+  min-width:0;overflow:hidden;text-align:right;justify-content:flex-end;
+  font-size:8.5px!important;background:var(--padd-lavender);
+ }
+ #metronome .play-status time{
+  border-radius:0 22px 22px 0!important;
+  min-width:55px;font-size:12px!important;color:#000;background:var(--padd-amber);
+ }
+ #metronome .instrument > .lcars-deck-bar{
+  grid-column:1/-1;grid-row:4;order:4!important;display:grid;
+  grid-template-columns:1fr 1fr;gap:3px;width:100%;margin:0;
+ }
+ #metronome .lcars-deck-bar button{
+  min-width:0;min-height:36px;padding:3px 7px;
+  display:flex;gap:4px;align-items:center;justify-content:space-between;
+  color:#000;background:var(--padd-blue);border:0;
+  border-radius:18px 0 0 18px;font:900 10px/1 'Arial Narrow',Arial,sans-serif;
+ }
+ #metronome .lcars-deck-bar button:last-child{
+  background:var(--padd-tan);border-radius:0 18px 18px 0;
+ }
+ #metronome .lcars-deck-bar button small{font-size:8px;opacity:.9;}
+ #metronome .lcars-deck-bar button[aria-expanded=true]{
+  background:var(--padd-orange);box-shadow:inset 0 -4px var(--padd-amber);
+ }
+ #metronome:not(.deck-params-open) .side-controls{display:none!important;}
+ #metronome:not(.deck-mic-open):not(.mic-telemetry-on) #micConsole{display:none!important;}
+ #metronome:not(.mic-telemetry-on) #micVisual{display:none!important;}
+ #metronome:not(.mic-telemetry-on) #micConsole{margin:3px 0;}
+ #metronome:not(.mic-telemetry-on) #micConsole .mic-metrics,
+ #metronome:not(.mic-telemetry-on) #micConsole #micSlotStrip{display:none!important;}
+ #metronome:not(.mic-telemetry-on) #micConsole #micArm{min-height:43px;}
+ #metronome #micConsole .mic-cfg-drawer .hint{
+  margin:6px 0;line-height:1.4;font-size:10px;
+ }
+ /* RC25.3: primary controls in NORMAL phone Circular View.
+    The previous RC25.2 fix only applied when the mic was armed, so the
+    regular screen still put small transport buttons beside status. */
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .transport{
+  grid-column:1/-1;grid-row:2;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:5px;width:100%;margin:0;padding:0;border:0;
+ }
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .transport button{
+  min-height:48px!important;height:48px!important;
+  padding:5px 8px!important;font-size:13px!important;
+ }
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .pattern-counts{
+  grid-column:1;grid-row:3;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:3px;width:100%;min-width:0;margin:0;padding:0;border:0;
+ }
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .pattern-counts label{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 30px;
+  gap:1px;min-height:34px;min-width:0;margin:0;
+ }
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .pattern-counts label>span:first-child{
+  min-height:34px!important;font-size:0!important;
+  padding:2px!important;
+ }
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .pattern-counts label>span:first-child::after{
+  content:attr(data-compact);font-size:9px;line-height:1;
+ }
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .pattern-counts :is(.number-control,.value-dial,.number-control input[type=text]){
+  min-width:0!important;min-height:34px!important;
+  width:100%!important;height:34px!important;
+  padding:0 2px!important;font-size:15px!important;
+ }
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .play-status{
+  grid-column:2;grid-row:3;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  gap:3px;min-width:0;height:34px;margin:0;padding:0;
+ }
+ #metronome:not(.mic-telemetry-on) .instrument:not(:has(> #linear:not([hidden]))) > .play-status > *{
+  min-height:34px!important;height:34px;
+ }
+ /* Linear mode keeps the original accessible transport first.
+    Unlike a forced 154px dial, this supports any row/beat count. */
+ #metronome .instrument:has(> #linear:not([hidden])) > .transport{
+  grid-column:1/-1;grid-row:1;
+ }
+ #metronome .instrument:has(> #linear:not([hidden])) > #linear{grid-row:2;}
+ #metronome .instrument:has(> #linear:not([hidden])) > .pattern-counts{grid-row:3;}
+ #metronome .instrument:has(> #linear:not([hidden])) > .play-status{
+  grid-column:1/-1;grid-row:4;
+ }
+ #metronome .instrument:has(> #linear:not([hidden])) > .lcars-deck-bar{grid-row:5;}
+
+ /* Armed sensor becomes one two-column cockpit + integrated science panel. */
+ /* Keep the Circular / Linear view control in the active sensor state. */
+ #metronome.mic-telemetry-on .section-heading{
+  display:flex!important;min-height:32px;margin:0 0 4px;padding:0 0 4px;
+ }
+ #metronome.mic-telemetry-on .section-heading h2{font-size:13px;}
+ #metronome.mic-telemetry-on .section-heading #view{
+  display:inline-flex!important;justify-content:center;align-items:center;
+  min-height:34px!important;min-width:110px;padding:3px 9px;
+  font-size:10px;font-weight:900;white-space:nowrap;
+ }
+ /* Do not shrink a 500-unit beat diagram into a 144px postage stamp. */
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))){
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
+  grid-template-rows:repeat(4,auto);
+  gap:4px;align-items:center;padding:2px 0 0;
+ }
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))) > #dial:not([hidden]){
+  display:block!important;visibility:visible;opacity:1;
+  grid-column:1/-1;grid-row:1;
+  width:min(100%,216px)!important;max-width:216px!important;
+  height:216px;min-height:216px;aspect-ratio:1;margin:0 auto;
+ }
+ #metronome.mic-telemetry-on #dial:not([hidden]) #rings{
+  display:block;width:100%;height:100%;overflow:visible;
+ }
+ #metronome.mic-telemetry-on #rings .node-label{font-size:23px;}
+ #metronome.mic-telemetry-on #rings .point.beat-arc{stroke-width:4px;}
+ #metronome.mic-telemetry-on #linear:not([hidden]){
+  display:block;min-height:0;max-width:100%;
+ }
+ #metronome.mic-telemetry-on #tempo{border-width:3px;}
+ #metronome.mic-telemetry-on :is(#bpm,#tempoValue){font-size:26px!important;}
+ #metronome.mic-telemetry-on .tempo-buttons button{
+  min-width:18px;min-height:18px;font-size:13px;
+ }
+ /* Primary actions get the entire width and the larger touch targets. */
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))) > .transport{
+  grid-column:1/-1;grid-row:2;gap:5px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))) > .transport button{
+  min-height:48px!important;height:48px!important;
+  font-size:13px!important;
+ }
+ #metronome.mic-telemetry-on .transport button{
+  min-height:32px!important;height:32px!important;font-size:9px!important;
+ }
+ /* Optional typed quarter/subdivision inputs are secondary controls.
+    Keep both in a compact left half, beside the status/timer. */
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))) > .pattern-counts{
+  grid-column:1;grid-row:3;gap:3px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  min-width:0;
+ }
+ #metronome.mic-telemetry-on .pattern-counts label{
+  grid-template-columns:minmax(0,1fr) 29px;
+  gap:1px;min-width:0;min-height:32px;
+ }
+ #metronome.mic-telemetry-on .pattern-counts label>span:first-child{
+  min-height:32px!important;padding:2px!important;font-size:0!important;
+ }
+ #metronome.mic-telemetry-on .pattern-counts label>span:first-child::after{
+  content:attr(data-compact);font-size:9px;line-height:1;
+ }
+ #metronome.mic-telemetry-on .pattern-counts :is(.number-control,.value-dial,.number-control input[type=text]){
+  min-width:0!important;min-height:32px!important;height:32px!important;
+  font-size:14px!important;
+ }
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))) > .play-status{
+  grid-column:2;grid-row:3;height:32px;
+  min-width:0;
+ }
+ #metronome.mic-telemetry-on .play-status>span,
+ #metronome.mic-telemetry-on .play-status time{
+  min-height:28px!important;height:28px;padding:1px 3px!important;font-size:9px!important;
+ }
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))) > .lcars-deck-bar{
+  grid-column:1/-1;grid-row:4;
+ }
+ #metronome.mic-telemetry-on .lcars-deck-bar button{
+  min-height:34px;padding:3px 8px;font-size:10px;
+ }
+ #metronome.mic-telemetry-on .lcars-deck-bar button small{display:none;}
+ #metronome.mic-telemetry-on #micVisual{
+  display:block;order:1;width:100%;
+  margin:2px 0 0;padding:4px 6px 3px 8px;
+  border-left:8px solid var(--padd-lavender);
+  border-bottom:0;border-radius:18px 0 0 0;
+  animation:lcars-rc25-open .22s cubic-bezier(.22,1,.36,1) both;
+ }
+ #metronome.mic-telemetry-on .mic-visual-title{min-height:19px;font-size:9px;}
+ #metronome.mic-telemetry-on .mic-plot-buttons{margin:2px 0 4px;gap:3px;}
+ #metronome.mic-telemetry-on .mic-plot-buttons button{
+  min-height:29px!important;padding:3px;font-size:9px!important;
+ }
+ #metronome.mic-telemetry-on #micVisual .mic-chart{aspect-ratio:480/150;}
+ #metronome.mic-telemetry-on #micVisualCaption{display:none!important;}
+ #metronome.mic-telemetry-on #micConsole.mic-active{
+  display:flex;flex-direction:column;gap:4px;
+  order:2;width:100%;margin:0;padding:5px 5px 7px 8px;
+  border:0;border-left:8px solid var(--padd-peach);
+  border-bottom:7px solid var(--padd-peach);
+  border-radius:0 0 18px 18px;background:#05060d;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active > h3,
+ #metronome.mic-telemetry-on #micConsole.mic-active > .mic-mode,
+ #metronome.mic-telemetry-on #micConsole.mic-active > .mic-grid-row,
+ #metronome.mic-telemetry-on #micConsole.mic-active > .mic-cfg-drawer{
+  display:none!important;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active > #micStatus{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active .mic-metrics{
+  display:grid;order:1;grid-template-columns:1.25fr 1fr;
+  min-width:0;gap:3px;margin:0;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active .mic-metric{
+  min-width:0;padding:3px 5px;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active .mic-metric>span{font-size:8px;}
+ #metronome.mic-telemetry-on #micConsole.mic-active :is(#micOffset,#micRate){
+  height:1.5em;min-height:0;font-size:12px;line-height:1.5;
+  overflow:hidden;font-variant-numeric:tabular-nums;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active #micHitLeds{
+  height:16px;min-height:16px;gap:2px;margin-top:2px;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active #micHitLeds [data-led]{
+  height:15px;min-height:15px;font-size:5.5px;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active .mic-bottom-deck{
+  display:grid;order:2;grid-template-columns:minmax(0,1fr);
+  gap:4px;align-items:stretch;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active #micSlotStrip{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  min-width:0;gap:2px;margin:0;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active #micSlotStrip[hidden]{
+  display:none!important;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active #micSlotStrip>div{
+  min-width:0;padding:3px 4px;border-radius:0;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active #micSlotStrip span{font-size:7px;}
+ #metronome.mic-telemetry-on #micConsole.mic-active #micSlotStrip output{font-size:12px;}
+ #metronome.mic-telemetry-on #micConsole.mic-active #micArm{
+  grid-column:1;min-width:0;width:100%;
+  min-height:46px!important;height:auto;
+  padding:7px 12px!important;margin:0!important;
+  border-radius:19px 0 19px 0;background:var(--padd-red);
+  font:900 13px/1.15 'Arial Narrow',Arial,sans-serif!important;
+  text-align:center;overflow-wrap:anywhere;
+ }
+ #metronome.mic-telemetry-on #micConsole.mic-active #micSlotStrip[hidden]+#micArm{
+  grid-column:1/-1;
+ }
+ /* Configuration remains available on demand, but never steals cockpit area. */
+ #metronome.mic-telemetry-on:not(.deck-params-open) .side-controls{display:none!important;}
+}
+@media(max-width:360px){
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))){
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+ }
+ #metronome.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))) > #dial:not([hidden]){
+  width:min(100%,200px)!important;max-width:200px!important;
+  height:200px;min-height:200px;
+ }
+ #metronome .lcars-deck-bar button small{display:none;}
+}
+@media(prefers-reduced-motion:reduce){
+ #metronome.mode-drawer-open #modeButtons,
+ #metronome.mic-telemetry-on #micVisual{animation:none;}
+ #metronome .trigger-chevron{transition:none!important;}
+}
+
+/* RC25.1 · A live mic is not a menu lock: inspect configuration on demand.
+   Controls tied to a running analysis remain read-only until disengage. */
+#micConsole .mic-active-help[hidden]{display:none!important;}
+@media(max-width:640px){
+ #metronome.mic-telemetry-on #micConsole.mic-active #micActiveHelp{
+  display:block!important;order:3;margin:0!important;padding:3px 5px!important;
+  color:var(--padd-amber);font:800 9px/1.3 'Arial Narrow',Arial,sans-serif;
+  letter-spacing:.02em;
+ }
+ #metronome.mic-telemetry-on.mic-controls-open #micConsole.mic-active > h3{
+  display:block!important;order:4;margin:5px 0 0;
+ }
+ #metronome.mic-telemetry-on.mic-controls-open #micConsole.mic-active > .mic-mode{
+  display:grid!important;order:5;
+ }
+ #metronome.mic-telemetry-on.mic-controls-open #micConsole.mic-active > .mic-grid-row{
+  display:flex!important;order:6;
+ }
+ #metronome.mic-telemetry-on.mic-controls-open #micConsole.mic-active > .mic-cfg-drawer{
+  display:block!important;order:7;
+ }
+ #metronome.mic-telemetry-on.mic-controls-open #micConsole.mic-active{
+  padding-bottom:9px;
+ }
+ #metronome.mic-telemetry-on #micVisual .mic-chart{
+  aspect-ratio:480/155;
+ }
+}
+
+/* RC25.13: optional hardware research in the existing MIC SENSOR CFG drawer. */
+#micConsole .acoustic-pilot{margin:13px 0 8px;border:1px solid var(--line,#526479);border-radius:0 14px 14px 0;background:#071018;min-width:0}
+#micConsole .acoustic-pilot>summary{cursor:pointer;padding:12px 9px;background:var(--padd-blue,var(--purple));color:#000;font-size:10px;font-weight:900;letter-spacing:.035em;border-radius:0 12px 12px 0}
+#micConsole .acoustic-pilot-body{padding:9px;min-width:0}
+#micConsole .acoustic-pilot-actions{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:5px;margin:9px 0}
+#micConsole .acoustic-pilot-actions button{min-height:46px;font-size:10px;border-radius:0 13px 13px 0;min-width:0;overflow-wrap:anywhere;padding:7px}
+#micConsole .acoustic-pilot-actions button:disabled{opacity:.4}
+#micConsole #acousticPilotState{display:block;min-height:38px;background:#132736;color:#dcefff;border-left:5px solid var(--padd-amber,var(--orange));font-size:10px;font-weight:700;line-height:1.4;padding:10px 7px;overflow-wrap:anywhere}
+#micConsole .acoustic-pilot-phase{padding:10px 7px;margin:6px 0;font-size:11px;line-height:1.5;font-weight:900;color:#000;background:var(--padd-peach,var(--pink));border-radius:0 9px 9px 0}
+#micConsole .acoustic-pilot-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:10px 0}
+#micConsole .acoustic-pilot-metrics[hidden]{display:none}
+#micConsole .acoustic-pilot-metrics>div{padding:8px;min-width:0;background:#152638;color:#e8effc}
+#micConsole .acoustic-pilot-metrics small{display:block;color:#bbd1e6;font-size:9px;line-height:1.35}
+#micConsole .acoustic-pilot-metrics strong{display:block;overflow-wrap:anywhere;font-size:12px;font-variant-numeric:tabular-nums}
+#micConsole .acoustic-pilot-metrics>.hint{grid-column:1/-1}
+@media(max-width:400px){#micConsole .acoustic-pilot-metrics{grid-template-columns:minmax(0,1fr)}#micConsole .acoustic-pilot-metrics>.hint{grid-column:1}}
+
+/* Single-window, untimed guided calibration progress; iPhone-safe. */
+#micConsole .acoustic-pilot-progress{
+  display:block;margin:5px 0 9px;padding:10px 7px;min-height:36px;
+  font-variant-numeric:tabular-nums;font-size:14px;font-weight:900;
+  color:#e8effc;background:#1b3344;border-left:5px solid var(--padd-blue,var(--purple));
+  border-radius:0 8px 8px 0;overflow-wrap:anywhere
+}
+#micConsole .acoustic-pilot-progress[hidden]{display:none}
+
+/* RC25.13.4: calibration adoption remains inside the existing one-window drawer. */
+#micConsole #acousticPilotApply{grid-column:1/-1;background:var(--padd-amber,var(--orange));color:#000;font-weight:900}
+
+/* RC25.13.5 manual six-click readout: single window, no pads. */
+#micConsole #acousticPilotPhase{font:900 clamp(12px,2.7vw,20px)/1.4 ui-monospace,monospace;font-variant-numeric:tabular-nums}
+#micConsole .acoustic-pilot-actions{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+#micConsole #acousticPilotApply{display:none!important}

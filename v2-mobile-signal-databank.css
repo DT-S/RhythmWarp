@@ -1,0 +1,355 @@
+/* RC25 · Mobile Signal Matrix & Preset Databank
+   Phone-only visual refinement. No audio, persistence, or DOM changes.
+   Loaded after the existing LCARS/theme styles to avoid global overrides. */
+@media (max-width: 640px) {
+  /* Two channels share one compact LCARS header line each. */
+  #audio #mixer.cards {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  #audio #mixer .panel.matrix-channel,
+  #audio .panel.master {
+    min-width: 0;
+    margin: 0;
+    padding: 6px 5px 9px 8px;
+    border-left-width: 10px;
+    border-top-width: 6px;
+    border-bottom-width: 5px;
+    border-radius: 23px 0 0 17px;
+  }
+  #audio #mixer .panel.matrix-channel {
+    display: grid;
+    grid-template-columns: auto minmax(0,1fr);
+    column-gap: 4px;
+    row-gap: 5px;
+    align-content: start;
+  }
+  #audio #mixer .panel.matrix-channel > .eyebrow {
+    grid-column: 1;
+    min-width: 0;
+    min-height: 32px;
+    margin: 0;
+    padding: 7px 7px;
+    border-radius: 16px 0 0 16px;
+    background: var(--padd-amber,#ffcc66);
+    color: #08050b;
+    font: 900 10px/1.15 Impact,'Arial Narrow',Arial,sans-serif;
+    white-space: nowrap;
+  }
+  #audio #mixer .panel.matrix-channel > h3 {
+    grid-column: 2;
+    min-width: 0;
+    min-height: 32px;
+    margin: 0;
+    padding: 7px 8px;
+    border-radius: 0 16px 16px 0;
+    background: var(--padd-orange,#ff9900);
+    color: #08050b;
+    font: 900 clamp(11px,2.6vw,14px)/1.15 Impact,'Arial Narrow',Arial,sans-serif;
+    overflow-wrap: anywhere;
+  }
+  #audio #mixer .panel.matrix-channel:nth-child(2) > h3 {
+    background: var(--padd-lavender,#cc99cc);
+  }
+  #audio #mixer .panel.matrix-channel > :not(.eyebrow):not(h3) {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  /* Retain the four live faders and precision controls. */
+  #audio #mixer .matrix-faders {
+    gap: 7px;
+    margin: 3px 0 5px;
+  }
+  #audio #mixer .matrix-housing {
+    gap: 4px;
+    padding: 5px 5px 6px;
+    border-right-width: 7px;
+  }
+  #audio #mixer .matrix-segments {
+    height: 27px;
+  }
+  #audio #mixer .matrix-quick,
+  #audio #mixer .matrix-micro-step {
+    min-height: 32px;
+  }
+
+  /* Channel routing remains directly reachable with a finger. */
+  #audio #mixer .pan-scale {
+    gap: 4px;
+    margin: 0;
+  }
+  #audio #mixer .pan-scale button,
+  #audio #mixer .mixer-buttons button {
+    min-width: 0;
+    min-height: 44px;
+    padding: 5px 3px;
+    font: 900 11px/1.1 'Arial Narrow',Arial,sans-serif;
+  }
+  #audio #mixer .mixer-buttons {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 4px;
+    margin: 0;
+  }
+  #audio #mixer .mixer-buttons button {
+    border-radius: 0;
+  }
+  #audio #mixer .mixer-buttons button:first-child {
+    border-radius: 17px 0 0 17px;
+    background: var(--padd-tan,#cc6666);
+  }
+  #audio #mixer .mixer-buttons button:last-child {
+    border-radius: 0 17px 17px 0;
+    background: var(--padd-blue,#9999ff);
+  }
+
+  /* Sound choices accept all built-in and custom instruments.
+     Never assume the original eight sounds, never crop imported names. */
+  #audio #mixer .accent-sound-row {
+    display: grid;
+    grid-template-columns: 61px minmax(0,1fr);
+    gap: 4px;
+    align-items: stretch;
+    margin: 3px 0 0;
+    padding: 0;
+    border: 0;
+  }
+  #audio #mixer .accent-sound-row h4 {
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 7px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: right;
+    font: 900 10px/1.1 'Arial Narrow',Arial,sans-serif;
+    border-radius: 15px 0 0 15px;
+    background: var(--padd-lavender,#cc99cc);
+    color: #08050b;
+    overflow-wrap: anywhere;
+  }
+  #audio #mixer .accent-sound-row:nth-last-child(2) h4 {
+    background: var(--padd-blue,#9999ff);
+  }
+  #audio #mixer .accent-sound-row:last-child h4 {
+    background: var(--padd-tan,#cc6666);
+  }
+  #audio #mixer .sound-choices {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 3px;
+    min-width: 0;
+  }
+  #audio #mixer .sound-choices button {
+    min-width: 0;
+    min-height: 44px;
+    height: auto;
+    padding: 5px 2px;
+    margin: 0;
+    border-radius: 0;
+    flex: initial;
+    font: 800 10.5px/1.12 'Arial Narrow',Arial,sans-serif;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  #audio #mixer .sound-choices button:first-child {
+    border-radius: 0;
+  }
+  #audio #mixer .sound-choices button:last-child {
+    border-radius: 0 0 14px 0;
+  }
+  #audio #mixer .sound-choices button[aria-pressed="true"] {
+    background: var(--padd-amber,#ffcc66);
+    box-shadow: inset 0 -4px var(--padd-orange,#ff9900);
+    color: #08050b;
+  }
+
+  /* Master fader compression without shrinking the drag target. */
+  #audio .panel.master {
+    margin-top: 9px;
+  }
+  #audio .panel.master .lcars-slide {
+    margin: 3px 0 7px;
+  }
+  #audio .panel.master .lcars-calibration {
+    height: 28px;
+  }
+  #audio .panel.master .lcars-slide-strip {
+    height: 75px;
+  }
+  #audio .panel.master .lcars-pill-housing {
+    height: 35px;
+  }
+  #audio .panel.master .lcars-bracket {
+    height: 63px;
+  }
+  #audio .lcars-info summary {
+    min-height: 44px;
+    padding: 7px 11px;
+  }
+
+  /* Preset save line plus full-width primary action. */
+  #presets #presetForm.preset-form {
+    display: grid;
+    grid-template-columns: minmax(76px, .4fr) minmax(0,1fr);
+    gap: 4px;
+    align-items: stretch;
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 6px 5px 8px 8px;
+    border-left-width: 10px;
+    border-top-width: 6px;
+    border-bottom-width: 5px;
+    border-radius: 23px 0 0 17px;
+  }
+  #presets #presetForm .field-name {
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 7px;
+    border-radius: 16px 0 0 0;
+    background: var(--padd-lavender,#cc99cc);
+    color: #08050b;
+    font-size: 10px;
+  }
+  #presets #presetForm #presetName {
+    grid-column: 2;
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 6px 9px;
+    border: 1px solid var(--padd-lavender,#cc99cc);
+    border-radius: 0 16px 0 0;
+    font-size: 16px; /* Native Safari input zoom guard. */
+  }
+  #presets #presetForm button.primary {
+    grid-column: 1 / -1;
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 7px 10px;
+    border-radius: 0 0 16px 16px;
+    font: 900 12px/1 Impact,'Arial Narrow',Arial,sans-serif;
+  }
+
+  /* Databank cartridges expand naturally for longer names/details. */
+  #presets #presetList.cards {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    align-items: start;
+    gap: 9px;
+  }
+  #presets #presetList > .system-field {
+    min-height: 44px;
+    padding: 8px 11px;
+    font-size: 11px;
+  }
+  #presets #presetList article.panel {
+    min-width: 0;
+    margin: 0;
+    padding: 0 0 0 7px;
+    border: 0;
+    border-left: 10px solid var(--padd-orange,#ff9900);
+    border-radius: 18px 0 0 18px;
+    background: #09070d;
+  }
+  #presets #presetList article.panel:nth-child(even) {
+    border-left-color: var(--padd-blue,#9999ff);
+  }
+  #presets #presetList article.panel > h3 {
+    min-width: 0;
+    min-height: 31px;
+    margin: 0 0 3px;
+    padding: 6px 10px;
+    border-radius: 0 15px 0 0;
+    background: var(--padd-orange,#ff9900);
+    color: #08050b;
+    font: 900 13px/1.2 Impact,'Arial Narrow',Arial,sans-serif;
+    overflow-wrap: anywhere;
+  }
+  #presets #presetList article.panel:nth-child(even) > h3 {
+    background: var(--padd-blue,#9999ff);
+  }
+  #presets #presetList article.panel > .preset-data {
+    min-width: 0;
+    min-height: 26px;
+    margin: 0 0 4px;
+    padding: 5px 9px;
+    border-left: 3px solid var(--padd-amber,#ffcc66);
+    background: #14101d;
+    color: var(--padd-amber,#ffcc66);
+    font: 700 10px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;
+    overflow-wrap: anywhere;
+  }
+  #presets #presetList article.panel > .preset-actions {
+    display: grid;
+    grid-template-columns: repeat(5,minmax(0,1fr));
+    gap: 3px;
+    min-width: 0;
+    margin: 0;
+  }
+  #presets #presetList article.panel > .preset-actions button {
+    min-width: 0;
+    min-height: 44px;
+    margin: 0;
+    padding: 6px 2px;
+    border-radius: 0;
+    font: 900 10px/1.1 'Arial Narrow',Arial,sans-serif;
+    overflow-wrap: anywhere;
+    color: #08050b;
+  }
+  #presets #presetList article.panel > .preset-actions button:nth-child(1) {
+    background: var(--padd-amber,#ffcc66);
+  }
+  #presets #presetList article.panel > .preset-actions button:nth-child(2) {
+    background: var(--padd-blue,#9999ff);
+  }
+  #presets #presetList article.panel > .preset-actions button:nth-child(3) {
+    background: var(--padd-lavender,#cc99cc);
+  }
+  #presets #presetList article.panel > .preset-actions button:nth-child(4) {
+    background: var(--padd-tan,#cc6666);
+  }
+  #presets #presetList article.panel > .preset-actions button:nth-child(5) {
+    border-radius: 0 0 14px 0;
+    background: var(--padd-orange,var(--orange,#ffb45e));
+  }
+}
+
+/* Dark Red Alert panels need light labels for readable small controls. */
+@media (max-width: 640px) {
+  html[data-app-theme="redalert"] #audio #mixer .accent-sound-row:last-child h4,
+  html[data-app-theme="redalert"] #audio #mixer .mixer-buttons button:first-child:not(.toggled),
+  html[data-app-theme="redalert"] #presets #presetList article.panel > .preset-actions button:nth-child(4) {
+    color: #fff4ed;
+  }
+}
+
+/* Very narrow PADDs: keep instrument names and action labels legible. */
+@media (max-width: 350px) {
+  #audio #mixer .accent-sound-row {
+    grid-template-columns: 54px minmax(0,1fr);
+  }
+  #audio #mixer .sound-choices {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+  #presets #presetList article.panel > .preset-actions button {
+    font-size: 9px;
+  }
+}
+
+/* Wider phones have enough room for the requested four-by-two sound bank. */
+@media (min-width: 430px) and (max-width: 640px) {
+  #audio #mixer .sound-choices {
+    grid-template-columns: repeat(4,minmax(0,1fr));
+  }
+}

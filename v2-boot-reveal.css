@@ -1,0 +1,85 @@
+/* RC22. The splash closes immediately on INITIALIZE. Only the permanent
+   application shell now unfolds. Existing panels and touch geometry remain
+   unchanged after this one-shot 1450ms construction. */
+@keyframes lcars-rc22-open-x {
+ 0%{transform:scaleX(.025);opacity:0;filter:brightness(1.8)}
+ 60%{transform:scaleX(.84);opacity:1;filter:brightness(1.25)}
+ 100%{transform:scaleX(1);opacity:1;filter:brightness(1)}
+}
+@keyframes lcars-rc22-open-y {
+ 0%{transform:scaleY(.025);opacity:0;filter:brightness(1.8)}
+ 65%{transform:scaleY(.85);opacity:1}
+ 100%{transform:scaleY(1);opacity:1;filter:brightness(1)}
+}
+@keyframes lcars-rc22-expand-panel {
+ 0%{clip-path:inset(0 100% 0 0);opacity:.04;filter:brightness(1.65)}
+ 65%{clip-path:inset(0 8% 0 0);opacity:1;filter:brightness(1.15)}
+ 100%{clip-path:inset(0 0 0 0);opacity:1;filter:brightness(1)}
+}
+.app-shell.lcars-booting > header::after{
+ transform-origin:left center;
+ animation:lcars-rc22-open-x 530ms cubic-bezier(.22,1,.36,1) 70ms both;
+}
+.app-shell.lcars-booting::after{
+ transform-origin:left center;
+ animation:lcars-rc22-open-x 580ms cubic-bezier(.22,1,.36,1) 110ms both;
+}
+.app-shell.lcars-booting > aside .rail{
+ transform-origin:center top;
+ animation:lcars-rc22-open-y 480ms cubic-bezier(.22,1,.36,1) 155ms both;
+}
+/* Keep the REAL instrument and buttons at full hit-test geometry at all
+   times. Only their non-interactive fascia is allowed to pull open. */
+.app-shell.lcars-booting #metronome .instrument{
+ animation:lcars-launch-border 560ms ease-out 230ms both;
+}
+.app-shell.lcars-booting #metronome .instrument::before,
+.app-shell.lcars-booting #metronome .instrument::after{
+ transform-origin:left center;pointer-events:none;
+ animation:lcars-rc22-open-x 540ms cubic-bezier(.22,1,.36,1) 275ms both;
+}
+.app-shell.lcars-booting #metronome .side-controls > .panel{
+ position:relative;
+ animation:lcars-launch-panel-border 560ms ease-out 310ms both;
+}
+.app-shell.lcars-booting #metronome .side-controls > .panel::after{
+ content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+ border-radius:inherit;
+ background:linear-gradient(90deg,rgba(204,153,204,.28),rgba(255,153,0,.06) 70%,transparent);
+ transform-origin:left center;
+ animation:lcars-rc22-open-x 530ms cubic-bezier(.22,1,.36,1) 310ms both;
+}
+.app-shell.lcars-booting #metronome .side-controls > .panel:nth-of-type(2){
+ animation-delay:400ms;
+}
+.app-shell.lcars-booting #metronome .side-controls > .panel:nth-of-type(2)::after{
+ animation-delay:400ms;
+}
+.app-shell.lcars-booting > aside nav .nav{
+ transform-origin:left center;
+ animation:lcars-rc22-open-x 280ms cubic-bezier(.22,1,.36,1) var(--rc22-nav-delay,280ms) both;
+}
+.app-shell.lcars-booting > aside nav .nav:nth-child(1){--rc22-nav-delay:300ms}
+.app-shell.lcars-booting > aside nav .nav:nth-child(2){--rc22-nav-delay:350ms}
+.app-shell.lcars-booting > aside nav .nav:nth-child(3){--rc22-nav-delay:400ms}
+.app-shell.lcars-booting > aside nav .nav:nth-child(4){--rc22-nav-delay:450ms}
+.app-shell.lcars-booting > aside nav .nav:nth-child(5){--rc22-nav-delay:500ms}
+.app-shell.lcars-booting > aside nav .nav:nth-child(6){--rc22-nav-delay:550ms}
+.mobile-build-version{display:none}
+@media(max-width:640px){
+ .app-shell > header .mobile-build-version{
+  position:absolute;display:block;left:0;top:27px;z-index:2;
+  color:#ffcc66;font:800 9px/1.15 "Arial Narrow",Arial,sans-serif;
+  letter-spacing:.08em;white-space:nowrap;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html:not([data-lcars-motion="force"]) .app-shell.lcars-booting > header::after,
+ html:not([data-lcars-motion="force"]) .app-shell.lcars-booting::after,
+ html:not([data-lcars-motion="force"]) .app-shell.lcars-booting > aside .rail,
+ html:not([data-lcars-motion="force"]) .app-shell.lcars-booting > aside nav .nav,
+ html:not([data-lcars-motion="force"]) .app-shell.lcars-booting #metronome .instrument,
+ html:not([data-lcars-motion="force"]) .app-shell.lcars-booting #metronome .side-controls > .panel{
+  animation:none!important;transform:none!important;clip-path:none!important;
+ }
+}

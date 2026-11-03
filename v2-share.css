@@ -1,0 +1,80 @@
+/* Inline, theme-driven QR sharing. No overlay or second app window. */
+.share-deck{margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:20px 4px 20px 4px;background:rgba(0,0,0,.22);min-width:0}
+.share-deck h3{font-size:15px;margin:0 0 10px;color:var(--text)}
+.share-deck p{font-size:12px;line-height:1.5;color:var(--muted)}
+.share-qr{width:min(100%,370px);min-height:0;margin:12px auto;padding:6px;background:#fff;border:5px solid var(--padd-orange,var(--orange));border-radius:8px;overflow:hidden}
+.share-qr img,.share-qr canvas{width:100%!important;height:auto!important;aspect-ratio:1;display:block;margin:auto;image-rendering:pixelated}
+.share-url{display:block;width:100%;min-width:0;box-sizing:border-box;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--text);font:12px/1.4 ui-monospace,monospace;padding:10px;margin:12px 0}
+.share-actions{display:flex;gap:8px;flex-wrap:wrap}
+.share-actions button{flex:1 1 130px;min-width:0;border-radius:22px;font-size:11px}
+.share-warning{color:var(--padd-amber,var(--orange))!important;font-weight:650}
+#sharedPresetPreview{margin-bottom:20px;border-left:5px solid var(--padd-orange,var(--orange))}
+#sharedPresetPreview[hidden]{display:none!important}
+#appSharePanel{min-width:0}
+@media(max-width:640px){
+ .share-deck{padding:10px;border-radius:14px 4px 14px 4px}
+ .share-qr{max-width:min(100%,320px);padding:4px;border-width:4px}
+ .share-actions button{min-height:44px;padding:9px}
+}
+
+/* The only exception to the single-window LCARS rule: an actual full-screen QR viewport.
+   It is outside .app-shell so narrow navigation columns never shrink the code. */
+#archiveQRDialog{position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;
+ margin:0;padding:0;border:0;box-sizing:border-box;background:#050409;color:var(--text,#f4e8ff);overflow:auto;
+ font-family:inherit;z-index:10000}
+#archiveQRDialog::backdrop{background:#000}
+#archiveQRDialog[open]{display:flex;align-items:stretch;justify-content:center}
+#archiveQRDialog .archive-sync-shell{width:100%;min-height:100%;box-sizing:border-box;
+ padding:calc(env(safe-area-inset-top,0px) + 12px) max(14px,env(safe-area-inset-right,0px))
+ calc(env(safe-area-inset-bottom,0px) + 16px) max(14px,env(safe-area-inset-left,0px));
+ display:flex;flex-direction:column;align-items:stretch;gap:8px}
+#archiveQRDialog .archive-sync-head{display:flex;justify-content:space-between;align-items:center;gap:16px;
+ width:100%;max-width:1000px;margin:0 auto}
+#archiveQRDialog .archive-sync-head h2{font-size:clamp(16px,3.5vw,25px);line-height:1.15;
+ font-weight:750;color:var(--padd-peach,#e0b1ff);margin:0;letter-spacing:.02em}
+#archiveQRDialog button{font-family:inherit;font-weight:700;font-size:clamp(14px,2.5vw,20px);line-height:1.2;
+ border:0;background:var(--padd-orange,#9170d1);color:#000;padding:13px 18px;min-height:48px;
+ border-radius:30px 6px 30px 6px;cursor:pointer;touch-action:manipulation}
+#archiveQRDialog .archive-sync-head button{background:var(--padd-peach,#c1a8e9);flex-shrink:0}
+#archiveQRDialog button:disabled{opacity:.36;cursor:not-allowed}
+#archiveQRDialog .archive-sync-pane{width:100%;max-width:1000px;margin:auto;
+ min-height:0;box-sizing:border-box;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:12px}
+#archiveQRDialog [hidden]{display:none!important}
+#archiveQRDialog .archive-sync-count{font-size:clamp(18px,4vw,28px);font-weight:750;
+ color:var(--padd-peach,#c9b0ef);margin:0}
+#archiveQRDialog .archive-sync-qr{
+ box-sizing:border-box;width:min(100%,calc(100dvh - 230px),840px);
+ aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+ margin:0 auto;padding:10px;border:4px solid var(--padd-lavender,#9d7be5);border-radius:10px;
+ background:#fff;flex:0 1 auto;overflow:hidden}
+#archiveQRDialog .archive-sync-qr canvas,
+#archiveQRDialog .archive-sync-qr img{display:block;width:100%!important;height:100%!important;
+ object-fit:contain;image-rendering:pixelated}
+#archiveQRDialog .archive-sync-info{text-align:center;font-size:clamp(13px,2.5vw,18px);
+ color:var(--text,#e4d0fc);line-height:1.45;margin:0;max-width:660px}
+#archiveQRDialog .archive-sync-actions{display:flex;gap:12px;justify-content:center;align-items:center;
+ width:100%;max-width:720px}
+#archiveQRDialog .archive-sync-actions button{flex:1}
+#archiveQRDialog .archive-sync-video{display:block;width:min(100%,calc(100dvh - 220px),840px);
+ max-height:68dvh;aspect-ratio:3/4;object-fit:cover;background:#08080c;
+ border:4px solid var(--padd-lavender,#9d7be5);border-radius:12px;box-sizing:border-box}
+#archiveQRDialog .archive-sync-manual{width:min(100%,640px);text-align:center;
+ font-size:12px;color:var(--text,#c9b0ef);padding:10px 4px}
+#archiveQRDialog .archive-sync-manual summary{cursor:pointer;list-style:disclosure-closed;
+ font-size:12px}
+#archiveQRDialog .archive-sync-manual .share-url{font-size:14px}
+#archiveQRDialog .archive-sync-manual button{width:100%}
+#archiveQRDialog .archive-sync-result{text-align:center;font-size:clamp(20px,5vw,36px);
+ line-height:1.4;color:var(--padd-peach,#c9b0ef);font-weight:700;margin:0 0 16px;max-width:600px}
+#archiveQRDialog #archiveQRDone{width:min(100%,380px)}
+@media(max-height:550px){
+ #archiveQRDialog .archive-sync-shell{gap:3px}
+ #archiveQRDialog .archive-sync-pane{gap:5px}
+ #archiveQRDialog .archive-sync-qr{width:min(100%,calc(100dvh - 105px),840px);padding:5px}
+ #archiveQRDialog .archive-sync-head button{padding:8px 14px;min-height:40px}
+ #archiveQRDialog .archive-sync-count{font-size:16px}
+ #archiveQRDialog .archive-sync-info{font-size:12px}
+}
+@media(max-width:640px){#archiveQRDialog .archive-sync-head button{padding:11px 14px;min-height:44px}
+ #archiveQRDialog .archive-sync-qr{padding:7px;border-width:3px}}

@@ -1,0 +1,132 @@
+/* Rhythm Warp student edition: independent Studio-Green design layer.
+   Load last so the original rhythm engine and DOM contracts remain untouched. */
+:root, html[data-app-theme]{
+ color-scheme:dark;
+ --bg:#0e1714!important;--panel:#14231c!important;--text:#f2f0e8!important;
+ --muted:#a7b9ae!important;--orange:#b3df94!important;--pink:#92cbd2!important;
+ --purple:#4d6b55!important;--salmon:#507b63!important;--line:#283a30!important;
+ --padd-bg:#0e1714!important;--padd-orange:#b3df94!important;
+ --padd-amber:#cdebb6!important;--padd-peach:#87ae91!important;
+ --padd-lavender:#4d6b55!important;--padd-blue:#92cbd2!important;
+ --padd-tan:#365544!important;--padd-red:#85f4a3!important;
+ --padd-ice:#92cbd2!important;--padd-cream:#f2f0e8!important;
+ --lcars-mobile-orange:#b3df94!important;--lcars-mobile-peach:#87ae91!important;
+ --lcars-mobile-blue:#92cbd2!important;--lcars-mobile-lilac:#4d6b55!important;
+ --theme-signal:#85f4a3!important;
+ --rw-neon:#85f4a3;--rw-rail:#1b2a23;--rw-panel:#14231c;
+}
+html[data-app-theme="elite"]{--rw-neon:#92cbd2;--rw-rail:#173034;}
+html[data-app-theme="redalert"]{--rw-neon:#b3df94;--rw-rail:#20382b;}
+html,body,.app-shell{background:#0e1714!important;color:#f2f0e8;}
+/* Steeper 2-3px elbows and framed rails instead of large solid pastel blocks. */
+.app-shell>header .elbow{
+ background:var(--rw-rail)!important;border:3px solid var(--rw-neon)!important;
+ border-radius:clamp(48px,6vw,82px) 0 0 0!important;
+}
+.app-shell>header .elbow::after{
+ background:#0e1714!important;
+ border-top:3px solid var(--rw-neon);border-left:3px solid var(--rw-neon);
+ border-radius:clamp(30px,4vw,48px) 0 0 0!important;
+}
+.app-shell>header::before{content:none!important}
+.app-shell>header::after{
+ background:linear-gradient(to bottom,var(--rw-neon) 0 3px,var(--rw-rail) 3px 100%)!important;
+ border-radius:0 16px 16px 0!important;
+}
+.app-shell::after{
+ background:linear-gradient(to bottom,var(--rw-rail) 0 calc(100% - 3px),var(--rw-neon) calc(100% - 3px))!important;
+ border-radius:0 0 0 32px!important;
+}
+.app-shell>aside nav .nav,html[data-app-theme] .app-shell>aside nav .nav{
+ color:#f2f0e8!important;background:var(--rw-rail)!important;
+ border:2px solid #365544!important;border-radius:24px 5px 5px 24px!important;
+ box-shadow:none!important;
+}
+.app-shell>aside nav .nav.active,html[data-app-theme] .app-shell>aside nav .nav.active{
+ color:#cdebb6!important;background:#223a2c!important;
+ border-color:var(--rw-neon)!important;box-shadow:inset 4px 0 var(--rw-neon)!important;
+}
+.app-shell>aside .rail,.app-shell>aside .rail-end{
+ background:var(--rw-rail)!important;border:2px solid #365544!important;
+ color:#b3df94!important;
+}
+.app-shell>aside .rail::after,.app-shell>aside .rail-end::before{content:none!important}
+.app-shell .panel,html[data-app-theme] .app-shell .panel{
+ background:#14231c!important;border:3px solid #365544!important;
+ border-radius:39px 7px 7px 24px!important;
+}
+.app-shell .panel:focus-within{border-color:var(--rw-neon)!important}
+.app-shell .panel>.eyebrow,.app-shell .panel>h3,
+.app-shell .panel>summary{
+ background:#21382a!important;color:#cdebb6!important;
+ border:1px solid #365544!important;
+}
+.app-shell .section-heading,.app-shell .transport{border-color:#4d6b55!important}
+.app-shell .nav:focus-visible,.app-shell button:focus-visible{outline:2px solid var(--rw-neon)!important;outline-offset:2px}
+.app-shell button.primary{background:#b3df94!important;color:#0e1714!important}
+.app-shell button.outline{background:#1b2a23!important;border:2px solid #4d6b55!important;color:#f2f0e8!important}
+.app-shell button.outline:active{border-color:var(--rw-neon)!important}
+/* Framed opening screen: keep all interactive coordinates and audio behavior. */
+.lcars-start-screen,html[data-app-theme] .lcars-start-screen{
+ --padd-bg:#0e1714!important;--padd-orange:#b3df94!important;
+ --padd-amber:#cdebb6!important;--padd-peach:#87ae91!important;
+ --padd-lavender:#4d6b55!important;--padd-blue:#92cbd2!important;
+ --padd-tan:#365544!important;--padd-ice:#92cbd2!important;
+ --padd-red:#85f4a3!important;--padd-cream:#f2f0e8!important;
+ --radius-outer:clamp(48px,6.5vw,84px);--radius-inner:clamp(27px,3.8vw,48px);
+ background:radial-gradient(circle at 55% 45%,rgba(179,223,148,.09),transparent 65%),#0e1714!important;
+ color:#cdebb6!important;
+}
+.lcars-start-screen .lcars-elbow-top,
+.lcars-start-screen .lcars-elbow-bottom{
+ background:var(--rw-rail)!important;
+ border:3px solid var(--rw-neon)!important;border-right:0!important;
+ color:#cdebb6!important;
+}
+.lcars-start-screen .lcars-elbow-top::after,
+.lcars-start-screen .lcars-elbow-bottom::after{
+ background:#0e1714!important;box-shadow:none!important;
+ border-left:3px solid var(--rw-neon)!important;
+ border-top:3px solid var(--rw-neon)!important;
+}
+.lcars-start-screen .lcars-elbow-bottom::after{
+ border-top:0!important;border-bottom:3px solid var(--rw-neon)!important;
+}
+.lcars-start-screen .lcars-seg,
+.lcars-start-screen .lcars-side-block,
+.lcars-start-screen .lcars-side-filler{
+ background:var(--rw-rail)!important;color:#cdebb6!important;
+ border:2px solid #365544!important;box-shadow:none!important;
+}
+.lcars-start-screen .lcars-side-block[aria-pressed="true"]{
+ background:#223a2c!important;color:#f2f0e8!important;
+ border-color:var(--rw-neon)!important;
+ box-shadow:inset 4px 0 var(--rw-neon)!important;
+}
+.lcars-start-screen .lcars-top-subbar,.lcars-start-console{
+ border-color:#365544!important;
+}
+.lcars-start-screen .lcars-subbrand-bar{
+ background:#1b2a23!important;color:#b3df94!important;
+ border:2px solid #365544!important;
+}
+.lcars-start-screen .lcars-studio-badge{
+ background:#14231c!important;border-color:#4d6b55!important;
+ color:#92cbd2!important;
+}
+.lcars-start-screen .lcars-emblem-wrap{
+ filter:drop-shadow(0 0 12px rgba(133,244,163,.12))!important;
+}
+.lcars-start-screen::after{
+ background:repeating-linear-gradient(to bottom,transparent 0 4px,rgba(133,244,163,.016) 4px 5px)!important;
+}
+.lcars-start-screen .lcars-activate-wrap .lcars-start-activate{
+ background:#b3df94!important;color:#0e1714!important;
+ border:2px solid var(--rw-neon)!important;
+}
+/* Original theme palettes remain as internal IDs but user-facing colors are Studio Green. */
+@media(max-width:640px){
+ .app-shell>header .elbow{border-radius:47px 0 0 0!important}
+ .lcars-start-screen{--radius-outer:47px;--radius-inner:28px}
+ .app-shell .panel{border-radius:30px 5px 5px 18px!important}
+}

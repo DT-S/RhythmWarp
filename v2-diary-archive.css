@@ -1,0 +1,360 @@
+/* RC25.8 PREVIEW / VOYAGER PERSONAL LOG // ARCHIVE SUBSYSTEM
+ * Self-contained diary presentation layer. No changes to data storage,
+ * session calculations, audio or transport. Colors follow LCARS themes.
+ */
+
+/* Live session count belongs to the archive heading, not the setup deck. */
+#diary > .section-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:7px;
+}
+#diary > .section-heading #entryCount {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:28px;
+  margin:0;
+  padding:5px 11px;
+  border-radius:15px 0 0 15px;
+  background:var(--padd-amber,#ffcc66);
+  color:#09070b;
+  font:900 11px/1 Impact,'Arial Narrow',Arial,sans-serif;
+  letter-spacing:.05em;
+  white-space:nowrap;
+}
+
+/* Native details/summary supports keyboard, VoiceOver and the existing
+ * dynamic #diaryControls without replacing or duplicating any field. */
+#diary #diarySetup {
+  min-width:0;
+  margin:5px 0 8px;
+  padding:0 8px 8px 9px;
+  border-left:10px solid var(--padd-lavender,#cc99cc);
+  border-top:5px solid var(--padd-lavender,#cc99cc);
+  border-bottom:0;
+  border-radius:19px 0 0 16px;
+}
+#diary #diarySetup > summary {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:38px;
+  padding:7px 10px;
+  margin:0 -8px 0 -9px;
+  background:var(--padd-lavender,#cc99cc);
+  color:#08060b;
+  font:900 16px/1.2 Impact,'Arial Narrow',Arial,sans-serif;
+  letter-spacing:.05em;
+  list-style:none;
+  cursor:pointer;
+}
+#diary #diarySetup > summary::-webkit-details-marker {display:none;}
+#diary #diarySetup > summary::after {
+  content:'+';
+  margin-left:auto;
+  font:900 22px/1 Arial,sans-serif;
+}
+#diary #diarySetup[open] > summary::after {content:'−';}
+#diary #diarySetup > summary:focus-visible {
+  outline:3px solid #fff;
+  outline-offset:2px;
+}
+#diary #diarySetup .diary-setup-body {padding:5px 1px 0 0;min-width:0;}
+#diary #diarySetup .lcars-info {margin:5px 0 0;}
+
+/* Two equally important archive actions stay on one LCARS rail. */
+#diary .diary-actions {
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+  gap:4px;
+  margin:6px 0 8px;
+}
+#diary .diary-actions > button {
+  min-width:0;
+  min-height:42px;
+  padding:7px 8px;
+  margin:0;
+  border:0;
+  font:900 12px/1.15 'Arial Narrow',Arial,sans-serif;
+  overflow-wrap:anywhere;
+}
+#diary #manualEntry {background:var(--padd-orange,#ff9900);color:#050505;border-radius:21px 0 0 21px;}
+#diary #csvExport {background:var(--padd-blue,#9999ff);color:#050505;border-radius:0 21px 21px 0;}
+
+/* Dark Okuda data-strips: visible structure instead of 6 massive tiles. */
+#diary #diaryList {gap:8px;min-width:0;}
+#diary #diaryList .log-entry {
+  padding:0 0 5px 8px;
+  margin:0;
+  border-left:10px solid var(--padd-orange,#ff9900);
+  border-top:0;
+  border-bottom:0;
+  border-radius:19px 0 0 19px;
+  background:#050408;
+  min-width:0;
+}
+#diary #diaryList .log-entry:nth-child(even) {border-left-color:var(--padd-lavender,#cc99cc);}
+#diary #diaryList .log-entry > h3 {
+  display:flex;
+  align-items:center;
+  min-height:32px;
+  padding:6px 10px;
+  margin:0 0 3px;
+  background:var(--padd-orange,#ff9900);
+  color:#08080a;
+  border-radius:0 16px 16px 0;
+  font:900 13px/1.2 Impact,'Arial Narrow',Arial,sans-serif;
+  letter-spacing:.02em;
+  overflow-wrap:anywhere;
+}
+#diary #diaryList .log-entry:nth-child(even) > h3 {background:var(--padd-lavender,#cc99cc);}
+#diary #diaryList .session-data {
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr) minmax(0,1fr);
+  gap:3px;
+  margin:0 0 3px;
+  min-width:0;
+}
+#diary #diaryList .session-data .stat-tile {
+  min-width:0;
+  min-height:0;
+  padding:6px 7px;
+  background:#181320;
+  color:#fff;
+  border:0;
+  border-left:4px solid var(--padd-blue,#9999ff);
+  border-radius:0;
+  overflow-wrap:anywhere;
+}
+#diary #diaryList .session-data .stat-tile:nth-child(3n + 2) {border-left-color:var(--padd-amber,#ffcc66);}
+#diary #diaryList .session-data .stat-tile:nth-child(3n) {border-left-color:var(--padd-peach,#ff9966);}
+#diary #diaryList .session-data .stat-tile > span {
+  display:block;
+  font:800 9px/1.2 'Arial Narrow',Arial,sans-serif;
+  color:var(--padd-ice,#99ccff);
+  letter-spacing:.04em;
+}
+#diary #diaryList .session-data .stat-tile > strong {
+  display:block;
+  margin-top:3px;
+  color:#fff;
+  font:800 13px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;
+  overflow-wrap:anywhere;
+}
+#diary #diaryList .log-actions {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,.8fr);
+  gap:3px;
+  margin:0;
+}
+#diary #diaryList .log-actions button {
+  min-width:0;
+  min-height:36px;
+  padding:6px;
+  margin:0;
+  font:900 11px/1.1 'Arial Narrow',Arial,sans-serif;
+}
+#diary #diaryList .log-actions button:first-child {
+  background:var(--padd-amber,#ffcc66);
+  color:#050505;
+  border-radius:0;
+}
+#diary #diaryList .log-actions button:last-child {
+  background:var(--padd-tan,#cc6666);
+  color:#050505;
+  border-radius:0 17px 17px 0;
+}
+
+/* The rest of the pages and statistics are deliberately unaffected. */
+@media (max-width:640px) {
+  #diary > .section-heading {gap:5px;margin-bottom:5px;}
+  #diary > .section-heading h2 {margin-bottom:0;}
+  #diary > .section-heading #entryCount {min-height:27px;font-size:10px;padding:5px 7px;}
+  #diary #diarySetup {padding-bottom:5px;}
+  #diary #diarySetup > summary {min-height:35px;font-size:17px;}
+  #diary .diary-actions > button {min-height:42px!important;padding:6px 5px!important;font-size:11px!important;}
+  #diary #diaryControls > button.full {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:37px!important;
+    margin:3px 0 4px;
+    padding:6px 9px!important;
+    border-radius:19px 3px 3px 19px;
+    font-size:12px!important;
+  }
+  #diary #diaryControls > button.full::before {
+    content:'47-LOG //';
+    font-size:9px;
+    opacity:.8;
+  }
+  #diary .diary-minimum {
+    gap:4px;
+    margin:3px 0 5px;
+    padding:5px 6px;
+    border-left-width:5px;
+  }
+  #diary .diary-minimum > .field-name {
+    min-height:0;
+    padding:0;
+    font-size:10px;
+    color:var(--padd-amber,#ffcc66);
+  }
+  #diary .diary-minimum-choices button {min-height:31px;font-size:11px;}
+  #diary .diary-minimum-note {display:none;}
+  #diary #diaryControls > label.diary-field {
+    display:grid;
+    grid-template-columns:115px minmax(0,1fr);
+    align-items:stretch;
+    gap:4px;
+    min-width:0;
+    margin:5px 0;
+  }
+  #diary #diaryControls > label.diary-field > .field-name {
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    min-height:38px;
+    padding:4px 7px;
+    font-size:10px;
+    line-height:1.12;
+    text-align:right;
+    background:var(--padd-lavender,#cc99cc);
+    color:#000;
+    border-radius:19px 0 0 19px;
+  }
+  #diary #diaryControls > label.diary-field > input {
+    width:100%;
+    min-width:0;
+    min-height:38px;
+    padding:5px 8px;
+    font-size:18px;
+    border-radius:0 19px 19px 0;
+  }
+  #diary #diaryControls > h3 {
+    margin:6px 0 3px;
+    padding:0 2px;
+    min-height:0;
+    background:transparent;
+    color:var(--padd-amber,#ffcc66);
+    font-size:11px;
+  }
+  #diary #diaryControls .diary-categories {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:3px;
+    margin:3px 0 5px;
+    padding-left:3px;
+    border-left-width:7px;
+    min-width:0;
+  }
+  #diary #diaryControls .diary-categories button {
+    min-width:0;
+    min-height:34px;
+    margin:0;
+    padding:4px 3px;
+    font-size:12px;
+    line-height:1.2;
+    border-radius:0;
+    overflow-wrap:anywhere;
+  }
+  #diary #diaryControls .diary-categories button:nth-child(n) {border-radius:0;}
+  #diary #diaryControls .diary-categories button:nth-child(3n + 1) {border-radius:15px 0 0 15px;}
+  #diary #diaryControls .diary-categories button:nth-child(3n) {border-radius:0 15px 15px 0;}
+  #diary #diaryControls .category-form {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:4px;
+    margin:5px 0;
+    min-width:0;
+  }
+  #diary #diaryControls .category-form input {
+    min-width:0;
+    min-height:39px;
+    padding:5px 9px;
+    font-size:18px;
+    border-radius:18px 0 0 18px;
+  }
+  #diary #diaryControls .category-form button {
+    width:auto;
+    min-width:0;
+    min-height:39px;
+    padding:6px 9px;
+    font-size:11px;
+    border-radius:0 18px 18px 0;
+    background:var(--padd-peach,#ff9966);
+    color:#050505;
+  }
+  #diary #diarySetup .lcars-info summary,
+  #diary .diary-maintenance summary {
+    min-height:34px;
+    padding:6px 9px;
+    font-size:13px;
+  }
+  #diary .diary-maintenance {
+    margin:4px 0 8px;
+    padding:3px 7px;
+  }
+  #diary #diaryList .log-entry {padding:0 0 3px 7px;border-left-width:9px;}
+  #diary #diaryList .log-entry > h3 {min-height:30px;padding:5px 9px;font-size:12px;}
+  #diary #diaryList .session-data .stat-tile {padding:5px 5px; border-left-width:3px;}
+  #diary #diaryList .session-data .stat-tile > span {font-size:8.5px;}
+  #diary #diaryList .session-data .stat-tile > strong {font-size:13px;line-height:1.18;}
+  #diary #diaryList .log-actions button {min-height:34px!important;padding:5px!important;font-size:10px!important;}
+  /* 2-column editor leaves date/notes full width. Retains the existing
+   * number-control wrappers and the iOS single-scroll-container policy. */
+  #diary #diaryEditor {
+    min-width:0;
+    padding:6px 5px 10px 8px;
+    border-left-width:10px;
+  }
+  #diary #diaryEditor .diary-form {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:5px;
+  }
+  #diary #diaryEditor .diary-form > .system-field,
+  #diary #diaryEditor .diary-form > .preset-actions,
+  #diary #diaryEditor .diary-form > .diary-field:has(input[type="datetime-local"]),
+  #diary #diaryEditor .diary-form > .diary-field:has(textarea) {
+    grid-column:1/-1;
+  }
+  #diary #diaryEditor .diary-form > .diary-field {min-width:0;margin:0;gap:3px;}
+  #diary #diaryEditor .diary-form > .diary-field > .field-name {
+    min-height:26px;
+    padding:5px 6px;
+    font-size:10px;
+    line-height:1.12;
+    border-radius:12px 12px 0 0;
+    overflow-wrap:anywhere;
+  }
+  #diary #diaryEditor .diary-form .diary-field :is(input,textarea),
+  #diary #diaryEditor .diary-form .number-control .value-dial {
+    min-width:0;
+    min-height:39px;
+    padding:6px 7px;
+    border-radius:0 0 12px 0;
+    font-size:max(18px,calc(16px * var(--mobile-zoom-inverse,1)));
+  }
+  #diary #diaryEditor .diary-form .number-control {min-width:0;}
+  #diary #diaryEditor .diary-form .number-control .value-dial {width:100%;}
+}
+
+/* 320px and smaller devices get 2 telemetry columns to keep actual values
+ * readable. The requested 3x2 layout remains on the iPhone 13 (390px). */
+@media (max-width:360px) {
+  #diary #diaryList .session-data {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #diary #diaryControls > label.diary-field {grid-template-columns:95px minmax(0,1fr);}
+  #diary #diaryControls .diary-categories {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #diary #diarySetup > summary {font-size:16px;}
+  #diary #diaryControls .diary-categories button:nth-child(n) {border-radius:0;}
+  #diary #diaryControls .diary-categories button:nth-child(2n + 1) {border-radius:15px 0 0 15px;}
+  #diary #diaryControls .diary-categories button:nth-child(2n) {border-radius:0 15px 15px 0;}
+}
+
+@media (prefers-reduced-motion:reduce) {
+  #diary #diarySetup > summary {scroll-behavior:auto;}
+}

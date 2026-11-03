@@ -1,0 +1,136 @@
+/* P4b: numeric button visually MORPHS into the LCARS ladder at the exact
+   touch/drag location. No sibling overlay or layout reflow. The original
+   button stays in the DOM as the accessible, pointer-capturing control. */
+.gesture-guide{
+ position:fixed;
+ z-index:250;
+ box-sizing:border-box;
+ left:var(--guide-from-left,0px);
+ top:var(--guide-from-top,0px);
+ width:var(--guide-from-width,80px);
+ height:var(--guide-from-height,52px);
+ padding:0;
+ overflow:hidden;
+ border-top:5px solid transparent;
+ border-radius:var(--guide-source-radius,18px);
+ background:var(--guide-source-color,#ff9900);
+ box-shadow:0 0 0 2px #000,0 4px 18px rgba(0,0,0,.45);
+ color:#ffcc66;
+ visibility:hidden;
+ opacity:0;
+ pointer-events:none;
+ font-family:'Arial Narrow',Arial,sans-serif;
+ transform:none;
+ transition:left .2s cubic-bezier(.22,1,.36,1),
+  top .2s cubic-bezier(.22,1,.36,1),
+  width .2s cubic-bezier(.22,1,.36,1),
+  height .2s cubic-bezier(.22,1,.36,1),
+  background-color .2s ease,border-radius .2s ease,
+  border-top-color .2s ease;
+}
+.gesture-guide.is-morphing{visibility:visible;opacity:1;}
+.gesture-guide.is-visible{
+ left:var(--guide-to-left);
+ top:var(--guide-to-top);
+ width:var(--guide-to-width);
+ height:var(--guide-to-height);
+ background:#100c17;
+ border-top-color:#cc7777;
+ border-radius:18px 2px 18px 2px;
+ box-shadow:0 0 0 2px #000,0 4px 18px rgba(0,0,0,.8);
+}
+.gesture-guide::before {
+ content:attr(data-source-text);
+ position:absolute;
+ inset:0;
+ display:grid;
+ place-items:center;
+ font-family:var(--guide-source-family,Arial,sans-serif);
+ font-size:var(--guide-source-size,23px);
+ font-weight:var(--guide-source-weight,900);
+ line-height:1;
+ font-variant-numeric:tabular-nums;
+ color:var(--guide-source-ink,#000);
+ opacity:1;
+ transition:opacity .085s linear;
+}
+.gesture-guide.is-visible::before{opacity:0;}
+.gesture-guide-body {
+ box-sizing:border-box;
+ position:relative;
+ width:100%;
+ height:100%;
+ padding:3px 8px 8px;
+ opacity:0;
+ transition:opacity .09s ease;
+}
+.gesture-guide.is-visible .gesture-guide-body {
+ opacity:1;
+ transition-delay:.055s;
+}
+.value-dial.gesture-source-active,
+#tempoValue.gesture-source-active {
+ opacity:0!important;
+}
+/* Two rails with horizontal ladder rungs, active step centered under thumb. */
+.gesture-guide-heading {
+ font-size:9px;font-weight:900;letter-spacing:.07em;
+ text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ color:#99ccff;
+}
+.gesture-guide-value {
+ display:block;
+ background:#ff9900;color:#000;
+ margin:4px 0 6px;
+ padding:3px 2px;
+ font-size:14px;line-height:18px;
+ font-weight:900;
+ text-align:center;
+ border-radius:11px 2px 11px 2px;
+ font-variant-numeric:tabular-nums;
+}
+.gesture-guide-rungs{
+ position:relative;
+ height:184px;
+ display:grid;
+ grid-template-rows:repeat(13,minmax(0,1fr));
+ border-left:2px dashed #cc7777;
+ border-right:2px dashed #cc7777;
+ padding:0 3px;
+ overflow:hidden;
+}
+.gesture-guide-rung {
+ min-height:0;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:3px;
+ padding:0 2px;
+ opacity:.52;
+}
+.gesture-guide-rung[hidden]{display:none;}
+.gesture-guide-tick{display:block;width:52%;height:1px;background:#cc7777;}
+.gesture-guide-number {
+ min-width:18px;
+ font:700 9px/1 ui-monospace,Consolas,monospace;
+ text-align:right;
+ color:#cc99cc;
+}
+.gesture-guide-rung.is-major{opacity:.85;}
+.gesture-guide-rung.is-major .gesture-guide-tick{width:72%;height:2px;}
+.gesture-guide-rung.is-current{
+ background:#332137;opacity:1;
+ border-left:3px solid #ff9900;
+ border-right:3px solid #ff9900;
+}
+.gesture-guide-rung.is-current .gesture-guide-tick{
+ width:65%;height:3px;background:#ffcc66;box-shadow:0 0 6px #ff9900;
+}
+.gesture-guide-rung.is-current .gesture-guide-number{color:#ffffcc;font-size:11px;}
+@media (prefers-reduced-motion:reduce){
+ .gesture-guide,.gesture-guide::before,.gesture-guide-body{transition:none!important;}
+}
+
+/* The 13 rungs are permanent spatial slots. At 1 and 16–20, invalid
+   steps remain invisible yet still reserve their grid row. */
+.gesture-guide-rung.is-outside {visibility:hidden!important;pointer-events:none;}
