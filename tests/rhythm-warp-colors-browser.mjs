@@ -52,10 +52,18 @@ try{
     return {
      edge:getComputedStyle($('.lcars-start-screen')).getPropertyValue('--rw-edge').trim(),
      logoFilter:sty('.lcars-emblem-wrap').filter,
-     lightBackground:sty('.lcars-start-screen').backgroundColor
+     lightBackground:sty('.lcars-start-screen').backgroundColor,
+     topRim:sty('.lcars-rail-segments .lcars-seg').borderTopColor,
+     innerSeam:sty('.lcars-rail-segments .lcars-seg').borderBottomColor,
+     fillerLeft:sty('.lcars-side-filler').borderLeftColor,
+     fillerRight:sty('.lcars-side-filler').borderRightColor,
+     bottomRim:sty('.lcars-bottom-segments .lcars-seg').borderBottomColor
     };
    });
    assert.equal(launch.logoFilter,'none','logo should not cast an uncontrolled glow');
+   for(const edge of ['topRim','fillerLeft','fillerRight','bottomRim'])
+     assert.equal(rgb(launch[edge]),themes[theme].edge,edge+' uses same outer rim');
+   assert.equal(rgb(launch.innerSeam),'53,84,66','inside separators stay muted');
    await page.screenshot({path:path.join(output,'launch-'+key+'.png')});
    await page.locator('#lcarsInitialize').click();
    await page.waitForFunction(()=>document.querySelector('#lcarsStartup').hidden,null,{timeout:20000});
@@ -111,6 +119,13 @@ try{
      assert.equal(rgb(settings.offline),'232,221,190','neutral storage note color');
      assert.equal(rgb(settings.storage),'146,203,210','info status color');
      assert.equal(rgb(settings.export),themes[theme].active,'positive export color');
+    }
+    if(tab==='diary'){
+     const d=await page.evaluate(()=>{
+      const el=document.querySelector('#diary .diary-minimum-choices button:not([aria-pressed="true"])');
+      return getComputedStyle(el).backgroundColor;
+     });
+     assert.equal(rgb(d),'77,107,85','duration options must no longer be violet');
     }
     if(tab==='analytics'){
      const tiles=await page.locator('#analyticsContent .stat-tile').evaluateAll(items=>

@@ -30,3 +30,14 @@ test('all three UI themes share semantics and matrix LEDs no longer use orange',
  assert.match(css,/background:transparent!important/);
  assert.match(css,/#rings \.point\.state3:not\(\.playing\)/);
 });
+
+test('start frame edge continuity and violet control cleanup',()=>{
+ const css=read('rhythm-warp-colors.css');
+ for(const name of ['.lcars-start-screen .lcars-rail-segments .lcars-seg',
+ '.lcars-start-screen .lcars-bottom-segments .lcars-seg',
+ '.lcars-start-screen .lcars-side-filler',
+ '#diary .diary-minimum-choices button',
+ '#settings .panel label:has(input[type="checkbox"]):not(:has(input:checked))'])
+ assert.ok(css.includes(name),'missing '+name);
+ assert.match(css,/border-right-color:var\(--rw-edge\)!important/);
+});

@@ -543,3 +543,89 @@ html[data-app-theme] .app-shell .panel {
  fill:#789f93!important;
  stroke:var(--rw-outline)!important;
 }
+
+/* 13. UNBROKEN OUTER STROKE. Geometry is unchanged; every visible OUTER
+   border uses the same theme edge, internal separators stay muted. */
+.lcars-start-screen .lcars-rail-segments .lcars-seg{
+ border-top-color:var(--rw-edge)!important;
+ border-bottom-color:var(--rw-outline)!important;
+ border-left-color:var(--rw-outline)!important;
+ border-right-color:var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-bottom-segments .lcars-seg{
+ border-bottom-color:var(--rw-edge)!important;
+ border-top-color:var(--rw-outline)!important;
+ border-left-color:var(--rw-outline)!important;
+ border-right-color:var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-side-filler{
+ border-left-color:var(--rw-edge)!important;
+ border-right-color:var(--rw-edge)!important;
+ border-bottom-color:var(--rw-edge)!important;
+ border-top-color:var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-elbow-top,
+.lcars-start-screen .lcars-elbow-bottom,
+.lcars-start-screen .lcars-elbow-top::after,
+.lcars-start-screen .lcars-elbow-bottom::after{
+ border-color:var(--rw-edge)!important;
+}
+.app-shell > aside .rail,.app-shell > aside .rail-end{
+ border-left-color:var(--rw-edge)!important;
+ border-right-color:var(--rw-edge)!important;
+}
+.lcars-start-screen .lcars-rail-segments,
+.lcars-start-screen .lcars-bottom-segments,
+.lcars-start-screen .lcars-side-filler{
+ box-shadow:none!important;filter:none!important;
+}
+/* 14. Historic fixed purple removed from diary controls, checkbox OFF
+   and rhythm rings. Purple survives ONLY on intentionally custom audio. */
+#diary .diary-minimum{
+ background:var(--rw-bg-2)!important;
+ border-left-color:var(--rw-outline)!important;
+}
+#diary .diary-minimum > .field-name{
+ background:var(--rw-bg-3)!important;color:var(--rw-active)!important;
+}
+#diary .diary-minimum-choices button{
+ background:var(--rw-inactive)!important;color:var(--rw-text)!important;
+ box-shadow:none!important;
+}
+#diary .diary-minimum-choices button[aria-pressed="true"]{
+ background:var(--rw-neutral)!important;color:var(--rw-ink)!important;
+ box-shadow:none!important;
+}
+#diary .diary-minimum-note{color:var(--rw-dim)!important;}
+#diary .diary-maintenance{
+ background:var(--rw-bg-2)!important;
+ border-left-color:var(--rw-warning)!important;
+ border-bottom-color:var(--rw-outline)!important;
+}
+#diary .diary-maintenance-actions button:not(.diary-erase-action),
+#diaryDangerCancel{background:var(--rw-info)!important;color:var(--rw-ink)!important;}
+#diary .diary-maintenance-actions .diary-erase-action,
+#diaryDangerConfirm{background:var(--rw-danger)!important;color:var(--rw-ink)!important;}
+#settings .panel label:has(input[type="checkbox"]):not(:has(input:checked)){
+ background:var(--rw-bg-3)!important;
+}
+#settings .panel label:has(input[type="checkbox"]):not(:has(input:checked))::after{
+ color:var(--rw-warning)!important;
+}
+#settings .panel label:has(input[type="checkbox"]):has(input:checked){
+ background:var(--rw-active)!important;
+}
+#settings .panel label:has(input[type="checkbox"]):has(input:checked)::after{
+ color:var(--rw-ink)!important;
+}
+#rings .track{stroke:#84ab93!important;}
+#rings .inner-track,#rings .dial-ticks{stroke:var(--rw-info)!important;}
+#rings .point.state1:not(.playing){
+ fill:var(--rw-info)!important;stroke:var(--rw-outline)!important;
+}
+#rings .point.state2:not(.playing){
+ fill:#91b39d!important;stroke:var(--rw-outline)!important;
+}
+#metronome .lcars-cap-crescent,.lcars-slide .lcars-cap-crescent{
+ background:var(--rw-info)!important;
+}
