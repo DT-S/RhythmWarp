@@ -89,7 +89,7 @@ test('Launch choreography uses real circular geometry, has reduced-motion escape
  assert.doesNotMatch(css,/animation:[^;]*infinite/);
  assert.match(app,/\}render\(\);[\s\S]*function bootDirect\(\)/);
  assert.match(app,/--boot-delay:/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v1'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v\d+'/);
 });
 
 test('RC9 page builds never touch persistent chassis and clear on rapid navigation',()=>{
@@ -172,7 +172,7 @@ test('all six pages animate only their inner panels while fixed rails stay untou
 
  assert.doesNotMatch(css,/\.page\.lcars-page-enter \{[^}]*translateX\(/,
   'never slide the complete page or its hit targets horizontally');
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v1'/); // Cache rotates with release.
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v\d+'/); // Cache rotates with release.
 });
 
 test('RC10 view reassembly is one-shot per toggle, cancellable and reduced-motion-safe',()=>{
@@ -251,7 +251,7 @@ test('RC10 rebuilds individual view beats without any outer LCARS chassis animat
   'view switch must not touch startup shell');
  assert.doesNotMatch(newRules,/animation:[^;]*infinite/);
  assert.match(newRules,/prefers-reduced-motion:reduce/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v1'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v\d+'/);
 });
 
 test('RC15 returning to active Linear from another tab replays the real view build',()=>{

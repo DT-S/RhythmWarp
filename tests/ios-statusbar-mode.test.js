@@ -20,7 +20,7 @@ test('mobile root uses dynamic viewport, without enlarging the app beyond painta
  assert.match(appJs,/shell\.style\.height=\x60\$\{mobileFrameHeight\(height,state\.uiScale\)\}px\x60/);
  assert.match(appJs,/SCREEN MINUS WEB VIEWPORT:/);
  assert.match(appJs,/STATUS BAR META:/);
- assert.match(serviceWorker,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v1'/);
+ assert.match(serviceWorker,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v\d+'/);
 });
 test('independent probe PWA has its own identity and opaque iOS status bar',()=>{
  assert.match(probeHtml,/name="apple-mobile-web-app-status-bar-style" content="black"/);

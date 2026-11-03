@@ -8,7 +8,7 @@ const sw=read('sw.js');
 test('Voyager archive is a separate, theme-aware, offline preview skin',()=>{
  assert.match(html,/href="\.\/v2-diary-archive\.css"/);
  assert.match(sw,/\.\/v2-diary-archive\.css/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v1'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v\d+'/);
  assert.match(css,/#diary #diaryList \.log-entry/);
  assert.match(css,/var\(--padd-orange/);
  assert.match(css,/var\(--padd-lavender/);

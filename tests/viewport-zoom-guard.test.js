@@ -49,7 +49,7 @@ test('RC3 mobile viewport and CSS exclude browser-level zoom',()=>{
  const expectedRelease=pkg.version.replace('-rc.',' RC');
  assert.ok(index.includes('Rhythm core '+expectedRelease),'UI release label must match package version');
  assert.match(css,/html,body,\.app-shell\{touch-action:pan-x pan-y;\}/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v1'/); // Version-specific cache names may change.
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v\d+'/); // Version-specific cache names may change.
  assert.match(sw,/\.\/src\/viewport-zoom-guard\.js/);
  assert.match(app,/installViewportZoomGuard\(document\)/);
  assert.match(app,/shell\.style\.zoom=state\.uiScale/); // Internal scaling remains.
