@@ -131,21 +131,59 @@ html,body,.app-shell{background:#0e1714!important;color:#f2f0e8;}
  .app-shell .panel{border-radius:30px 5px 5px 18px!important}
 }
 
-/* Rhythm Warp v0.2: slim the navigation frame without shrinking its controls.
-   The original audio, state and rhythm code is intentionally untouched. */
+/* Rhythm Warp v0.3: narrow ONLY the decorative vertical rails.
+   Keep navigation controls and theme selection wide enough for real text. */
 @media (min-width:641px) {
- .app-shell {
-  --v2-sidebar:clamp(78px,8.5vw,136px);
+ .app-shell { --v2-sidebar:clamp(118px,11vw,160px); }
+ .app-shell > aside nav .nav {
+   min-height:48px;
+   padding-inline:10px;
+   font-size:clamp(11px,1vw,14px);
  }
- .lcars-start-screen {
-  --elbow-w:clamp(82px,10.5vw,132px);
- }
+ .lcars-start-screen { --elbow-w:clamp(100px,11vw,140px); }
 }
+.app-shell > aside .rail,
+.app-shell > aside .rail-end {
+  width:14px!important;
+  min-width:14px;
+  align-self:flex-start;
+  border:2px solid #365544!important;
+  background:var(--rw-rail)!important;
+}
+.app-shell > aside .rail { border-left-color:var(--rw-neon)!important; }
+.app-shell > aside .rail-end { border-bottom-color:var(--rw-neon)!important; }
+/* Theme selection stays full width; only the empty bar below is thin. */
+.lcars-start-screen .lcars-side-filler {
+  width:14px!important;
+  align-self:flex-start!important;
+  padding:0!important;
+  border:2px solid #365544!important;
+  border-left-color:var(--rw-neon)!important;
+  background:var(--rw-rail)!important;
+}
+.lcars-start-screen .lcars-side-filler > span { display:none!important; }
 @media (max-width:640px) {
- /* Mobile uses a horizontal menu: only its left connecting rib gets slimmer. */
- .app-shell > aside nav {padding-left:23px;}
- .app-shell > aside nav::before {width:25px;border-radius:24px 0 0 24px;}
- .app-shell > aside nav::after {left:8px;}
- /* Maintain enough width for the start-screen theme choices. */
- .lcars-start-screen {--elbow-w:clamp(55px,14vw,64px);}
+ /* On actual mobile layouts, retain the full-width 3 x 2 navigation grid. */
+ .app-shell > aside nav {
+   padding-left:14px;
+   border-left:0!important;
+ }
+ .app-shell > aside nav::before {
+   width:11px!important;
+   border-radius:11px 0 0 11px!important;
+   background:var(--rw-rail)!important;
+   border-left:2px solid var(--rw-neon);
+ }
+ .app-shell > aside nav::after { left:0; }
+ .app-shell > aside nav .nav {
+   min-height:48px;
+   font-size:clamp(10px,2.7vw,12px);
+   padding-inline:5px;
+ }
+ .lcars-start-screen { --elbow-w:clamp(78px,21vw,88px); }
+ .lcars-start-screen .lcars-side-block {
+   min-height:44px!important;
+   font-size:clamp(9px,2.3vw,11px)!important;
+   padding:6px 5px!important;
+ }
 }
