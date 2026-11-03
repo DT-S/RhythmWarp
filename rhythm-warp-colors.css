@@ -429,3 +429,99 @@ html[data-app-theme] .app-shell .panel {
   box-shadow:none!important;
  }
 }
+
+
+/* 10. SWING, SHUFFLE & SLIDER CAPSULES
+   The old module carried hard-coded orange/lavender gradients and hot glows.
+   Use the same green/teal roles as the surrounding metronome controls. */
+.lcars-slide {
+ --sl-salmon:var(--rw-inactive)!important;
+ --sl-orange:var(--rw-active)!important;
+ --sl-gold:var(--rw-active)!important;
+ --sl-lavender:var(--rw-info)!important;
+ --sl-peach:#91b7a0!important;
+ --sl-cream:var(--rw-neutral)!important;
+ --sl-dark:var(--rw-bg-1)!important;
+ color:var(--rw-text)!important;
+}
+.lcars-slide-label {
+ background:var(--rw-inactive)!important;
+ color:var(--rw-ink)!important;
+ border-right-color:var(--rw-outline)!important;
+}
+.lcars-slide-code {color:var(--rw-ink)!important;}
+.lcars-slide-beacon {background:var(--rw-edge)!important;box-shadow:none!important;}
+.lcars-slide-track {background:var(--rw-bg-1)!important;}
+.lcars-tick {background:var(--rw-outline)!important;}
+.lcars-tick.lit {background:var(--rw-active)!important;}
+.lcars-tick.at-cursor {background:var(--rw-info)!important;box-shadow:none!important;}
+.lcars-preset:nth-child(3) {color:var(--rw-info)!important;}
+.lcars-preset:nth-child(4) {color:var(--rw-neutral)!important;}
+.lcars-preset.selected {filter:none!important;text-shadow:none!important;}
+.lcars-pill-housing {
+ background:var(--rw-bg-2)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;
+}
+.lcars-pill {background:#294033!important;}
+.lcars-pill.lit.led-gold {
+ background:linear-gradient(#b3df94,#82b992,#4d6b55)!important;
+}
+.lcars-pill.lit.led-peach {
+ background:linear-gradient(#92cbd2,#6da8a5,#355442)!important;
+}
+.lcars-pill.lit.led-salmon {
+ background:linear-gradient(#d8b37e,#ad956f,#5f624c)!important;
+}
+.lcars-pill.lit,.lcars-pill.near-cursor {box-shadow:none!important;}
+.lcars-pill-housing::after {
+ background:linear-gradient(90deg,transparent,rgba(133,244,163,.08),transparent)!important;
+}
+.lcars-bracket {filter:none!important;}
+.lcars-bracket-box {
+ background:var(--rw-bg-2)!important;
+ box-shadow:none!important;
+}
+.lcars-bracket-lip {
+ border-color:var(--rw-edge)!important;
+}
+.lcars-bracket-core {
+ background:linear-gradient(#b3df94,#88bb96,#4d6b55)!important;
+ color:var(--rw-ink)!important;
+ box-shadow:none!important;
+}
+.lcars-touch-active .lcars-bracket-core {box-shadow:none!important;}
+.lcars-touch-active .lcars-bracket-lip {border-color:var(--rw-edge)!important;}
+.lcars-bracket-micro {
+ background:var(--rw-bg-1)!important;color:var(--rw-active)!important;
+}
+.lcars-plus,.lcars-minus {
+ background:var(--rw-active)!important;color:var(--rw-ink)!important;
+}
+.lcars-jump-up,.lcars-jump-down {
+ background:var(--rw-info)!important;color:var(--rw-ink)!important;
+}
+.lcars-cap-crescent {background:#6f9da2!important;}
+.lcars-cap-readout {
+ background:var(--rw-bg-1)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;
+}
+.lcars-cap-value {color:var(--rw-active)!important;text-shadow:none!important;}
+.lcars-slide-telemetry {
+ background:var(--rw-neutral)!important;
+ border-color:var(--rw-neutral)!important;
+ color:var(--rw-ink)!important;
+}
+.lcars-telemetry-scanner {background:var(--rw-info)!important;}
+
+/* 11. CUSTOM AUDIO: one intentional purple accent, no stray orange halo. */
+#settings #soundDrop {
+ outline:2px solid var(--rw-custom)!important;
+ outline-offset:0!important;
+ border-color:var(--rw-custom)!important;
+ box-shadow:none!important;
+}
+#settings #soundDrop:focus-within {
+ outline-color:var(--rw-edge)!important;
+}
