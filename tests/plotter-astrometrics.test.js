@@ -27,6 +27,6 @@ test('All Astrometrics effects avoid floating reticles, work offline and respect
  assert.match(css,/chart-motion-static/);
  assert.match(css,/lcars-chart-energy-flow 1850ms linear 600ms 2 both/);
  assert.match(html,/href="\.\/v2-astrometrics\.css"/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-colors-v1'/);
  assert.match(sw,/'\.\/v2-astrometrics\.css'/);
 });
