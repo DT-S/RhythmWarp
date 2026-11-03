@@ -525,3 +525,21 @@ html[data-app-theme] .app-shell .panel {
 #settings #soundDrop:focus-within {
  outline-color:var(--rw-edge)!important;
 }
+
+
+/* 12. CONTRAST CORRECTION
+   The older generic output rule paints the same color as its text.
+   Never allow a value readout to disappear against its own background. */
+.lcars-cap-readout > .lcars-cap-value {
+ background:transparent!important;
+ color:var(--rw-active)!important;
+ text-shadow:none!important;
+}
+#rings .point.state3:not(.playing) {
+ fill:#15241c!important;
+ stroke:var(--rw-outline)!important;
+}
+#rings .point.state2:not(.playing) {
+ fill:#789f93!important;
+ stroke:var(--rw-outline)!important;
+}

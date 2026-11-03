@@ -91,6 +91,10 @@ try{
       display:cs.display,opacity:cs.opacity,visibility:cs.visibility,width:r.width,height:r.height};
    });
    console.log('RW SWING READOUT '+key+' '+JSON.stringify(cap));
+   if(cap && cap.width>0){
+     assert.notEqual(cap.fg,cap.bg,'swing value must not be invisible against its own background');
+     assert.equal(cap.text.trim().length>0,true,'swing value must stay populated');
+   }
    for(const tab of ['metronome','diary','analytics','settings']){
     await page.locator('[data-tab="'+tab+'"]').click();
     const pageTitle=await page.locator('#'+tab).isVisible();

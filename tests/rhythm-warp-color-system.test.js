@@ -26,4 +26,7 @@ test('all three UI themes share semantics and matrix LEDs no longer use orange',
  assert.match(css,/--matrix-led-band-1:linear-gradient\(#b3df94,#7cbb94,#4d6b55\)/);
  assert.match(css,/#analyticsContent \.stat-tile:nth-child\(n\)/);
  assert.match(css,/#settings #soundDrop/);
+ assert.match(css,/\.lcars-cap-readout > \.lcars-cap-value/);
+ assert.match(css,/background:transparent!important/);
+ assert.match(css,/#rings \.point\.state3:not\(\.playing\)/);
 });
