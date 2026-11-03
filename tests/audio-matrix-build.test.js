@@ -73,5 +73,5 @@ test('RC11 animation scopes real mixer parts, master outputs, and preserves redu
  assert.doesNotMatch(block,/(?:translate[XYZ]?|scale[XYZ]?)\(/,'never shift live fader input geometry');
  assert.doesNotMatch(block,/\.app-shell\.lcars-page-enter|\.app-shell\.lcars-page-building/);
  assert.match(block,/@media \(prefers-reduced-motion:reduce\)/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-\d+'/);
 });

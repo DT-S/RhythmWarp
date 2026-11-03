@@ -40,7 +40,7 @@ test('Voyager bloom, blue grid, 320px fallback and offline assets',()=>{
  assert.match(css,/@keyframes tac-sweep/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
  assert.match(css,/@media\(max-width:360px\)/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-1'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-studio-green-v0-\d+'/);
  assert.match(sw,/\.\/v2-tactical\.css/);
  assert.match(sw,/\.\/src\/tactical-view\.js/);
  assert.match(html,/href="\.\/v2-tactical\.css"/);

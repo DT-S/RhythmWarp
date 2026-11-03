@@ -130,3 +130,22 @@ html,body,.app-shell{background:#0e1714!important;color:#f2f0e8;}
  .lcars-start-screen{--radius-outer:47px;--radius-inner:28px}
  .app-shell .panel{border-radius:30px 5px 5px 18px!important}
 }
+
+/* Rhythm Warp v0.2: slim the navigation frame without shrinking its controls.
+   The original audio, state and rhythm code is intentionally untouched. */
+@media (min-width:641px) {
+ .app-shell {
+  --v2-sidebar:clamp(78px,8.5vw,136px);
+ }
+ .lcars-start-screen {
+  --elbow-w:clamp(82px,10.5vw,132px);
+ }
+}
+@media (max-width:640px) {
+ /* Mobile uses a horizontal menu: only its left connecting rib gets slimmer. */
+ .app-shell > aside nav {padding-left:23px;}
+ .app-shell > aside nav::before {width:25px;border-radius:24px 0 0 24px;}
+ .app-shell > aside nav::after {left:8px;}
+ /* Maintain enough width for the start-screen theme choices. */
+ .lcars-start-screen {--elbow-w:clamp(55px,14vw,64px);}
+}
