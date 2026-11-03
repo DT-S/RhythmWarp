@@ -1,0 +1,431 @@
+/* RHYTHM WARP / STUDIO GREEN COLOR SYSTEM v1
+   Source of base colors: Drum Track Studio.
+   A strictly VISUAL layer: DO NOT change width/height/gap/layout/animations,
+   audio scheduling, timing, event handling or the original UI component classes.
+   To tune colors manually, edit the semantic tokens below, not 20 legacy CSS files.
+   The old theme IDs (voyager, elite, redalert) are internal compatibility keys. */
+
+/* 01. PALETTE & SEMANTICS */
+:root,html[data-app-theme],.lcars-start-screen {
+ --rw-bg-0:#08100d;
+ --rw-bg-1:#0e1714;
+ --rw-bg-2:#14231c;
+ --rw-bg-3:#1b2d24;
+ --rw-rail:#203328;
+ --rw-outline:#355442;
+ --rw-edge:#85f4a3;
+ --rw-outline-soft:rgba(133,244,163,.14);
+ --rw-text:#f2f0e8;
+ --rw-dim:#aec3b6;
+ --rw-muted:#7f998b;
+ --rw-ink:#08100d;
+ --rw-active:#b3df94;
+ --rw-info:#92cbd2;
+ --rw-neutral:#e8ddbe;
+ --rw-custom:#c4a3d5;
+ --rw-warning:#d8b37e;
+ --rw-danger:#c98d8d;
+ --rw-inactive:#4d6b55;
+ --rw-inactive-text:#f2f0e8;
+ /* Compatibility: old engine/components still read these variables. */
+ --bg:var(--rw-bg-1)!important;
+ --panel:var(--rw-bg-2)!important;
+ --text:var(--rw-text)!important;
+ --muted:var(--rw-dim)!important;
+ --line:var(--rw-outline)!important;
+ --orange:var(--rw-active)!important;
+ --pink:var(--rw-info)!important;
+ --purple:var(--rw-inactive)!important;
+ --salmon:var(--rw-warning)!important;
+ --padd-bg:var(--rw-bg-1)!important;
+ --padd-orange:var(--rw-active)!important;
+ --padd-amber:var(--rw-active)!important;
+ --padd-peach:#a1baa8!important;
+ --padd-lavender:#91b39d!important;
+ --padd-blue:var(--rw-info)!important;
+ --padd-tan:#7e9f8b!important;
+ --padd-red:var(--rw-danger)!important;
+ --padd-ice:var(--rw-info)!important;
+ --padd-cream:var(--rw-neutral)!important;
+ --lcars-mobile-orange:var(--rw-active)!important;
+ --lcars-mobile-peach:#a1baa8!important;
+ --lcars-mobile-blue:var(--rw-info)!important;
+ --lcars-mobile-lilac:#91b39d!important;
+ --rw-neon:var(--rw-edge)!important;
+ --rw-panel:var(--rw-bg-2)!important;
+ --theme-signal:var(--rw-edge)!important;
+}
+/* Theme selection changes the signature line, NOT the functional color roles.
+   This prevents the old violet/orange themes from leaking into student UI. */
+html[data-app-theme="elite"],.lcars-start-screen[data-theme="elite"] {
+ --rw-edge:#86ced3;
+ --rw-active:#a9d9cf;
+}
+html[data-app-theme="redalert"],.lcars-start-screen[data-theme="redalert"] {
+ --rw-edge:#a5df8a;
+ --rw-active:#b9dca3;
+}
+
+/* 02. FRAME: a single uninterrupted visual language on top/left/bottom. */
+html,body,.app-shell {background:var(--rw-bg-1)!important;color:var(--rw-text);}
+.lcars-start-screen {
+ background:var(--rw-bg-1)!important;color:var(--rw-text)!important;
+}
+/* No random bloom: same green edge and same flat dark finish everywhere. */
+.app-shell > header .elbow,
+.lcars-start-screen .lcars-elbow-top,
+.lcars-start-screen .lcars-elbow-bottom {
+ background:var(--rw-rail)!important;
+ border-color:var(--rw-edge)!important;
+ box-shadow:none!important;filter:none!important;
+}
+.app-shell > header .elbow::after,
+.lcars-start-screen .lcars-elbow-top::after,
+.lcars-start-screen .lcars-elbow-bottom::after {
+ background:var(--rw-bg-1)!important;
+ border-color:var(--rw-edge)!important;
+ box-shadow:none!important;
+}
+.app-shell > header::after {
+ background:linear-gradient(to bottom,var(--rw-edge) 0 3px,var(--rw-rail) 3px 100%)!important;
+ box-shadow:none!important;filter:none!important;
+}
+.app-shell::after {
+ background:linear-gradient(to bottom,var(--rw-rail) 0 calc(100% - 3px),var(--rw-edge) calc(100% - 3px))!important;
+ box-shadow:none!important;filter:none!important;
+}
+.app-shell > aside .rail,
+.app-shell > aside .rail-end {
+ background:var(--rw-rail)!important;
+ border-color:var(--rw-outline)!important;
+ border-left-color:var(--rw-edge)!important;
+ color:var(--rw-dim)!important;
+ box-shadow:none!important;filter:none!important;
+}
+.app-shell > aside .rail::after,
+.app-shell > aside .rail-end::before {content:none!important;}
+/* The main heading on the dark rail previously rendered black on dark green. */
+.app-shell > header .heading h1 .mobile-title,
+.app-shell > header .heading h1,
+.app-shell > header .heading .eyebrow {
+ color:var(--rw-text)!important;text-shadow:none!important;
+}
+/* Main sidebar: inactive = muted; selected = ONE distinct line. */
+.app-shell > aside nav .nav,
+html[data-app-theme] .app-shell > aside nav .nav {
+ background:var(--rw-bg-3)!important;
+ color:var(--rw-text)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;filter:none!important;
+}
+.app-shell > aside nav .nav.active,
+html[data-app-theme] .app-shell > aside nav .nav.active {
+ background:#284535!important;
+ color:var(--rw-active)!important;
+ border-color:var(--rw-edge)!important;
+ box-shadow:inset 3px 0 0 var(--rw-edge)!important;
+}
+.app-shell > aside nav .nav::after,
+.app-shell > aside nav .nav.active::after {color:inherit!important;}
+.app-shell .nav:focus-visible,.app-shell button:focus-visible {
+ outline:2px solid var(--rw-edge)!important;
+ outline-offset:2px;
+}
+
+/* 03. START SCREEN: all framing receives the same green line strength. */
+.lcars-start-screen .lcars-rail-segments .lcars-seg,
+.lcars-start-screen .lcars-bottom-segments .lcars-seg,
+.lcars-start-screen .lcars-side-block,
+.lcars-start-screen .lcars-side-filler {
+ background:var(--rw-rail)!important;
+ color:var(--rw-text)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;filter:none!important;
+}
+.lcars-start-screen .lcars-side-filler {
+ border-left-color:var(--rw-edge)!important;
+}
+.lcars-start-screen .lcars-side-block[aria-pressed="true"] {
+ background:#284535!important;
+ border-color:var(--rw-edge)!important;
+ color:var(--rw-active)!important;
+ box-shadow:inset 3px 0 0 var(--rw-edge)!important;
+}
+.lcars-start-screen .lcars-top-subbar,
+.lcars-start-screen .lcars-subbrand-bar {
+ background:var(--rw-bg-1)!important;
+ border-color:var(--rw-outline)!important;
+ color:var(--rw-dim)!important;
+ box-shadow:none!important;
+}
+.lcars-start-screen .lcars-studio-badge {
+ background:var(--rw-bg-2)!important;
+ color:var(--rw-info)!important;
+ border-color:var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-start-activate {
+ background:var(--rw-active)!important;
+ color:var(--rw-ink)!important;
+ border-color:var(--rw-edge)!important;
+ box-shadow:none!important;filter:none!important;
+}
+.lcars-start-screen .lcars-emblem-wrap {
+ filter:none!important;
+}
+/* A scanline is allowed, but not a different localized glow on each rail. */
+.lcars-start-screen::after {
+ background:repeating-linear-gradient(to bottom,transparent 0 4px,rgba(133,244,163,.012) 4px 5px)!important;
+}
+
+/* 04. PANELS, INSTRUMENT HOUSINGS AND STANDARD CONTROLS */
+.app-shell .panel,
+html[data-app-theme] .app-shell .panel {
+ background:var(--rw-bg-2)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;filter:none!important;
+}
+.app-shell .panel:focus-within {
+ border-color:var(--rw-edge)!important;
+}
+.app-shell .panel > h3,
+.app-shell .panel > .eyebrow,
+:is(#metronome,#audio,#presets,#diary,#analytics,#settings) .panel > :is(h3,.eyebrow) {
+ background:var(--rw-bg-3)!important;
+ color:var(--rw-active)!important;
+ border-color:var(--rw-outline)!important;
+ text-shadow:none!important;
+}
+/* Content summaries should not use random magenta/peach background strips. */
+.app-shell .lcars-info summary,
+.app-shell .mode-help summary,
+#diary #diarySetup > summary {
+ background:var(--rw-inactive)!important;
+ color:var(--rw-ink)!important;
+ box-shadow:none!important;
+}
+.app-shell .section-heading,
+.app-shell .transport {
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;
+}
+.app-shell > main .section-heading h2 {
+ color:var(--rw-text)!important;
+ text-shadow:none!important;
+}
+/* Clickable action colors: activation green, muted controls dark green. */
+.app-shell button.primary,
+#metronome .transport #start,
+#settings #openLaunchConsole,
+#diary #manualEntry,
+#settings #export {
+ background:var(--rw-active)!important;
+ color:var(--rw-ink)!important;
+ box-shadow:none!important;
+}
+.app-shell button.outline,
+#metronome .transport #tap {
+ background:var(--rw-bg-3)!important;
+ border-color:var(--rw-outline)!important;
+ color:var(--rw-text)!important;
+ box-shadow:none!important;
+}
+#modeButtons button,
+#metronome #tacticalViewSwitch button,
+#tacticalViewSwitch button,
+#settings #scaleButtons button,
+#diary #diaryControls .diary-categories button,
+#analyticsContent .analytics-filters button,
+#analyticsContent .chart-modes button {
+ background:var(--rw-inactive)!important;
+ color:var(--rw-text)!important;
+ box-shadow:none!important;
+}
+#modeButtons button[aria-pressed="true"],
+#metronome #tacticalViewSwitch button[aria-pressed="true"],
+#tacticalViewSwitch button[aria-pressed="true"],
+#settings #scaleButtons button[aria-pressed="true"],
+#diary #diaryControls .diary-categories button[aria-pressed="true"],
+#analyticsContent .analytics-filters button[aria-pressed="true"],
+#analyticsContent .chart-modes button[aria-pressed="true"],
+#analyticsContent .session-choices button[aria-pressed="true"] {
+ background:var(--rw-active)!important;
+ color:var(--rw-ink)!important;
+ box-shadow:none!important;
+}
+/* Timers and actual instrument data are accents, not panel chrome. */
+#tempoValue,#liveTempo,#tacticalBpm,#tacticalQuarter,#tacticalSub {
+ color:var(--rw-active)!important;
+}
+
+/* 05. PRACTICE LOG: green action / teal export / warm input / red danger */
+#diary #manualEntry {background:var(--rw-active)!important;color:var(--rw-ink)!important;}
+#diary #csvExport {background:var(--rw-info)!important;color:var(--rw-ink)!important;}
+#diary #diaryControls .diary-field > .field-name,
+#diary #diaryEditor .diary-field > .field-name {
+ background:var(--rw-bg-3)!important;color:var(--rw-text)!important;
+}
+#diary #diarySetup {
+ border-color:var(--rw-outline)!important;
+ background:var(--rw-bg-2)!important;
+}
+#diary #diaryList .log-entry,
+#diary #diaryList .log-entry:nth-child(even) {
+ background:var(--rw-bg-2)!important;border-left-color:var(--rw-outline)!important;
+}
+#diary #diaryList .log-entry > h3,
+#diary #diaryList .log-entry:nth-child(even) > h3 {
+ background:var(--rw-bg-3)!important;color:var(--rw-text)!important;
+}
+#diary .diary-minimum > .field-name,
+#diary #diaryControls .diary-minimum > .field-name {
+ background:var(--rw-bg-3)!important;color:var(--rw-text)!important;
+}
+#diary #diaryControls input:not([type="checkbox"]),
+#diary #diaryEditor input:not([type="checkbox"]),
+#diary #diaryControls textarea,
+#diary #diaryEditor textarea {
+ background:var(--rw-neutral)!important;
+ color:var(--rw-ink)!important;
+}
+/* Archive maintenance is warm, actual deletion is muted red. */
+#diary [id*="archive"] summary,
+#diary [id*="Archive"] summary {
+ background:var(--rw-bg-3)!important;color:var(--rw-warning)!important;
+}
+#diary button[id*="delete" i],
+#diary button[class*="delete" i],
+#diary button[class*="danger" i] {
+ background:var(--rw-danger)!important;color:var(--rw-ink)!important;
+}
+
+/* 06. ANALYTICS: quiet statistical cards, information in teal, no rainbow tiles */
+#analyticsContent .stat-tile,
+#analyticsContent .stat-grid > .stat-tile,
+#analyticsContent .stat-tile:nth-child(n) {
+ background:var(--rw-bg-3)!important;
+ color:var(--rw-text)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;
+}
+#analyticsContent .stat-tile :is(span,strong) {
+ color:var(--rw-text)!important;
+}
+#analyticsContent .stat-tile strong {
+ color:var(--rw-info)!important;
+}
+#analyticsContent .session-choices button:not([aria-pressed="true"]) {
+ background:var(--rw-inactive)!important;color:var(--rw-text)!important;
+ box-shadow:none!important;
+}
+#analyticsContent .panel .field-name {
+ background:var(--rw-bg-3)!important;color:var(--rw-text)!important;
+}
+#analyticsContent .chart-readout,
+#analyticsContent .system-field {
+ background:var(--rw-info)!important;color:var(--rw-ink)!important;
+}
+#analyticsContent .practice-calendar .calendar-day {
+ box-shadow:none!important;
+}
+#analyticsContent .practice-calendar .calendar-day[aria-pressed="true"] {
+ background:var(--rw-active)!important;color:var(--rw-ink)!important;
+}
+#analyticsContent .history-table th {
+ background:var(--rw-bg-3)!important;color:var(--rw-text)!important;
+}
+
+/* 07. SETTINGS: neutral frames; meaning only in interactive widgets. */
+#settings .panel:nth-child(n) {
+ background:var(--rw-bg-2)!important;
+ border-color:var(--rw-outline)!important;
+}
+#settings #scaleButtons button[aria-pressed="true"] {
+ background:var(--rw-active)!important;color:var(--rw-ink)!important;
+}
+#settings .panel:has(> label #uiEnabled) > label > .field-name {
+ background:var(--rw-info)!important;color:var(--rw-ink)!important;
+}
+#settings .panel:has(> label #uiEnabled) > label > input[type="checkbox"] {
+ background:var(--rw-active)!important;color:var(--rw-ink)!important;
+}
+#settings #soundDrop {
+ background:var(--rw-custom)!important;color:var(--rw-ink)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;
+}
+#settings #soundDrop::after {
+ background:var(--rw-bg-1)!important;color:var(--rw-custom)!important;
+}
+#settings #customSoundList .system-field,
+#settings #buildInfo,#settings #motionInfo {
+ background:var(--rw-info)!important;color:var(--rw-ink)!important;
+}
+#settings #offlineStatus {
+ background:var(--rw-neutral)!important;color:var(--rw-ink)!important;
+}
+#settings #storageStatus {
+ background:var(--rw-info)!important;color:var(--rw-ink)!important;
+}
+#settings #persist {
+ background:var(--rw-bg-3)!important;color:var(--rw-text)!important;
+ border-color:var(--rw-outline)!important;
+}
+#settings #update {
+ background:var(--rw-warning)!important;color:var(--rw-ink)!important;
+}
+#settings .panel:has(> #export) > .file-button {
+ background:var(--rw-info)!important;color:var(--rw-ink)!important;
+}
+/* Safety switch / warning stays visible, not a random purple toggle. */
+#settings .panel label:has(#forceMotion) input {
+ background:var(--rw-warning)!important;color:var(--rw-ink)!important;
+}
+
+/* 08. AUDIO MATRIX: recolor existing fader/LED variables, keep signal logic. */
+#mixer .panel.matrix-channel {
+ --matrix-amber:var(--rw-active)!important;
+ --matrix-gold:#d0e9ad!important;
+ --matrix-rust:var(--rw-inactive)!important;
+ --matrix-lilac:#79a28c!important;
+ --matrix-ice:var(--rw-info)!important;
+ --matrix-cream:var(--rw-neutral)!important;
+ --matrix-bg:var(--rw-bg-1)!important;
+ --matrix-led-band-1:linear-gradient(#b3df94,#7cbb94,#4d6b55)!important;
+ --matrix-led-band-2:linear-gradient(#92cbd2,#629d9e,#355442)!important;
+ --matrix-led-band-3:linear-gradient(#d8b37e,#af8f68,#695b45)!important;
+ --matrix-led-on:var(--rw-active)!important;
+ --matrix-led-highlight:#d0e9ad!important;
+ --matrix-led-glow:rgba(133,244,163,.15)!important;
+ --matrix-led-peak:rgba(179,223,148,.32)!important;
+ --matrix-led-sweep:rgba(133,244,163,.08)!important;
+ --matrix-bracket-fill:linear-gradient(#b3df94,#79aa87,#45654f)!important;
+ --matrix-bracket-rim:var(--rw-outline)!important;
+ --matrix-bracket-glow:rgba(133,244,163,.12)!important;
+ --matrix-bracket-active:var(--rw-active)!important;
+}
+#mixer .matrix-housing {
+ background:var(--rw-bg-1)!important;
+ border-color:var(--rw-outline)!important;
+}
+#mixer .matrix-housing.matrix-active,
+#mixer .matrix-housing:focus-within {
+ border-color:var(--rw-edge)!important;
+ box-shadow:none!important;
+}
+/* Actual audio-level LEDs may glow faintly, but not the structural panels. */
+
+/* 09. PLOT READABILITY / ACCESSIBILITY */
+#tactical .tac-cockpit,#tactical .tac-plot-panel,#tactical .tac-diagnostics {
+ border-color:var(--rw-outline)!important;
+}
+#tactical .tac-cockpit::before,
+#tactical .tac-plot-panel::before {opacity:.12!important;}
+#tactical .tac-head {color:var(--rw-text)!important;}
+#tactical .tac-plot-shell {background:var(--rw-bg-1)!important;}
+@media(prefers-reduced-motion:reduce){
+ .app-shell .panel,
+ .lcars-start-screen .lcars-elbow-top,
+ .lcars-start-screen .lcars-elbow-bottom {
+  box-shadow:none!important;
+ }
+}
