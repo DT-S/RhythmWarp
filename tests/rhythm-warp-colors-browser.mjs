@@ -83,6 +83,14 @@ try{
    assert.equal(rgb(frame.panelBorder),'53,84,66','panels share same stroke');
    assert.ok(frame.leftButton.width>(isMobile?40:80),'navigation width unchanged');
    assert.ok(frame.sideRail.width>(isMobile?40:80),'side rail width unchanged');
+   const cap=await page.evaluate(()=>{
+    const el=document.querySelector('#metronome .lcars-cap-value');
+    if(!el)return null;
+    const cs=getComputedStyle(el),ps=getComputedStyle(el.parentElement),r=el.getBoundingClientRect();
+    return {text:el.textContent,fg:cs.color,bg:cs.backgroundColor,parentBg:ps.backgroundColor,
+      display:cs.display,opacity:cs.opacity,visibility:cs.visibility,width:r.width,height:r.height};
+   });
+   console.log('RW SWING READOUT '+key+' '+JSON.stringify(cap));
    for(const tab of ['metronome','diary','analytics','settings']){
     await page.locator('[data-tab="'+tab+'"]').click();
     const pageTitle=await page.locator('#'+tab).isVisible();
