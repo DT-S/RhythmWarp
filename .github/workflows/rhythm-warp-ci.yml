@@ -3,6 +3,7 @@ name: Rhythm Warp student edition checks
 on:
   push:
     branches:
+      - main
       - feat/student-edition
   pull_request:
     branches:
@@ -24,6 +25,7 @@ jobs:
         run: npm test
 
   color-system-browser:
+    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
