@@ -6,7 +6,7 @@ test('the sidebar-only layout loads after all color themes and is fully precache
  const html=read('index.html'),sw=read('sw.js');
  assert.ok(html.indexOf('rhythm-warp-layout.css')>html.indexOf('rhythm-warp-colors.css'));
  assert.match(sw,/\.\/rhythm-warp-layout\.css/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-db-isolation-v1'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-palettes-v10'/);
 });
 test('buttons have square corners, rail extends, and detached end is hidden',()=>{
  const css=read('rhythm-warp-layout.css');
