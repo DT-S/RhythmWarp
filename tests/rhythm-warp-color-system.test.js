@@ -69,3 +69,11 @@ test('palette tokens drive faders, ring strokes and startup SVG',()=>{
  assert.match(css,/#rings \.track\{stroke:var\(--rw-ring-track\)!important;\}/);
  assert.match(css,/\.lcars-start-screen \.lcars-start-logo \[stroke="#85f4a3"\]/);
 });
+
+test('launch CTA, status labels and input colors inherit theme semantic roles',()=>{
+ const css=read('rhythm-warp-colors.css');
+ assert.match(css,/--ice:var\(--rw-info\)!important/);
+ assert.match(css,/--cream:var\(--rw-neutral\)!important/);
+ assert.match(css,/html\[data-app-theme\] \.lcars-start-screen \.lcars-activate-wrap \.lcars-start-activate/);
+ assert.match(css,/#trainingFields \.system-field/);
+});

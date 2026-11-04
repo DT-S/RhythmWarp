@@ -66,7 +66,9 @@ try{
      bottomRim:sty('.lcars-bottom-segments .lcars-seg').borderBottomColor,
      logoStroke:sty('.lcars-start-logo [stroke="#85f4a3"]').stroke,
      selectedTheme:document.documentElement.dataset.appTheme,
-     visibleTheme:$('.lcars-start-screen').dataset.theme
+     visibleTheme:$('.lcars-start-screen').dataset.theme,
+     startButton:getComputedStyle($('#lcarsInitialize')).backgroundColor,
+     consoleRim:getComputedStyle($('.lcars-start-console')).borderLeftColor
     };
    });
    assert.equal(launch.logoFilter,'none','logo should not cast an uncontrolled glow');
@@ -74,6 +76,7 @@ try{
    assert.equal(launch.visibleTheme,theme,'launch theme matches application theme');
    assert.equal(rgb(launch.logoStroke),themes[theme].edge,'start emblem must follow theme accent');
    assert.equal(rgb(launch.lightBackground),themes[theme].bg,'launch background follows chosen theme');
+   assert.equal(rgb(launch.startButton),themes[theme].active,'launch CTA must not remain green in other themes');
    for(const edge of ['topRim','fillerLeft','fillerRight','bottomRim'])
      assert.equal(rgb(launch[edge]),themes[theme].edge,edge+' uses same outer rim');
    assert.equal(rgb(launch.innerSeam),themes[theme].outline,'inside separators use theme seam');
@@ -106,6 +109,8 @@ try{
    assert.equal(rgb(frame.panelBorder),themes[theme].outline,'panels share theme stroke');
    assert.ok(frame.leftButton.width>(isMobile?40:80),'navigation width unchanged');
    assert.ok(frame.sideRail.width>(isMobile?40:80),'side rail width unchanged');
+   const status=await page.locator('#trainingFields .system-field').evaluate(el=>getComputedStyle(el).backgroundColor);
+   assert.equal(rgb(status),themes[theme].info,'metronome status must use theme info color');
    const cap=await page.evaluate(()=>{
     const el=document.querySelector('#metronome .lcars-cap-value');
     if(!el)return null;

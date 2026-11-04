@@ -52,6 +52,8 @@
  --text:var(--rw-text)!important;
  --muted:var(--rw-dim)!important;
  --line:var(--rw-outline)!important;
+ --ice:var(--rw-info)!important;
+ --cream:var(--rw-neutral)!important;
  --orange:var(--rw-active)!important;
  --pink:var(--rw-info)!important;
  --purple:var(--rw-inactive)!important;
@@ -768,4 +770,23 @@ html[data-app-theme] .lcars-start-screen .lcars-subbrand-bar{
 html[data-app-theme] .lcars-start-screen::after{
  background:repeating-linear-gradient(to bottom,transparent 0 4px,var(--rw-sweep) 4px 5px)!important;
  opacity:.2;
+}
+
+
+/* 17. REMOVE FINAL LEGACY GREEN FROM THEME-SWITCHED LAUNCH AND STATUS.
+   Specificity matches/exceeds the original Studio-Green CSS for the
+   actual clickable start button (wrapper + button), not just the button. */
+html[data-app-theme] .lcars-start-screen .lcars-activate-wrap .lcars-start-activate {
+ background:var(--rw-active)!important;
+ color:var(--rw-ink)!important;
+ border-color:var(--rw-edge)!important;
+ box-shadow:none!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-start-console {
+ border-left-color:var(--rw-outline-soft)!important;
+}
+#trainingFields .system-field,
+#trainingFields .system-field:nth-child(n) {
+ background:var(--rw-info)!important;
+ color:var(--rw-ink)!important;
 }
