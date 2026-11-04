@@ -29,7 +29,8 @@ const browser=await chromium.launch({headless:true});
 let failures=0;
 const cases=[{width:320,height:740,theme:'voyager'}, {width:393,height:852,theme:'voyager'},
  {width:768,height:1024,theme:'voyager'}, {width:1440,height:900,theme:'voyager'},
- {width:393,height:852,theme:'elite'}, {width:1440,height:900,theme:'redalert'}];
+ {width:393,height:852,theme:'elite'}, {width:1440,height:900,theme:'elite'},
+ {width:393,height:852,theme:'redalert'}, {width:1440,height:900,theme:'redalert'}];
 const rgb=s=>s.match(/\d+/g)?.slice(0,3).map(Number).join(',')||'';
 const themes={
  voyager:{edge:'133,244,163',active:'179,223,148',bg:'14,23,20',panel:'20,35,28',
