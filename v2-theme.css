@@ -1,0 +1,363 @@
+/* Optional, persisted palette overlays. Voyager is the current unmodified default. */
+/* Hazard Team: violet -> indigo -> blue, with gold only as an indicator.
+   Tactical Red: crimson -> coral -> red-orange -> muted amber. */
+html[data-app-theme="elite"] {
+ --orange:#9c78df;--salmon:#668fd4;--purple:#9167d1;--pink:#b6a0e7;
+ --text:#e9e1ff;--muted:#c1b5d9;--line:#645a99;
+ --padd-orange:#9871d8;--padd-amber:#91a9e7;--padd-peach:#baa5ec;
+ --padd-lavender:#8661ca;--padd-blue:#7bb7ec;
+ --padd-tan:#648bd1;--padd-red:#aa8be7;
+ --lcars-mobile-orange:#9871d8;--lcars-mobile-peach:#baa5ec;
+ --lcars-mobile-blue:#7bb7ec;--lcars-mobile-lilac:#9973d9;
+ --theme-signal:#e7c875;
+}
+html[data-app-theme="redalert"] {
+ --orange:#ed4448;--salmon:#e65d4e;--purple:#c84951;--pink:#f1835d;
+ --text:#ffe1d6;--muted:#e6b6b1;--line:#984953;
+ --padd-orange:#ed4448;--padd-amber:#f0a268;--padd-peach:#f47b56;
+ --padd-lavender:#cd4953;--padd-blue:#f2a56d;
+ --padd-tan:#c23744;--padd-red:#ed5051;
+ --lcars-mobile-orange:#ed4448;--lcars-mobile-peach:#f47b56;
+ --lcars-mobile-blue:#ef9e65;--lcars-mobile-lilac:#d3544c;
+ --theme-signal:#f5bc79;
+}
+html[data-app-theme="elite"] .app-shell,
+html[data-app-theme="redalert"] .app-shell {color:var(--text);}
+html[data-app-theme="elite"] header::after,
+html[data-app-theme="redalert"] header::after {
+ background:linear-gradient(to right,var(--padd-orange) 0 57%,#000 57% 58%,var(--padd-tan) 58% 78%,#000 78% 79%,var(--padd-blue) 79% 96%,#000 96% 97%,var(--padd-lavender) 97%);
+}
+html[data-app-theme="elite"] .nav.active,
+html[data-app-theme="redalert"] .nav.active {background:var(--padd-amber);box-shadow:inset -8px 0 var(--padd-peach);color:#000;}
+html[data-app-theme="elite"] .nav:nth-child(4),
+html[data-app-theme="redalert"] .nav:nth-child(4) {background:var(--padd-tan);}
+html[data-app-theme="elite"] .nav:nth-child(5),
+html[data-app-theme="redalert"] .nav:nth-child(5) {background:var(--padd-peach);}
+html[data-app-theme="elite"] .rail,
+html[data-app-theme="redalert"] .rail {
+ background:linear-gradient(to bottom,var(--padd-tan) 0 36%,#000 36% calc(36% + 6px),var(--padd-lavender) calc(36% + 6px) 72%,#000 72% calc(72% + 6px),var(--padd-peach) calc(72% + 6px));
+}
+html[data-app-theme="elite"] .panel,
+html[data-app-theme="redalert"] .panel {border-color:var(--padd-lavender);}
+html[data-app-theme="elite"] .panel:nth-child(even),
+html[data-app-theme="redalert"] .panel:nth-child(even) {border-color:var(--padd-tan);}
+html[data-app-theme="elite"] .section-heading,
+html[data-app-theme="redalert"] .section-heading {border-color:var(--padd-lavender);}
+html[data-app-theme="elite"] .transport,
+html[data-app-theme="redalert"] .transport {border-color:var(--padd-tan);}
+html[data-app-theme="elite"] .point.state0,
+html[data-app-theme="redalert"] .point.state0 {stroke:var(--padd-orange);fill:var(--text);}
+html[data-app-theme="elite"] .point.state1,
+html[data-app-theme="redalert"] .point.state1 {fill:var(--padd-tan);}
+html[data-app-theme="elite"] .point.state2,
+html[data-app-theme="redalert"] .point.state2 {fill:var(--padd-lavender);}
+html[data-app-theme="elite"] .tempo-buttons button,
+html[data-app-theme="redalert"] .tempo-buttons button {color:var(--text);}
+html[data-app-theme="elite"] #notice,
+html[data-app-theme="redalert"] #notice {background:var(--padd-amber);}
+html[data-app-theme="elite"] .toggled,
+html[data-app-theme="redalert"] .toggled {background:var(--padd-orange)!important;}
+#openLaunchConsole {min-height:52px;border-radius:28px 5px 5px 28px;letter-spacing:.04em;}
+
+/* The segmented LCARS sliders have component-local color tokens and hardcoded
+   Voyager LED gradients. Recolor those too, without changing their geometry. */
+html[data-app-theme="elite"] .lcars-slide,
+html[data-app-theme="redalert"] .lcars-slide {
+ --sl-orange:var(--padd-orange);--sl-gold:var(--padd-amber);--sl-peach:var(--padd-peach);
+ --sl-lavender:var(--padd-lavender);--sl-salmon:var(--padd-tan);
+ --sl-cream:var(--text,var(--padd-peach));
+}
+html[data-app-theme="elite"] .lcars-pill.lit.led-gold,
+html[data-app-theme="redalert"] .lcars-pill.lit.led-gold {
+ background:linear-gradient(var(--padd-amber),var(--padd-orange));
+}
+html[data-app-theme="elite"] .lcars-pill.lit.led-peach,
+html[data-app-theme="redalert"] .lcars-pill.lit.led-peach {
+ background:linear-gradient(var(--padd-peach),var(--padd-orange));
+}
+html[data-app-theme="elite"] .lcars-pill.lit.led-salmon,
+html[data-app-theme="redalert"] .lcars-pill.lit.led-salmon {
+ background:linear-gradient(var(--padd-lavender),var(--padd-tan));
+}
+html[data-app-theme="elite"] .lcars-bracket-core,
+html[data-app-theme="redalert"] .lcars-bracket-core {
+ background:linear-gradient(var(--padd-peach),var(--padd-orange),var(--padd-tan));
+}
+html[data-app-theme="elite"] .lcars-cap-crescent,
+html[data-app-theme="redalert"] .lcars-cap-crescent {background:var(--padd-lavender);}
+
+/* Actual tablet/desktop fascia uses several strong, direct declarations.
+   Override them explicitly so an alternate palette never inherits the
+   Voyager white/yellow rail or unthemed crimson START button. */
+html[data-app-theme="elite"] .app-shell > aside nav .nav:nth-child(1){background:#9979d7;}
+html[data-app-theme="elite"] .app-shell > aside nav .nav:nth-child(2){background:#728fd9;}
+html[data-app-theme="elite"] .app-shell > aside nav .nav:nth-child(3){background:#b79ee8;}
+html[data-app-theme="elite"] .app-shell > aside nav .nav:nth-child(4){background:#78b7e9;}
+html[data-app-theme="elite"] .app-shell > aside nav .nav:nth-child(5){background:#6c7bcc;}
+html[data-app-theme="elite"] .app-shell > aside nav .nav:nth-child(6){background:#9d7cda;}
+html[data-app-theme="redalert"] .app-shell > aside nav .nav:nth-child(1){background:#e45654;}
+html[data-app-theme="redalert"] .app-shell > aside nav .nav:nth-child(2){background:#e45d55;}
+html[data-app-theme="redalert"] .app-shell > aside nav .nav:nth-child(3){background:#e96850;}
+html[data-app-theme="redalert"] .app-shell > aside nav .nav:nth-child(4){background:#ef8257;}
+html[data-app-theme="redalert"] .app-shell > aside nav .nav:nth-child(5){background:#f29962;}
+html[data-app-theme="redalert"] .app-shell > aside nav .nav:nth-child(6){background:#efb474;}
+html[data-app-theme="elite"] .app-shell > aside nav .nav.active{
+ background:#c9b5f3!important;box-shadow:inset -7px 0 #e7c875!important;color:#151025;
+}
+html[data-app-theme="redalert"] .app-shell > aside nav .nav.active{
+ background:#ffc184!important;box-shadow:inset -7px 0 #ee6250!important;color:#240d0d;
+}
+html[data-app-theme="elite"] .app-shell > header .elbow{background:#8f6bd3;}
+html[data-app-theme="redalert"] .app-shell > header .elbow{background:#e84549;}
+html[data-app-theme="elite"] .app-shell > header::after{
+ background:linear-gradient(90deg,#8f6bd3 0 56%,#000 56% 57.5%,#7193d9 57.5% 81%,#000 81% 82.5%,#b6a0ec 82.5%);
+}
+html[data-app-theme="redalert"] .app-shell > header::after{
+ background:linear-gradient(90deg,#d83b45 0 56%,#000 56% 57.5%,#ec7554 57.5% 81%,#000 81% 82.5%,#f3a66d 82.5%);
+}
+html[data-app-theme="elite"] .app-shell > aside .rail{background:#7f76d0;}
+html[data-app-theme="elite"] .app-shell > aside .rail-end{background:#769fdf;}
+html[data-app-theme="redalert"] .app-shell > aside .rail{background:#dc4850;}
+html[data-app-theme="redalert"] .app-shell > aside .rail-end{background:#ec865c;}
+html[data-app-theme="elite"] .app-shell > aside .rail-end::after{
+ background:linear-gradient(90deg,#9d73d9 0 42%,#000 42% 44%,#779cde 44% 83%,#000 83% 85%,#c2a9ed 85%);
+}
+html[data-app-theme="redalert"] .app-shell > aside .rail-end::after{
+ background:linear-gradient(90deg,#d7444e 0 42%,#000 42% 44%,#ed7755 44% 83%,#000 83% 85%,#f4aa70 85%);
+}
+html[data-app-theme="elite"] #metronome .transport #start{background:#a18be8;color:#140e2d;}
+html[data-app-theme="elite"] #metronome .transport #tap{background:#83bbe9;color:#10142d;}
+html[data-app-theme="redalert"] #metronome .transport #start{background:#ee4a4b;color:#280d0b;}
+html[data-app-theme="redalert"] #metronome .transport #tap{background:#f49765;color:#2b1209;}
+/* Component-specific audio controls otherwise keep fixed rusty Voyager colors. */
+/* Upper channel instruments share the exact segmented LED families and
+   moving-bracket palette of the master/UI sliders directly below them.
+   Scope to actual channel panels, both channels and all viewport widths. */
+html[data-app-theme="elite"] #mixer .panel.matrix-channel,
+html[data-app-theme="redalert"] #mixer .panel.matrix-channel {
+ --matrix-led-band-1:linear-gradient(var(--padd-amber),var(--padd-orange));
+ --matrix-led-band-2:linear-gradient(var(--padd-peach),var(--padd-orange));
+ --matrix-led-band-3:linear-gradient(var(--padd-lavender),var(--padd-tan));
+ --matrix-led-on:var(--padd-amber);
+ --matrix-led-highlight:var(--padd-peach);
+ --matrix-led-glow:var(--padd-amber);
+ --matrix-led-peak:var(--padd-amber);
+ --matrix-led-sweep:color-mix(in srgb,var(--padd-amber) 16%,transparent);
+ --matrix-bracket-fill:linear-gradient(var(--padd-peach),var(--padd-orange),var(--padd-tan));
+ --matrix-bracket-rim:var(--padd-orange);
+ --matrix-bracket-glow:var(--padd-orange);
+ --matrix-bracket-active:var(--padd-peach);
+}
+html[data-app-theme="elite"] #mixer .panel.matrix-channel{
+ --matrix-amber:#9874d9;--matrix-gold:#c8adef;--matrix-rust:#648bd1;
+ --matrix-lilac:#9769d0;--matrix-ice:#87c0ec;--matrix-cream:#eee5ff;
+}
+html[data-app-theme="redalert"] #mixer .panel.matrix-channel{
+ --matrix-amber:#ec514c;--matrix-gold:#f7ad70;--matrix-rust:#c33e47;
+ --matrix-lilac:#e16a54;--matrix-ice:#f3a26a;--matrix-cream:#ffe4cb;
+}
+/* The app's other accent panels follow the same progression. */
+html[data-app-theme="elite"] #settings .panel,html[data-app-theme="elite"] #metronome .panel{
+ border-color:#8767cc;
+}
+html[data-app-theme="redalert"] #settings .panel,html[data-app-theme="redalert"] #metronome .panel{
+ border-color:#d54c50;
+}
+html[data-app-theme="elite"] #settings .panel:nth-child(even),
+html[data-app-theme="elite"] #metronome .panel:nth-child(even){border-color:#78a9e6;}
+html[data-app-theme="redalert"] #settings .panel:nth-child(even),
+html[data-app-theme="redalert"] #metronome .panel:nth-child(even){border-color:#ef8a5a;}
+html[data-app-theme="elite"] #openLaunchConsole{background:#aa8be7;color:#140e2d;}
+html[data-app-theme="redalert"] #openLaunchConsole{background:#f07f55;color:#29100d;}
+
+
+/* =====================================================================
+   RC25.10 // VOYAGER MAIN ENGINEERING / SYSTEM ACCESS (#settings)
+   Seven existing DOM panels. CSS-only presentation; no changes to
+   backup, sound-upload, device diagnostics or interface state handling.
+   Scoped to phones to preserve the desktop engineering console.
+   ===================================================================== */
+@media (max-width:640px) {
+  #settings .cards {gap:8px!important;min-width:0;}
+  #settings .cards > .panel {
+    min-width:0;box-sizing:border-box;padding:5px 5px 8px 8px!important;
+    margin:0!important;border-left-width:10px!important;
+    border-top-width:6px!important;border-radius:22px 0 0 16px!important;
+  }
+  /* RC16 readability guarantees: section titles stay at least 16/18px,
+     instead of shrinking meaningful headings to 13px. */
+  #settings .cards > .panel > h3 {
+    min-width:0;min-height:39px!important;padding:6px 10px!important;
+    margin:0 0 5px!important;font-size:18px!important;
+    line-height:1.16;overflow-wrap:anywhere;
+  }
+  #settings .cards > .panel > h3 #scaleReadout {
+    font-size:13px;white-space:nowrap;
+  }
+  #settings .cards .lcars-info {min-width:0;margin:4px 0 0!important;}
+  #settings .cards .lcars-info summary {
+    min-height:36px!important;padding:6px 10px!important;
+    font-size:14px!important;line-height:1.15;
+    border-radius:15px 3px 3px 15px!important;
+  }
+
+  /* Engineering Deck A: theme & scale. Keep the actual launch trigger. */
+  #settings #scaleButtons {gap:3px!important;margin:4px 0!important;min-width:0;}
+  #settings #scaleButtons button {
+    min-width:0;min-height:36px!important;padding:5px 2px!important;
+    font-size:12px!important;line-height:1.15;
+  }
+  #settings .panel:has(> #openLaunchConsole) > .hint {display:none!important;}
+  #settings #openLaunchConsole {
+    min-height:42px!important;margin:2px 0 0!important;padding:7px 10px!important;
+    font-size:13px!important;border-radius:19px 4px 4px 19px!important;
+  }
+
+  /* Engineering Deck B: four UI controls in two columns; force-motion
+     is deliberately a separate, wide warning switch below them. */
+  #settings .panel:has(> label #uiEnabled) {
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:4px!important;align-items:stretch;
+  }
+  #settings .panel:has(> label #uiEnabled) > h3,
+  #settings .panel:has(> label #uiEnabled) > label:has(#forceMotion),
+  #settings .panel:has(> label #uiEnabled) > .lcars-info {
+    grid-column:1/-1!important;
+  }
+  #settings .panel:has(> label #uiEnabled) > label:has(input[type="checkbox"]) {
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 39px!important;
+    gap:2px!important;min-width:0;min-height:44px!important;
+    margin:0!important;border-radius:0!important;
+    align-items:stretch;
+  }
+  #settings .panel:has(> label #uiEnabled) > label:has(#forceMotion) {
+    grid-template-columns:minmax(0,1fr) 55px!important;
+    min-height:44px!important;border-radius:0 0 14px 14px!important;
+  }
+  #settings .panel:has(> label #uiEnabled) > label:has(#uiEnabled) {border-top-left-radius:14px!important;}
+  #settings .panel:has(> label #uiEnabled) > label:has(#hoverEnabled) {border-top-right-radius:14px!important;}
+  #settings .panel:has(> label #uiEnabled) > label:has(input[type="checkbox"]) > .field-name {
+    display:flex!important;align-items:center;justify-content:flex-end;
+    min-width:0;min-height:44px!important;padding:4px 5px!important;
+    font-size:11px!important;line-height:1.16!important;text-align:right;
+    overflow-wrap:anywhere;
+  }
+  #settings .panel:has(> label #uiEnabled) > label:has(input[type="checkbox"]) input {
+    width:39px!important;height:100%;min-height:44px;left:auto;right:0;
+  }
+  #settings .panel:has(> label #uiEnabled) > label:has(#forceMotion) input {width:55px!important;}
+  #settings .panel:has(> label #uiEnabled) > label:has(input[type="checkbox"])::after {
+    font-size:11px!important;
+  }
+
+  /* Engineering Deck C: compact sound transporter. Invisible native file
+     input still covers the entire slot for tap-to-upload and focus. */
+  #settings #soundDrop {
+    display:flex!important;align-items:center;justify-content:space-between;
+    gap:6px;min-width:0;min-height:44px!important;
+    padding:8px 9px!important;margin:3px 0 5px!important;
+    border:0!important;border-left:10px solid var(--padd-amber,#ffcc66)!important;
+    outline:0!important;border-radius:18px 0 0 18px!important;
+    font:900 12px/1.2 'Arial Narrow',Arial,sans-serif!important;
+  }
+  #settings #soundDrop > span {flex:1;min-width:0;overflow-wrap:anywhere;}
+  #settings #soundDrop::after {
+    content:'MAX 16 · 5s';flex:0 0 auto;pointer-events:none;
+    font:800 10px/1 ui-monospace,Consolas,monospace;
+    padding:4px 5px;background:#000;
+    color:var(--padd-amber,#ffcc66);border-radius:7px;
+  }
+  #settings #soundDrop:focus-within {outline:3px solid #fff!important;outline-offset:2px!important;}
+  #settings #customSoundList {min-width:0;}
+  #settings #customSoundList .system-field {
+    min-height:32px!important;padding:6px 9px!important;
+    font-size:12px!important;margin:2px 0!important;
+  }
+  #settings #customSoundList .sound-file {
+    display:grid!important;grid-template-columns:minmax(0,1fr) 52px 58px!important;
+    gap:3px!important;min-width:0;margin:4px 0!important;
+    align-items:stretch;
+  }
+  #settings #customSoundList .sound-file > span {
+    display:block;min-width:0;grid-column:1!important;
+    padding:9px 7px!important;font-size:12px!important;line-height:1.1;
+    align-content:center;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    border-radius:14px 0 0 14px!important;
+  }
+  #settings #customSoundList .sound-file button {
+    min-width:0;min-height:38px!important;margin:0!important;
+    padding:5px 2px!important;font-size:11px!important;
+    border-radius:0!important;
+  }
+  #settings #customSoundList .sound-file button:last-child {
+    border-radius:0 14px 14px 0!important;
+    background:var(--padd-tan,#cc6666);color:#07070b;
+  }
+
+  /* Engineering Deck D: paired export/import with the backup explanation
+     after the actions. Input remains a real, fully tappable file control. */
+  #settings .panel:has(> #export) {
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important;
+  }
+  #settings .panel:has(> #export) > h3,
+  #settings .panel:has(> #export) > .lcars-info {grid-column:1/-1!important;}
+  #settings .panel:has(> #export) > .lcars-info {order:3;}
+  #settings .panel:has(> #export) > #export,
+  #settings .panel:has(> #export) > .file-button {
+    display:flex!important;align-items:center;justify-content:center;
+    min-width:0;width:100%;min-height:44px!important;margin:0!important;
+    padding:7px 5px!important;font-size:14px!important;line-height:1.15;
+    box-sizing:border-box;text-align:center;
+  }
+  #settings .panel:has(> #export) > #export {border-radius:18px 0 0 18px!important;}
+  #settings .panel:has(> #export) > .file-button {border-radius:0 18px 18px 0!important;}
+
+  /* Engineering Deck E: storage status above paired storage actions.
+     Variable status messages may wrap; never clip or fake an online state. */
+  #settings .panel:has(> #offlineStatus) {
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:4px!important;align-items:stretch;
+  }
+  #settings .panel:has(> #offlineStatus) > h3 {grid-column:1/-1!important;}
+  #settings #offlineStatus,#settings #storageStatus {
+    min-width:0;min-height:39px!important;height:auto;margin:0!important;
+    padding:6px 6px!important;font-size:11px!important;
+    line-height:1.25!important;overflow-wrap:anywhere;
+  }
+  #settings #offlineStatus {border-radius:13px 0 0 0!important;}
+  #settings #storageStatus {border-radius:0 13px 0 0!important;}
+  #settings #persist,#settings #update {
+    min-width:0;width:100%;min-height:44px!important;margin:0!important;
+    padding:6px 5px!important;font-size:12px!important;
+    line-height:1.15!important;overflow-wrap:anywhere;
+  }
+  #settings #persist {border-radius:0 0 0 14px!important;}
+  #settings #update {
+    border-radius:0 0 14px 0!important;
+    background:var(--padd-amber,#ffcc66);color:#08050b;
+  }
+
+  /* Engineering Deck F: build and motion diagnostics; the expandable
+     viewport troubleshooting and capability details remain available. */
+  #settings #buildInfo,#settings #motionInfo {
+    min-width:0;min-height:34px!important;padding:7px 8px!important;
+    margin:3px 0!important;
+    font:800 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+    border-radius:15px 0 0 15px!important;
+    overflow-wrap:anywhere;
+  }
+  #settings #motionInfo {background:var(--padd-peach,#ff9966);color:#10060a!important;}
+}
+/* Devices narrower than an iPhone 13: preserve text without creating
+   horizontal scrolling or reducing meaningful section-heading sizes. */
+@media(max-width:350px) {
+  #settings .cards > .panel > h3 {font-size:16px!important;}
+  #settings .panel:has(> label #uiEnabled) > label:has(input[type="checkbox"]) > .field-name {font-size:10px!important;}
+  #settings #customSoundList .sound-file {grid-template-columns:minmax(0,1fr) 47px 53px!important;}
+  #settings #customSoundList .sound-file button {font-size:10px!important;}
+}

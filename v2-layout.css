@@ -1,0 +1,1054 @@
+/*
+ * Rhythm PADD 2.0 / P1b + first P1c pass.
+ * Tablet/desktop adopt the approved iPhone LCARS PADD vocabulary.
+ * This is a temporary migration layer. Consolidate into component sheets
+ * AFTER cross-device visual approval. Do not change the 0–640px design.
+ */
+:root {
+  --padd-bg: #000;
+  --padd-orange: #ff9900;
+  --padd-amber: #ffcc66;
+  --padd-peach: #ff9966;
+  --padd-lavender: #cc99cc;
+  --padd-blue: #9999ff;
+  --padd-tan: #cc6666;
+  --padd-red: #cc4444;
+}
+@media (min-width:641px) {
+  :root { color-scheme:dark; }
+  html,body {
+    width:100%; height:100%; margin:0; overflow:hidden;
+    background:var(--padd-bg);
+  }
+  .app-shell {
+    --v2-sidebar: clamp(88px,10.5vw,166px);
+    --v2-gutter: clamp(12px,1.7vw,26px);
+    display:grid;
+    grid-template-columns:var(--v2-sidebar) minmax(0,1fr);
+    grid-template-rows:clamp(74px,8.5vh,100px) minmax(0,1fr) 30px;
+    column-gap:var(--v2-gutter);
+    row-gap:6px;
+    /* CSS zoom already adjusts the percentage containing block on desktop.
+       Multiplying width by its inverse a second time overflows at 70%. */
+    width:100%;
+    max-width:none;
+    height:calc(100dvh * var(--mobile-zoom-inverse,1));
+    min-height:0;
+    margin:0;
+    padding: max(10px,calc(env(safe-area-inset-top) * var(--mobile-zoom-inverse,1)))
+             max(14px,calc(env(safe-area-inset-right) * var(--mobile-zoom-inverse,1)))
+             max(10px,calc(env(safe-area-inset-bottom) * var(--mobile-zoom-inverse,1)))
+             max(14px,calc(env(safe-area-inset-left) * var(--mobile-zoom-inverse,1)));
+    overflow:hidden;
+    background:var(--padd-bg);
+  }
+  /* Same real elbow and segmented upper rail as the compact PADD. */
+  .app-shell > header {
+    position:relative;
+    display:block;
+    grid-column:1/-1;grid-row:1;
+    height:100%;min-height:0;
+    width:100%;
+    padding:0;margin:0;
+    isolation:isolate;
+    overflow:visible;
+  }
+  .app-shell > header .elbow {
+    position:absolute;
+    top:0;left:0;
+    width:calc(var(--v2-sidebar) + 29px);
+    height:100%;
+    min-height:0;
+    border:0;
+    border-radius:clamp(36px,4vw,56px) 0 0 0;
+    background:var(--padd-amber);
+  }
+  .app-shell > header .elbow::after {
+    content:'';
+    position:absolute;
+    top:clamp(19px,2.4vw,28px);
+    left:var(--v2-sidebar);
+    right:0;bottom:0;
+    border-radius:clamp(18px,2.5vw,28px) 0 0 0;
+    background:#000;
+  }
+  .app-shell > header::before {
+    content:'47-01';
+    position:absolute;left:0;bottom:4px;
+    width:calc(var(--v2-sidebar) - 8px);
+    color:#000;
+    z-index:2;
+    font:900 clamp(11px,1.1vw,15px)/1 Impact,'Arial Narrow',sans-serif;
+    text-align:right;
+    pointer-events:none;
+  }
+  .app-shell > header::after {
+    content:'';
+    position:absolute;
+    left:calc(var(--v2-sidebar) + var(--v2-gutter));
+    top:0;right:0;bottom:auto;
+    width:auto;height:clamp(18px,2.2vw,25px);
+    border-radius:0 14px 14px 0;
+    background:linear-gradient(to right,
+      var(--padd-amber) 0 10%,#000 10% 11.5%,
+      var(--padd-orange) 11.5% 79%,#000 79% 80.5%,
+      var(--padd-orange) 80.5% 100%);
+  }
+  .app-shell > header .heading {
+    position:absolute;
+    z-index:2;
+    left:calc(var(--v2-sidebar) + var(--v2-gutter));
+    right:0;
+    top:clamp(28px,3.2vw,37px);
+    margin:0;
+    padding:0;
+    min-width:0;
+  }
+  .app-shell > header .heading .eyebrow,
+  .app-shell > header .heading h1 > span:not(.mobile-title),
+  .app-shell > header .header-tail {display:none;}
+  .app-shell > header .heading h1 {
+    margin:0;padding:0;
+    font-size:0;
+    line-height:1;
+  }
+  .app-shell > header .heading h1 .mobile-title {
+    display:block;
+    font:900 clamp(22px,2.8vw,37px)/1.15 Arial,Helvetica,sans-serif;
+    color:var(--padd-orange);
+    letter-spacing:.018em;
+    white-space:nowrap;
+  }
+  /* Fascia: visible on every page and every medium/wide screen. */
+  .app-shell > aside {
+    display:flex;
+    flex-direction:column;
+    grid-column:1;grid-row:2;
+    gap:6px;
+    min-width:0;min-height:0;
+    margin:0;padding:0;
+  }
+  .app-shell > aside nav {
+    display:flex;
+    flex-direction:column;
+    flex:0 0 auto;
+    gap:5px;
+    width:100%;
+    margin:0;padding:0;
+    border:none;background:#000;
+  }
+  .app-shell > aside nav .nav {
+    display:flex;align-items:center;justify-content:flex-end;
+    text-align:right;
+    width:100%;min-width:0;
+    min-height:clamp(48px,6.2vh,69px);
+    margin:0;padding:8px 10px;
+    border:0;border-radius:0;
+    box-shadow:none;
+    line-height:1.15;
+    font:900 clamp(10px,1vw,15px)/1.15 'Arial Narrow',Arial,sans-serif;
+    letter-spacing:0;
+    color:#000;
+    overflow:hidden;
+  }
+  .app-shell > aside nav .nav small {display:none;}
+  .app-shell > aside nav .nav:nth-child(1){background:#fff;}
+  .app-shell > aside nav .nav:nth-child(2){background:var(--padd-amber);}
+  .app-shell > aside nav .nav:nth-child(3){background:var(--padd-peach);}
+  .app-shell > aside nav .nav:nth-child(4){background:var(--padd-blue);}
+  .app-shell > aside nav .nav:nth-child(5){background:var(--padd-tan);}
+  .app-shell > aside nav .nav:nth-child(6){background:var(--padd-amber);}
+  .app-shell > aside nav .nav.active {
+    background:#fff!important;
+    box-shadow:inset -6px 0 var(--padd-orange)!important;
+  }
+  .app-shell > aside nav .nav:focus-visible {
+    outline:3px solid white;outline-offset:2px;
+  }
+  .app-shell > aside .rail {
+    display:flex;
+    flex:1 1 auto;
+    position:relative;
+    width:100%;min-height:24px;
+    padding:8px 8px 11px;
+    border-radius:0;
+    align-items:flex-end;justify-content:flex-end;
+    color:#000;
+    background:var(--padd-amber);
+    font-size:0;
+  }
+  .app-shell > aside .rail > span {display:none;}
+  .app-shell > aside .rail::after {
+    content:'09-442';
+    color:#000;
+    font:900 clamp(11px,1vw,15px)/1 Impact,'Arial Narrow',sans-serif;
+  }
+  .app-shell > aside .rail-end {
+    display:flex;
+    flex:0 0 auto;
+    position:relative;
+    width:100%;height:clamp(55px,9vh,92px);
+    align-items:flex-end;justify-content:flex-end;
+    padding:8px;
+    background:var(--padd-orange);
+    border-radius:0;
+    color:#000;
+  }
+  .app-shell > aside .rail-end::before {
+    content:'SYS-OK';font:900 clamp(10px,.95vw,14px)/1 Impact,Arial,sans-serif;
+  }
+  .app-shell > aside .rail-end::after {content:none;}
+  .app-shell::after {
+    content:'';
+    display:block;
+    grid-column:1/-1;grid-row:3;
+    width:100%;height:30px;
+    border-radius:0 0 0 26px;
+    background:linear-gradient(to right,
+      var(--padd-tan) 0 24%,#000 24% 25.5%,
+      var(--padd-tan) 25.5% 69%,#000 69% 70.5%,
+      var(--padd-amber) 70.5% 82%,#000 82% 83.5%,
+      var(--padd-orange) 83.5% 100%);
+  }
+  .app-shell > main {
+    display:block;
+    grid-column:2;grid-row:2;
+    min-width:0;min-height:0;
+    height:100%;
+    margin:0;
+    padding:0 4px 14px 0;
+    overflow-x:hidden;
+    overflow-y:auto;
+    scrollbar-width:thin;
+    scrollbar-color:var(--padd-lavender) #000;
+    overscroll-behavior:contain;
+    background:#000;
+  }
+  .app-shell > main .page {min-width:0;}
+  .app-shell > main .section-heading {
+    display:flex;justify-content:space-between;align-items:flex-end;
+    position:relative;
+    min-width:0;min-height:45px;
+    margin:0 0 12px;padding:0 0 8px;
+    border:0;border-bottom:3px solid var(--padd-amber);
+    border-radius:0;
+    gap:10px;
+  }
+  .app-shell > main .section-heading::after {content:none;}
+  .app-shell > main .section-heading .eyebrow {display:none;}
+  .app-shell > main .section-heading h2 {
+    margin:0;padding:0;
+    font:900 clamp(19px,1.9vw,28px)/1.1 Impact,'Arial Narrow',sans-serif;
+    color:var(--padd-amber);
+    letter-spacing:.025em;
+  }
+  .app-shell > main .section-heading .outline {
+    min-height:38px;
+    padding:8px 13px;
+    border:0;border-radius:0 19px 19px 0;
+    background:var(--padd-blue);color:#000;
+    font-size:11px;
+  }
+  /* LCARS operating modes retain the iPhone's 2-by-4 matrix language. */
+  #metronome .mode-heading {
+    margin:0 0 6px;
+    color:var(--padd-peach);
+    font-size:11px;
+    font-weight:900;
+  }
+  #metronome .mode-heading output {color:var(--padd-orange);}
+  #modeButtons {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:4px;
+    margin:0 0 18px;
+    padding:0;border:0;border-radius:0;background:#000;
+  }
+  #modeButtons::before {content:none;}
+  #modeButtons button {
+    min-width:0;
+    min-height:clamp(42px,4.6vh,55px);
+    padding:7px 5px;
+    flex:initial;
+    background:var(--padd-lavender);
+    color:#000;
+    border:0;border-radius:0!important;
+    font:900 clamp(10px,.9vw,13px)/1.1 Arial,sans-serif;
+    white-space:normal;overflow-wrap:anywhere;
+    letter-spacing:0;
+  }
+  #modeButtons button:first-child{border-top-left-radius:23px!important;}
+  #modeButtons button:nth-child(4){border-top-right-radius:23px!important;}
+  #modeButtons button:nth-last-child(4){border-bottom-left-radius:23px!important;}
+  #modeButtons button:last-child{border-bottom-right-radius:23px!important;}
+  #modeButtons button[aria-pressed=true] {
+    background:var(--padd-orange);
+    box-shadow:inset 0 -4px var(--padd-amber);
+  }
+  .app-shell .panel {
+    min-width:0;
+    padding:8px 6px 12px 12px;
+    margin:0 0 14px;
+    border-left:13px solid var(--panel-accent,var(--padd-lavender));
+    border-top:8px solid var(--panel-accent,var(--padd-lavender));
+    border-bottom:0;
+    border-radius:27px 0 0 0;
+    background:#000;
+  }
+  .app-shell .panel>.eyebrow,
+  .app-shell .panel>h3 {
+    min-height:44px;
+    margin:0 0 7px;
+    padding:9px 15px;
+    color:#000;
+    background:var(--panel-accent,var(--padd-lavender));
+    border-radius:0 25px 25px 0;
+    text-align:right;
+    font-size:clamp(12px,1.05vw,15px);
+    font-weight:900;
+  }
+  .app-shell .panel>.eyebrow {color:var(--padd-orange);}
+  .app-shell .cards {
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));
+    gap:16px;
+    min-width:0;
+  }
+  .app-shell .cards .panel {margin:0;}
+  .app-shell .panel label {min-width:0;max-width:100%;}
+  .app-shell .panel .field-name,
+  .app-shell .parameter-name {font-size:clamp(10px,.9vw,12px);}
+  .app-shell .lcars-info summary,.app-shell .mode-help summary {
+    border-radius:22px 0 0 22px;
+    background:var(--padd-lavender);
+  }
+  /* An instrument, not a stretched phone: the ring stays proportionate. */
+  #metronome .instrument-layout {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:20px;
+    align-items:start;
+  }
+  #metronome .instrument {
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    width:100%;max-width:680px;min-width:0;
+    margin:0 auto;
+    padding:0;
+    gap:0;
+  }
+  #metronome #dial {
+    order:1;
+    width:100%;
+    max-width:min(100%,500px);
+    min-width:0;
+    margin:2px auto 8px;
+  }
+  #metronome #linear {order:1;min-width:0;max-width:100%;padding-top:8px;}
+  #metronome #linear .pattern-row {min-width:0;}
+  #metronome .legend {
+    order:2;
+    width:100%;
+    margin:2px 0 9px;
+    padding:6px 0;
+    border-top:4px solid var(--padd-blue);
+    gap:10px;
+  }
+  #metronome .play-status {
+    order:3;
+    width:100%;max-width:none;
+    margin:0 0 9px;padding:0;
+    gap:5px;
+  }
+  #metronome .pattern-counts {
+    order:4;
+    margin:0 0 10px;padding:5px 0 0;
+    width:100%;
+    gap:6px;
+    border-top:4px solid var(--padd-tan);
+  }
+  #metronome .transport {
+    order:5;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    width:100%;max-width:none;
+    margin:0 0 14px;padding:0;
+    border:0;border-radius:0;
+    gap:6px;
+  }
+  #metronome .transport button {
+    min-height:54px;
+    padding:9px 7px;
+    border-radius:999px!important;
+    font:900 clamp(12px,1vw,16px)/1 Impact,Arial,sans-serif;
+    color:#000;
+  }
+  #metronome .transport #start {
+    grid-column:2;grid-row:1;
+    background:var(--padd-red);
+  }
+  #metronome .transport #tap {
+    grid-column:1;grid-row:1;
+    background:var(--padd-peach);
+  }
+  #rings .track {stroke:var(--padd-peach);}
+  #rings .inner-track {stroke:var(--padd-lavender);}
+  #rings .dial-ticks {stroke:var(--padd-blue);}
+  #tempo {border-color:var(--padd-orange);}
+  #metronome .side-controls {
+    display:flex;flex-direction:column;
+    gap:10px;min-width:0;
+  }
+  #metronome .side-controls>.panel {margin:0;}
+  /* Sound matrix: labels cap the rows, instrument groups form 4-column units. */
+  #mixer.cards {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:22px;
+    margin:0 0 16px;
+  }
+  #mixer .panel>h3 {
+    background:var(--cream);
+    border-radius:0;
+  }
+  #mixer .panel>label {max-width:none;}
+  #mixer .panel>label .field-name {
+    background:var(--ice);
+    flex:0 0 clamp(85px,10vw,140px);
+  }
+  #mixer .accent-sound-row {
+    display:grid;grid-template-columns:minmax(0,1fr);
+    gap:6px;align-items:stretch;
+    margin:9px 0 0;padding:0;
+    border:0;
+  }
+  #mixer .accent-sound-row h4 {
+    display:flex;align-items:center;justify-content:flex-end;
+    padding:10px 15px;
+    min-height:45px;
+    border-radius:23px 0 0 23px;
+    color:#000;
+    font-size:clamp(11px,1vw,14px);
+  }
+  #mixer .sound-choices {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:5px;
+    min-width:0;
+  }
+  #mixer .sound-choices button {
+    min-width:0;
+    min-height:48px;
+    padding:9px 5px;
+    flex:initial;
+    font-size:clamp(10px,.85vw,13px);
+    overflow-wrap:anywhere;
+  }
+  #mixer .mixer-buttons {
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;
+  }
+  #mixer .mixer-buttons button {min-width:0;min-height:48px;}
+  #mixer .pan-scale {
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    min-width:0;
+  }
+  #analyticsContent .xy-wrap,#diary .xy-wrap {max-width:100%;overflow-x:auto;}
+  .app-shell > main footer {margin:22px 0 0;min-width:0;}
+
+  /* P1c: a consistent responsive grammar on every secondary page.
+     Never spread historic "desktop cards" across the new PADD content well. */
+  #presets #presetForm {
+    display:grid;
+    grid-template-columns:minmax(140px,.8fr) minmax(175px,1.6fr) minmax(150px,.75fr);
+    align-items:stretch;
+    gap:6px;
+    width:100%;
+    margin:0 0 15px;
+  }
+  #presets #presetForm .field-name,
+  #presets #presetForm input,
+  #presets #presetForm button {
+    min-width:0;
+    width:100%;
+    min-height:54px;
+    height:auto;
+    margin:0;
+  }
+  #presets #presetForm input {
+    padding:9px 13px;
+    font-size:15px;
+  }
+  #presets #presetForm button {border-radius:0 26px 26px 0;}
+  #presets #presetList.cards {
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,335px),1fr));
+    align-items:start;
+  }
+  #presets #presetList .panel {min-width:0;}
+  #presets #presetList .preset-data {overflow-wrap:anywhere;}
+  #presets #presetList .preset-actions {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:5px;
+  }
+  #presets #presetList .preset-actions button {min-width:0;white-space:normal;}
+  /* Diary: editing and session history use the available well without
+     changing the field DOM or the existing IndexedDB persistence. */
+  #diary #diaryControls {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+    gap:8px 14px;
+    align-items:start;
+    min-width:0;
+  }
+  #diary #diaryControls > button.full {width:100%;margin:0;min-width:0;}
+  #diary #diaryControls > .diary-field {margin:0;}
+  #diary #diaryControls > h3 {
+    grid-column:1/-1;
+    margin:12px 0 0;
+    font-size:14px;
+    color:var(--padd-orange);
+    border-bottom:3px solid var(--padd-tan);
+  }
+  #diary #diaryControls .diary-categories {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,115px),1fr));
+    gap:5px;
+    border-left:10px solid var(--padd-lavender);
+    padding-left:5px;
+    margin:0;
+    min-width:0;
+  }
+  #diary #diaryControls .diary-categories button {
+    min-width:0;
+    min-height:45px;
+    flex:none;
+    overflow-wrap:anywhere;
+    border-radius:0;
+  }
+  #diary #diaryControls .category-form {
+    display:flex;
+    gap:5px;
+    align-self:start;
+    margin:0;
+    min-width:0;
+  }
+  #diary #diaryControls .category-form input {
+    min-width:0;
+    flex:1;
+    font-size:14px;
+  }
+  #diary #diaryControls .category-form button {min-width:105px;max-width:45%;font-size:10px;}
+  #diary .diary-actions {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:6px;
+    margin:10px 0 16px;
+    min-width:0;
+  }
+  #diary .diary-actions button {min-width:0;}
+  #diary #diaryList.cards {
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));
+    gap:13px;
+    align-items:start;
+  }
+  #diary #diaryList .log-entry {min-width:0;}
+  #diary #diaryList .session-data {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:5px;
+  }
+  #diary #diaryList .session-data .stat-tile {min-width:0;overflow-wrap:anywhere;}
+  #diary #diaryList .log-actions {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:5px;
+  }
+  #diary #diaryEditor {
+    min-width:0;
+    margin:0 0 15px;
+  }
+  #diary #diaryEditor .diary-form {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:6px 14px;
+  }
+  #diary #diaryEditor .diary-form > .diary-field,
+  #diary #diaryEditor .diary-form input,
+  #diary #diaryEditor .diary-form textarea {min-width:0;}
+  #diary #diaryEditor .diary-form > .diary-field:has(textarea),
+  #diary #diaryEditor .diary-form > .preset-actions,
+  #diary #diaryEditor .diary-form > .system-field {grid-column:1/-1;}
+  /* Stats: full-width filters and charts; lower analytics blocks can be
+     paired on genuinely wide screens without inventing fake data. */
+  #analytics #analyticsContent {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:15px;
+    min-width:0;
+  }
+  #analyticsContent > * {min-width:0;}
+  #analyticsContent > .panel,
+  #analyticsContent > .cards {margin:0;}
+  #analyticsContent .analytics-filters,
+  #analyticsContent .chart-modes {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,132px),1fr));
+    gap:5px;
+    padding-left:5px;
+    margin:8px 0 12px;
+    border-left:10px solid var(--padd-tan);
+    border-radius:20px 0 0 20px;
+    min-width:0;
+  }
+  #analyticsContent .analytics-filters button,
+  #analyticsContent .chart-modes button {
+    min-width:0;
+    min-height:43px;
+    padding:7px 6px;
+    border-radius:0;
+    font-size:clamp(10px,.95vw,12px);
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  #analyticsContent .stat-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,135px),1fr));
+    gap:8px;
+  }
+  #analyticsContent .stat-tile {min-width:0;overflow-wrap:anywhere;}
+  #analyticsContent .chart-legend {flex-wrap:wrap;gap:5px;}
+  #analyticsContent .chart-legend span {min-width:0;padding:7px 10px;font-size:11px;}
+  #analyticsContent .xy-wrap,#diary .xy-wrap {
+    width:100%;max-width:100%;
+    min-width:0;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  #analyticsContent .xy-plot,#diary .xy-plot {
+    display:block;
+    width:100%;max-width:100%;
+    height:auto;
+  }
+  #analyticsContent .practice-calendar {
+    display:grid;
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:4px;
+    min-width:0;max-width:100%;
+    overflow:visible;
+  }
+  #analyticsContent .calendar-day {
+    min-width:0;
+    padding:3px;
+    font-variant-numeric:tabular-nums;
+  }
+  #analyticsContent .history-table,
+  #diary #diaryEditor .history-table {
+    width:100%;max-width:100%;
+    table-layout:fixed;
+    overflow-wrap:anywhere;
+  }
+  #analyticsContent .history-table td,
+  #analyticsContent .history-table th {font-size:clamp(10px,.9vw,13px);}
+  #settings > .cards {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,335px),1fr));
+    gap:14px;
+    min-width:0;
+    align-items:start;
+  }
+  #settings > .cards > .panel {min-width:0;}
+  #settings > .cards > .interface-panel {grid-column:1/-1;}
+  #settings #scaleButtons {
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
+    width:100%;
+    min-width:0;
+  }
+  #settings #scaleButtons button {
+    min-width:0;
+    min-height:50px;
+    padding:5px 2px;
+    font-size:clamp(10px,.9vw,13px);
+  }
+  @media (min-width:1180px) {
+    #analytics #analyticsContent {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+    #analyticsContent > .panel:first-child,
+    #analyticsContent > .stat-grid,
+    #analyticsContent > .system-field,
+    #analyticsContent > .panel:has(.xy-wrap),
+    #analyticsContent > .panel:has(.history-table) {
+      grid-column:1/-1;
+    }
+    #analyticsContent > .cards {
+      grid-column:auto;
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+    }
+  }
+  @media (max-width:1050px) {
+    #presets #presetForm {
+      grid-template-columns:minmax(0,1fr);
+      gap:6px;
+    }
+    #presets #presetForm button {border-radius:0 0 23px 23px;}
+    #diary #diaryControls {grid-template-columns:minmax(0,1fr);}
+    #diary #diaryControls > h3 {grid-column:1;}
+    #diary #diaryControls .category-form {width:100%;}
+    #diary #diaryList.cards {grid-template-columns:minmax(0,1fr);}
+    #diary #diaryEditor .diary-form {grid-template-columns:minmax(0,1fr);}
+  }
+
+  @media (min-width:1140px) {
+    #metronome .instrument-layout {
+      grid-template-columns:minmax(380px,1.55fr) minmax(320px,.95fr);
+      gap:clamp(20px,2.5vw,42px);
+    }
+    #metronome .instrument {max-width:none;}
+    #metronome .side-controls {padding-top:0;}
+  }
+  @media (min-width:1350px) {
+    #mixer.cards {grid-template-columns:repeat(2,minmax(0,1fr));}
+  }
+}
+@media (min-width:641px) and (max-width:900px) {
+  .app-shell {
+    --v2-sidebar:clamp(80px,11vw,100px);
+    --v2-gutter:12px;
+  }
+  .app-shell > aside nav .nav {
+    font-size:0;
+    min-height:49px;
+    padding:6px 7px;
+  }
+  /* Abbreviate only the visual text, keeping the full native label for
+     assistive technologies. This fixes cramped tablet navigation. */
+  .app-shell > aside nav .nav::after {
+    content:attr(data-short);
+    font:900 clamp(11px,1.8vw,14px)/1.1 Arial,sans-serif;
+    color:inherit;
+    letter-spacing:0;
+  }
+  #metronome .instrument-layout {grid-template-columns:minmax(0,1fr);}
+  #metronome .side-controls {max-width:720px;margin:0 auto;width:100%;}
+  .app-shell > main .section-heading h2 {font-size:19px;}
+}
+@media (min-width:641px) and (max-height:620px) {
+  .app-shell {grid-template-rows:66px minmax(0,1fr) 24px;row-gap:4px;}
+  .app-shell > aside nav .nav {min-height:38px;padding:5px;}
+  .app-shell > aside .rail-end {height:42px;}
+  .app-shell::after {height:24px;}
+}
+
+
+/* ================================================================
+   DESKTOP XL · RHYTHM CORE STAGE (preview)
+   CSS-only. The circular SVG, gestures, scheduler and mobile PADD
+   are untouched. Every decorative rail is pointer-events:none.
+   Min-height gate keeps short landscape windows on the tested layout.
+   ================================================================ */
+@media (min-width:1440px) and (min-height:960px) {
+  /* Only alter the scrolling workspace while the metronome page is shown:
+     Presets, Diary, Analytics and System retain their own page layouts. */
+  .app-shell > main:has(#metronome:not([hidden])) {
+    display:flex;
+    flex-direction:column;
+  }
+  #metronome.page:not([hidden]) {
+    display:flex;
+    flex-direction:column;
+    /* Fill the well when possible. If the real controls need more height,
+       allow the page to grow and scroll instead of overlapping the footer. */
+    flex:1 0 auto;
+    min-height:calc(100% - 45px);
+    min-width:0;
+  }
+  #metronome .instrument-layout {
+    /* Its minimum is the actual content height: no clipping or collision
+       when a user selects 100% interface scaling on a shorter desktop. */
+    flex:1 0 auto;
+    height:auto;
+    display:grid;
+    grid-template-columns:minmax(0,1.55fr) minmax(355px,.95fr);
+    grid-template-rows:auto;
+    gap:clamp(18px,2.1vw,40px);
+    align-items:stretch;
+    min-height:min-content;
+    margin-top:clamp(10px,1.6vh,24px);
+  }
+
+  /* Full-height U-shaped LCARS cheek around the sequencer. */
+  #metronome .instrument {
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    position:relative;
+    width:100%;
+    max-width:none;
+    min-width:0;
+    min-height:0;
+    height:100%;
+    margin:0;
+    padding:clamp(14px,1.5vh,24px) clamp(18px,1.5vw,32px)
+            clamp(12px,1.4vh,22px) clamp(17px,1.3vw,28px);
+    border-left:clamp(18px,1.3vw,30px) solid var(--padd-amber);
+    border-top:clamp(10px,.85vw,17px) solid var(--padd-amber);
+    border-bottom:clamp(10px,.85vw,17px) solid var(--padd-peach);
+    border-radius:clamp(28px,2.5vw,48px) 0 0 clamp(28px,2.5vw,48px);
+    background:#000;
+  }
+  #metronome .instrument::before {
+    content:'47-ALPHA';
+    position:absolute;
+    top:50%;
+    left:calc(-1 * clamp(18px,1.3vw,30px));
+    transform:translateY(-50%);
+    width:clamp(18px,1.3vw,30px);
+    height:66px;
+    display:flex;align-items:center;justify-content:center;
+    writing-mode:vertical-rl;
+    font:900 clamp(7px,.48vw,10px)/1 ui-monospace,monospace;
+    letter-spacing:.02em;
+    color:var(--padd-orange);
+    background:#000;
+    pointer-events:none;
+  }
+  #metronome .instrument::after {
+    content:'';
+    pointer-events:none;
+    position:absolute;
+    right:0;
+    top:calc(-1 * clamp(10px,.85vw,17px));
+    bottom:calc(-1 * clamp(10px,.85vw,17px));
+    width:clamp(18px,2vw,38px);
+    border-left:clamp(4px,.42vw,8px) solid #000;
+    background:
+      linear-gradient(var(--padd-amber),var(--padd-amber)) top / 100% clamp(10px,.85vw,17px) no-repeat,
+      linear-gradient(var(--padd-peach),var(--padd-peach)) bottom / 100% clamp(10px,.85vw,17px) no-repeat;
+    border-radius:0 12px 12px 0;
+  }
+
+  /* Bigger ring, constrained by the viewport height as well as column width.
+     The ring is still a square; hit-target SVG geometry is unchanged. */
+  #metronome #dial:not([hidden]) {
+    order:1;
+    box-sizing:border-box;
+    flex:0 0 auto;
+    width:min(100%,55vh,760px);
+    max-width:100%;
+    height:auto;
+    max-height:none;
+    aspect-ratio:1;
+    margin:auto;
+    padding:0;
+  }
+  #metronome #linear:not([hidden]) {
+    order:1;
+    min-width:0;
+    width:100%;
+    max-width:100%;
+    margin:auto 0;
+    padding:10px 0;
+  }
+  /* If a view is hidden, keep the browser's native hidden behavior. */
+  #metronome #dial[hidden],#metronome #linear[hidden] {display:none!important;}
+
+  /* Keep the working controls together near the bottom of the left stage. */
+  #metronome .legend {
+    order:2;
+    flex:0 0 auto;
+    margin:4px 0 8px;
+    padding:9px 0 5px;
+    border-top:clamp(5px,.48vw,8px) solid var(--padd-blue);
+  }
+  #metronome .play-status {
+    order:3;
+    flex:0 0 auto;
+    margin:0 0 8px;
+  }
+  #metronome .pattern-counts {
+    order:4;
+    flex:0 0 auto;
+    margin:0 0 10px;
+    padding-top:7px;
+    border-top:clamp(5px,.48vw,8px) solid var(--padd-tan);
+  }
+  #metronome .transport {
+    order:5;
+    flex:0 0 auto;
+    margin:0;
+  }
+
+  /* Full-height panel rail: the black negative space remains intentional. */
+  #metronome .side-controls {
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    height:100%;
+    gap:clamp(11px,1.3vh,22px);
+    padding:0;
+  }
+  #metronome .side-controls > .panel {
+    box-sizing:border-box;
+    min-width:0;
+    margin:0;
+    padding:10px 9px 14px 16px;
+    border-left:clamp(17px,1.2vw,26px) solid var(--panel-accent,var(--padd-lavender));
+    border-top:clamp(9px,.7vw,14px) solid var(--panel-accent,var(--padd-lavender));
+    border-bottom:clamp(9px,.7vw,14px) solid var(--panel-accent,var(--padd-lavender));
+    border-radius:34px 0 0 34px;
+  }
+  #metronome .side-controls > .panel:nth-of-type(2) {
+    --panel-accent:var(--padd-peach);
+  }
+  #metronome .side-controls > .operation-info {
+    flex:0 0 auto;
+    margin-top:auto;
+    padding:10px 10px 5px 14px;
+    border-top:clamp(11px,.85vw,16px) solid var(--padd-tan);
+    border-left:clamp(17px,1.2vw,26px) solid var(--padd-tan);
+    border-radius:30px 0 0 0;
+  }
+
+  /* The existing status rail now anchors the bottom of the real screen. */
+  .app-shell > main:has(#metronome:not([hidden])) > footer {
+    flex:0 0 auto;
+    margin-top:auto;
+    padding-top:10px;
+  }
+}
+
+
+/* ==========================================================================
+   RC12 · LIVE LINEAR TEMPO CONSOLE
+   Exact same BPM engine/gestures as Circular, but purpose-built for the
+   horizontal view. No second tempo state; both controls stay synchronized.
+   ========================================================================== */
+#metronome #linear .linear-tempo-console {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(96px,160px) 56px;
+  min-width:0;
+  width:100%;
+  gap:5px;
+  align-items:stretch;
+  margin:0 0 18px;
+  border-top:6px solid var(--padd-amber);
+  border-left:12px solid var(--padd-amber);
+  border-bottom:5px solid var(--padd-peach);
+  border-radius:25px 0 0 25px;
+  padding:7px 4px 7px 8px;
+  background:#09070c;
+  touch-action:none;
+}
+#metronome #linear .linear-tempo-id {
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-end;
+  min-width:0;padding:5px 6px;
+  color:var(--padd-amber);text-align:right;
+  font:900 clamp(11px,1.4vw,19px)/1.1 Impact,'Arial Narrow',Arial,sans-serif;
+  letter-spacing:.04em;
+}
+#metronome #linear .linear-tempo-code {
+  color:var(--padd-lavender);
+  font:800 clamp(8px,.9vw,12px)/1.2 ui-monospace,Consolas,monospace;
+  margin-bottom:6px;
+}
+#metronome #linear .linear-tempo-hint {
+  margin-top:6px;max-width:100%;
+  font:700 clamp(8px,.85vw,11px)/1.2 'Arial Narrow',Arial,sans-serif;
+  color:var(--padd-peach);
+  letter-spacing:0;
+}
+#metronome #linear .linear-tempo-control {
+  display:flex;align-items:center;justify-content:center;
+  min-width:0;min-height:78px;
+  background:var(--padd-orange);
+  border-radius:12px 0 0 12px;
+}
+#metronome #linear #linearTempoValue,
+#metronome #linear #linearBpm:not([hidden]) {
+  display:block;width:100%;height:100%;min-width:0;
+  padding:4px 2px;border:0;border-radius:12px 0 0 12px;
+  background:transparent;color:#060405;
+  text-align:center;
+  font:900 clamp(36px,4.8vw,64px)/1 Impact,'Arial Narrow',Arial,sans-serif;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:0;touch-action:none;cursor:ns-resize;
+}
+#metronome #linear #linearBpm:not([hidden]) {
+  font-family:Arial,sans-serif;font-size:clamp(26px,3.2vw,38px);
+  background:#000;color:var(--padd-orange);
+  border:2px solid var(--padd-orange);
+  border-radius:10px;outline-offset:0;
+}
+#metronome #linear .linear-tempo-steps {
+  display:grid;grid-template-rows:1fr 1fr;gap:5px;min-width:0;
+}
+#metronome #linear .linear-tempo-steps button {
+  min-height:34px;min-width:0;padding:0 4px;
+  border:0;border-radius:0 15px 0 0;
+  background:var(--padd-lavender);color:#000;
+  font:900 25px/1 Impact,Arial,sans-serif;touch-action:manipulation;
+}
+#metronome #linear .linear-tempo-steps button:first-child {
+  border-radius:0 0 15px 0;background:var(--padd-peach);
+}
+/* Tablet ergonomics: conserve vertical room and place the main transport
+   immediately after operating modes, ahead of the decorative beat display.
+   At the top of the scroll well START and TAP remain visible even on short
+   iPad landscape viewports.  No effect on phones or XL desktop stages. */
+@media (min-width:641px) and (max-width:1139px) {
+  #metronome #dial:not([hidden]) {
+    width:min(100%,43dvh,420px);
+    max-width:100%;
+    aspect-ratio:1;
+    margin:4px auto 8px;
+  }
+  #metronome .transport {
+    order:0;
+    margin:0 0 10px;
+  }
+  #metronome .instrument {
+    gap:0;
+  }
+  #metronome .legend {margin-top:2px;margin-bottom:6px;}
+  #metronome .play-status {margin-bottom:6px;}
+  #metronome .pattern-counts {margin-bottom:8px;}
+}
+
+
+/* RC14: one proportional top-bus text anchor for tablet + desktop too.
+   The LCARS title always sits inside the orange section of the existing
+   header::after rail, using its actual flex-grid geometry. No hardcoded
+   wordmark pixel offsets and no changes to outer framework proportions. */
+@media (min-width:641px) {
+  .app-shell > header .heading {
+    left:calc(var(--v2-sidebar) + var(--v2-gutter));
+    right:0;
+    top:0;
+    height:clamp(18px,2.2vw,25px);
+    padding:0;
+    margin:0;
+    pointer-events:none;
+  }
+  .app-shell > header .heading h1 {
+    display:grid;
+    grid-template-columns:13% 65% 22%;
+    align-items:center;
+    height:100%;
+    margin:0;
+  }
+  .app-shell > header .heading h1 .mobile-title {
+    position:static;
+    grid-column:2;
+    width:max-content;
+    max-width:100%;
+    margin:0;
+    padding:0;
+    color:#000;
+    font:900 clamp(12px,1.7vw,19px)/1 Arial,Helvetica,sans-serif;
+    letter-spacing:0;
+    white-space:nowrap;
+  }
+}

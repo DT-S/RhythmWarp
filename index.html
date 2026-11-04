@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0e1714"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="description" content="Offline quarter-based metronome and circular rhythm sequencer."><link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./assets/icon-192.png"><link rel="icon" href="./assets/icon.svg"><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./v2-layout.css"><link rel="stylesheet" href="./v2-precision.css"><link rel="stylesheet" href="./v2-matrix.css"><link rel="stylesheet" href="./v2-gesture-guide.css"><link rel="stylesheet" href="./v2-linear-gesture.css"><link rel="stylesheet" href="./v2-motion.css"><link rel="stylesheet" href="./v2-astrometrics.css"><link rel="stylesheet" href="./v2-polish.css"><link rel="stylesheet" href="./v2-lcars-slider.css"><link rel="stylesheet" href="./v2-diary-maintenance.css"><link rel="stylesheet" href="./v2-startup.css"><link rel="stylesheet" href="./v2-boot-reveal.css"><link rel="stylesheet" href="./v2-theme.css"><link rel="stylesheet" href="./v2-mic.css"><link rel="stylesheet" href="./v2-ios-standalone.css"><link rel="stylesheet" href="./v2-diary-archive.css"><link rel="stylesheet" href="./v2-tactical.css"><link rel="stylesheet" href="./v2-share.css"><link rel="stylesheet" href="./v2-mobile-signal-databank.css"><link rel="stylesheet" href="./rhythm-warp.css"><link rel="stylesheet" href="./rhythm-warp-colors.css"><link rel="stylesheet" href="./rhythm-warp-layout.css"><title>Rhythm Warp</title></head>
+<body>
+<div id="lcarsStartup" class="lcars-start-screen" data-theme="voyager" role="dialog" aria-modal="true" aria-labelledby="lcarsStartupHeading" aria-describedby="lcarsStartupNote" hidden>
+
+  <!-- TOP RHYTHM WARP FRAME -->
+  <div class="lcars-start-top" aria-hidden="true">
+    <div class="lcars-elbow-top"></div>
+    <div class="lcars-top-right">
+      <div class="lcars-rail-segments">
+        <div class="lcars-seg s1">RHYTHM</div>
+        <div class="lcars-seg s2">STUDIO</div>
+        <div class="lcars-seg s3"><span>RHYTHM CONTROL</span><span>CORE 2.0</span></div>
+        <div class="lcars-seg s4">SYNC-LOCK</div>
+        <div class="lcars-seg s5">AUDIO</div>
+      </div>
+      <div class="lcars-top-subbar">
+        <span class="lcars-sub-title">DRUM TRACK STUDIO // <strong>TACTICAL RHYTHM SUBSYSTEM</strong></span>
+        <div class="lcars-cascade" id="lcarsCascade" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MIDDLE BODY: INTERACTIVE LEFT RAIL + MAIN CONSOLE -->
+  <div class="lcars-start-body">
+    <div class="lcars-left-column" role="group" aria-label="Tactical Display Controls">
+      <button type="button" class="lcars-side-block b1" data-set-theme="voyager" aria-pressed="true">
+        <small>01</small>
+        <span>STUDIO GREEN</span>
+      </button>
+      <button type="button" class="lcars-side-block b2" data-set-theme="elite" aria-pressed="false">
+        <small>02</small>
+        <span>VIOLET PULSE</span>
+      </button>
+      <button type="button" class="lcars-side-block b3" data-set-theme="redalert" aria-pressed="false">
+        <small>03</small>
+        <span>RED SHIFT</span>
+      </button>
+      <button type="button" class="lcars-side-block b4" id="bpmPreviewToggle" title="Preview emblem pulse only; metronome tempo is unchanged">
+        <small>04</small>
+        <span id="bpmPreviewLabel">120 BPM</span>
+      </button>
+      <div class="lcars-side-filler" aria-hidden="true">
+        <span>LOCAL RHYTHM</span>
+      </div>
+    </div>
+
+    <!-- CENTER CONSOLE -->
+    <div class="lcars-start-console">
+      <div class="lcars-console-frame">
+        <span class="lcars-start-kicker">DRUM TRACK STUDIO // RHYTHM TRAINING INTERFACE</span>
+
+        <!-- RHYTHM WARP / THREE-THEME RHYTHM EMBLEM SVG -->
+        <div class="lcars-emblem-wrap">
+          <svg class="lcars-start-logo" viewBox="0 0 240 240" role="img" aria-label="Rhythm Warp timing emblem">
+<defs><radialGradient id="warpHalo"><stop offset="0%" stop-color="#b3df94" stop-opacity=".24"/><stop offset="100%" stop-color="#0e1714" stop-opacity="0"/></radialGradient></defs>
+<circle cx="120" cy="120" r="110" fill="url(#warpHalo)"/>
+<g class="emblem-ring-outer"><circle cx="120" cy="120" r="101" fill="none" stroke="#85f4a3" stroke-width="3" stroke-dasharray="18 14"/><circle cx="120" cy="120" r="89" fill="none" stroke="#283a30" stroke-width="2"/></g>
+<g class="emblem-ring-inner"><circle cx="120" cy="120" r="75" fill="none" stroke="#92cbd2" stroke-width="2.5" stroke-dasharray="4 10"/><circle cx="120" cy="120" r="61" fill="none" stroke="#4d6b55" stroke-width="1.5"/></g>
+<g class="emblem-pulse-core"><rect x="95" y="92" width="50" height="80" rx="13" fill="#14231c" stroke="#85f4a3" stroke-width="3"/><path d="M104 141 L112 130 L119 144 L128 117 L136 131" fill="none" stroke="#b3df94" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g class="emblem-pendulum"><line x1="120" y1="160" x2="120" y2="63" stroke="#92cbd2" stroke-width="3.5" stroke-linecap="round"/><circle cx="120" cy="63" r="6" fill="#85f4a3"/></g><circle cx="120" cy="160" r="7" fill="#0e1714" stroke="#85f4a3" stroke-width="2.5"/></svg>
+        </div>
+
+        <!-- BRANDING STACK -->
+        <div class="lcars-title-stack">
+          <h2 id="lcarsStartupHeading">RHYTHM <span>WARP</span></h2>
+          <div class="lcars-subbrand-bar"><span class="lcars-subbrand-label">RHYTHM TRAINING // OFFLINE ENGINE</span></div>
+          <div class="lcars-studio-badge">
+            <span class="lcars-studio-dot"></span>
+            <span>DRUM TRACK STUDIO</span>
+            <span class="lcars-studio-dot"></span>
+          </div>
+        </div>
+
+        <p id="lcarsStartupNote">SYSTEM STANDBY // WEB AUDIO ENGINE &amp; SEQUENCER READY</p>
+
+        <!-- INITIALIZE BUTTON -->
+        <div class="lcars-activate-wrap">
+          <div class="lcars-activate-cap" aria-hidden="true">01</div>
+          <button id="lcarsInitialize" type="button" class="lcars-start-activate">
+            <span id="lcarsInitText">START RHYTHM WARP</span>
+            <span class="btn-sub" id="lcarsInitCode">ENGAGE // 47</span>
+          </button>
+        </div>
+
+        <div class="lcars-boot-bar" id="lcarsBootBar" aria-hidden="true">
+          <div class="lcars-boot-fill" id="lcarsBootFill"></div>
+        </div>
+
+        <span class="lcars-start-footer">OFFLINE PWA // QUARTZ-LOCK TIMING // DRUM TRACK STUDIO</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM RHYTHM WARP FRAME -->
+  <div class="lcars-start-bottom-wrap" aria-hidden="true">
+    <div class="lcars-elbow-bottom"></div>
+    <div class="lcars-bottom-segments">
+      <div class="lcars-seg s-b1">PRIMARY SEQUENCER</div>
+      <div class="lcars-seg s-b2">AUDIO MATRIX</div>
+      <div class="lcars-seg s-b3">PRACTICE LOG</div>
+      <div class="lcars-seg s-b4">AUDIO LINK</div>
+    </div>
+  </div>
+</div>
+<div class="app-shell">
+<header><div class="elbow"></div><div class="heading"><span class="eyebrow">RHYTHM TRAINING SYSTEM / 001</span><h1>RHYTHM <span>WARP</span><span class="mobile-title" aria-hidden="true">RHYTHM WARP</span></h1><span id="mobileBuildVersion" class="mobile-build-version">CORE 2.0.0 RC25.13.5</span></div><div class="header-tail"><span id="connection">LOCAL SYSTEM</span><span id="desktopBuildVersion">CORE 2.0.0 RC25.13.5</span></div></header>
+<aside><nav aria-label="Main navigation"><button class="nav active" data-tab="metronome" data-short="METRO"><small>01</small> METRONOME</button><button class="nav" data-tab="audio" data-short="AUDIO"><small>02</small> AUDIO MATRIX</button><button class="nav" data-tab="presets" data-short="PRESET"><small>03</small> PRESETS</button><button class="nav" data-tab="diary" data-short="DIARY"><small>04</small> PRACTICE LOG</button><button class="nav" data-tab="analytics" data-short="STATS"><small>05</small> ANALYTICS</button><button class="nav" data-tab="settings" data-short="SYSTEM"><small>06</small> SETTINGS</button></nav><div class="rail"><span>RHYTHM CONTROL<br>QUARTER REFERENCE</span></div><div class="rail-end" aria-hidden="true"></div></aside>
+<main>
+<section id="metronome" class="page">
+<div class="section-heading"><div><span class="eyebrow">PRIMARY SEQUENCER</span><h2>METRONOME CONTROL</h2></div><button id="view" class="outline">LINEAR VIEW</button></div>
+<div id="tacticalViewSwitch" class="tac-view-switch" role="group" aria-label="Sequencer view">
+<button type="button" data-tac-view="circular" aria-pressed="true">CIRCULAR</button>
+<button type="button" data-tac-view="linear" aria-pressed="false">LINEAR</button>
+<button type="button" data-tac-view="tactical" aria-pressed="false">TACTICAL</button>
+</div>
+<div class="mode-heading"><span class="desktop-mode-label">OPERATING MODE</span><button type="button" id="modeDrawerToggle" class="lcars-mode-trigger" aria-controls="modeButtons" aria-expanded="false" aria-label="Choose operating mode"><span class="trigger-tag">MODE</span><strong id="activeModeLabel">STANDARD</strong><span class="trigger-chevron" aria-hidden="true">▾</span></button><output id="liveTempo">120 BPM</output></div><div id="modeButtons" class="mode-buttons" role="group" aria-label="Operating mode"></div><div class="instrument-layout"><div class="instrument">
+<div id="dial"><svg id="rings" viewBox="0 0 500 500" role="group" aria-label="Circular rhythm sequencer"></svg><div id="tempo" aria-label="Rotate to change tempo"><span id="tempoLabel" class="eyebrow">QUARTER / MIN</span><button id="tempoValue" type="button" role="spinbutton" aria-label="Tempo: drag to adjust; double tap or hold to type" aria-valuemin="20" aria-valuemax="400" aria-valuenow="120">120</button><input hidden id="bpm" type="text" inputmode="numeric" min="20" max="400" step="1" value="120" aria-label="Tempo in beats per minute"><div class="tempo-buttons"><button id="minus" aria-label="Decrease tempo">−</button><span>BPM</span><button id="plus" aria-label="Increase tempo">+</button></div><div id="rampReadout" hidden><div><span>NOW</span> <output id="rampCurrent">120</output> <output id="rampDelta">+0</output></div><div class="ramp-target">TARGET <output id="rampTarget">160</output> BPM</div></div></div></div>
+<div id="linear" hidden><div id="linearTempo" class="linear-tempo-console" aria-label="Linear View tempo control">
+<div class="linear-tempo-id"><span class="linear-tempo-code">47-BPM // 02</span><strong>TEMPO / BPM</strong><span class="linear-tempo-hint">DRAG · DOUBLE-TAP OR HOLD TO TYPE</span></div>
+<div class="linear-tempo-control"><button id="linearTempoValue" type="button" role="spinbutton" aria-label="Tempo in BPM: drag to adjust, double-tap or hold to type" aria-valuemin="20" aria-valuemax="400" aria-valuenow="120">120</button><input id="linearBpm" hidden type="text" inputmode="numeric" aria-label="Enter Linear View tempo in BPM"></div>
+<div class="linear-tempo-steps"><button id="linearTempoMinus" type="button" aria-label="Decrease Linear View tempo by one BPM">−</button><button id="linearTempoPlus" type="button" aria-label="Increase Linear View tempo by one BPM">+</button></div>
+</div></div>
+<section id="tactical" class="tac-console" aria-label="Tactical dual-ring metronome and live microphone analytics" hidden>
+<div class="tac-cockpit">
+ <div class="tac-head"><strong>TACTICAL // FUSED CORE</strong><output id="tacticalSensorState">SENSOR STANDBY</output></div>
+ <div class="tac-fusion">
+  <div id="tacticalRingDock" class="tac-ring-dock" aria-label="Outer and inner interactive rhythm patterns">
+   <svg id="tacticalRingOverlay" viewBox="0 0 500 500" aria-hidden="true"></svg>
+  </div>
+  <div class="tac-lane-panel">
+   <div class="tac-readouts"><span>BPM <strong id="tacticalBpm">120</strong></span><span>QTR <strong id="tacticalQuarter">4</strong></span><span>SUB <strong id="tacticalSub">2</strong></span></div>
+   <div class="tac-lane-shell"><svg id="tacticalLane" viewBox="0 0 420 110" preserveAspectRatio="xMinYMid meet" role="img" aria-label="Reference click timing and detected hits scrolling from right to left"></svg></div>
+   <div class="tac-time-arrow"><span>PAST</span><span>REFERENCE / HIT</span><span>FUTURE</span></div>
+  </div>
+ </div>
+ <div class="tac-commands">
+  <button type="button" id="tacticalTap">TAP</button><button type="button" id="tacticalStart" class="tac-main-start">START</button>
+  <time id="tacticalClock">00:00</time>
+ </div>
+
+</div>
+<div class="tac-plot-panel">
+ <div class="tac-head"><strong>ASTROMETRICS // LIVE PLOT</strong><output id="tacticalPlotInfo">SENSOR STANDBY</output></div>
+ <div id="tacticalPlotButtons" class="tac-plot-buttons" role="group" aria-label="Tactical telemetry plot">
+  <button type="button" data-tac-plot="timing" aria-pressed="true">TIMING</button>
+  <button type="button" data-tac-plot="rate" aria-pressed="false">HIT RATE</button>
+  <button type="button" data-tac-plot="distribution" aria-pressed="false">DIST</button>
+ </div>
+ <div class="tac-plot-shell"><svg id="tacticalPlot" viewBox="0 0 480 168" role="img" aria-label="Measured microphone timing, rate or histogram with blue sensor grid"></svg></div>
+ <div class="tac-plot-legend"><span>EARLY</span><span>ZERO GRID / ±10 MS</span><span>LATE</span></div>
+</div>
+<div id="tacticalDiagnostics" class="tac-diagnostics">
+ <div class="tac-head"><strong>MIC // SENSOR DIAGNOSTICS</strong><span>LOCAL INPUT</span></div>
+ <div class="tac-diagnostic-row">
+  <div class="tac-offset"><small>LAST OFFSET</small><strong id="tacticalOffset">—</strong><small id="tacticalHitRate">—</small></div>
+  <div class="tac-counts">
+    <div data-tac-count="early"><span>EARLY</span><strong>0</strong></div>
+    <div data-tac-count="grid"><span>GRID</span><strong>0</strong></div>
+    <div data-tac-count="late"><span>LATE</span><strong>0</strong></div>
+    <div data-tac-count="extra"><span>EXTRA</span><strong>0</strong></div>
+    <div data-tac-count="outside"><span>OUT</span><strong>0</strong></div>
+    <div class="tac-slots"><span>SLOTS</span><strong id="tacticalSlots">0</strong></div>
+    <div class="tac-slots"><span>HITS</span><strong id="tacticalDetected">0</strong></div>
+    <div class="tac-slots"><span>MISS</span><strong id="tacticalMissed">0</strong></div>
+  </div>
+  <button type="button" id="tacticalMic" class="tac-mic-action" aria-pressed="false">ENGAGE</button>
+ </div>
+</div>
+<div id="tacticalDeckHost" class="tac-deck-host" aria-label="Tactical settings dropdowns">
+ <div id="tacticalDeckBarMount"></div>
+ <div id="tacticalSettingsBody" class="tac-inline-body" hidden></div>
+</div>
+</section>
+<div class="legend"><span><i class="state0"></i>DOUBLE</span><span><i class="state1"></i>ACCENT</span><span><i class="state2"></i>NORMAL</span><span><i class="state3"></i>SILENT</span></div>
+<div class="transport"><button id="start" class="primary">START</button><button id="tap" class="outline">TAP TEMPO</button></div>
+<div class="play-status"><span id="playStatus">READY</span><time id="clock">00:00</time></div>
+
+<div class="pattern-counts"><label><span id="outerLabel">QUARTERS</span><input id="beats" aria-label="Outer pattern length" type="number" min="1" max="20" value="4"></label><label><span id="innerLabel">SUBDIVISIONS</span><input id="subdivisions" aria-label="Inner pattern length" type="number" min="1" max="20" value="2"></label><p id="meterNote"></p></div>
+
+<div class="lcars-deck-bar" role="group" aria-label="Metronome subsystem panels">
+ <button type="button" id="deckParamsToggle" aria-expanded="false" aria-controls="trainingDeck"><small>01 // CFG</small><span>PARAMS &amp; SWING</span></button>
+ <button type="button" id="deckMicToggle" aria-expanded="false" aria-controls="micConsole"><small>02 // TAC</small><span>MIC SENSOR</span></button>
+ <button type="button" id="tacticalMix" aria-expanded="false" aria-controls="tacticalSettingsBody" hidden><small>03 // MIX</small><span>MIX SETTINGS</span></button>
+</div>
+</div>
+<section id="micVisual" class="panel" aria-label="RHYTHM WARP live microphone sensor plot" hidden>
+ <div class="mic-visual-title"><span>SENSOR ARRAY // LIVE</span><output id="micVisualInfo">SENSOR STANDBY</output></div>
+ <div id="micPlotButtons" class="mic-plot-buttons" role="group" aria-label="Live sensor plot">
+  <button type="button" data-mic-plot="timing" aria-pressed="true">TIMING</button>
+  <button type="button" data-mic-plot="rate" aria-pressed="false">HIT RATE</button>
+  <button type="button" data-mic-plot="distribution" aria-pressed="false">DISTRIBUTION</button>
+ </div>
+ <svg id="micLivePlot" class="mic-chart mic-sensor-chart" viewBox="0 0 480 168" role="img" aria-label="Live microphone sensor"></svg>
+ <p id="micVisualCaption" class="hint">Detected offsets relative to the reference grid.</p>
+</section>
+<section id="micConsole" class="panel" aria-label="Experimental microphone timing analysis">
+ <h3>MIC SENSOR // EXPERIMENT</h3>
+ <div class="mic-mode" role="group" aria-label="Microphone analysis mode">
+  <button type="button" id="micGuided" aria-pressed="true">GUIDED / CLICK GRID</button>
+  <button type="button" id="micFree" aria-pressed="false">FREE / NO CLICK</button>
+ </div>
+ <div class="mic-sens-row mic-grid-row">
+  <label for="micGridDivision">GUIDED REFERENCE</label>
+  <select id="micGridDivision" aria-describedby="micGridNote">
+   <option value="1">QUARTERS ×1</option>
+   <option value="2">EIGHTHS ×2</option>
+   <option value="3">TRIPLETS ×3</option>
+   <option value="4">SIXTEENTHS ×4</option>
+  </select>
+ </div>
+ <details class="lcars-info mic-cfg-drawer"><summary>SENSOR CALIBRATION // CFG</summary>
+<div class="mic-cfg-body">
+<p class="hint" id="micGridNote">Choose expected strikes per quarter. Analysis-only straight grid; it does not follow swing or change metronome sounds.</p>
+ <div class="mic-sens-row"><label for="micSensitivity">PAD SENSITIVITY</label>
+  <select id="micSensitivity"><option value="soft">SOFT PAD</option><option value="normal" selected>NORMAL</option><option value="loud">LOUD / SNARE</option></select>
+ </div>
+ <div class="mic-sens-row mic-calibration-row">
+  <label for="micInputDelay">INPUT DELAY / MS</label>
+  <input id="micInputDelay" type="number" inputmode="decimal" min="-500" max="500" step="0.1" value="0" aria-describedby="micCalibrationNote">
+  <button type="button" id="micDelayReset" class="outline">RESET</button>
+ </div>
+ <p class="hint" id="micCalibrationNote">Manual offset: positive milliseconds are subtracted from detected hit times. Measure CLICK OFFSET below, then type the reported delay into this field yourself. Use a separate value for each audio route.</p>
+ <p class="hint">Headphones recommended. Guided mode compares one strike per selected reference slot. Extra attacks or noise may not match. Offsets are experimental; microphone audio is never stored. FREE MODE shows raw hits/min, not musical BPM.</p>
+</div></details>
+ 
+ <output id="micStatus" role="status">MIC OFF // NO AUDIO RECORDED</output>
+ <div class="mic-metrics">
+  <div class="mic-metric mic-timing-metric"><span>HIT OFFSET / MS</span><strong id="micOffset" aria-label="Measured timing offset">—</strong>
+   <div id="micHitLeds" class="mic-hit-leds" role="group" aria-label="Last strike diagnosis" data-state="waiting">
+    <span data-led="early">EARLY</span><span data-led="grid">GRID</span><span data-led="late">LATE</span><span data-led="extra">EXTRA</span><span data-led="outside">OUT</span>
+   </div></div>
+  <div class="mic-metric"><span>RAW STRIKE RATE</span><strong id="micRate">—</strong></div>
+ </div>
+ <div class="mic-bottom-deck">
+ <div id="micSlotStrip" class="mic-slot-strip" aria-label="Completed timing reference windows, detected hits and no-hit slots">
+   <div><span>GRID SLOTS</span><output id="micSlots">0</output></div>
+   <div><span>DETECTED</span><output id="micDetected">0</output></div>
+   <div><span>NO HIT</span><output id="micMissed">0</output></div>
+ </div>
+ <button type="button" id="micArm" class="primary" aria-pressed="false">ENGAGE MICROPHONE</button>
+ </div>
+ <p id="micActiveHelp" class="mic-active-help" hidden>MIC LIVE // MIC SETTINGS opens configuration without stopping. DISENGAGE ends capture and restores setup controls.</p>
+</section>
+<div class="side-controls" id="trainingDeck"><div class="panel training-panel"><span class="eyebrow">TRAINING PARAMETERS</span><h3 id="modeTitle"></h3><div id="trainingFields" class="training-fields"></div><div id="trainingActions" class="preset-actions"></div><details class="mode-help"><summary>MODE INFO</summary><p id="modeDescription"></p></details><div class="swing-control"><label><span class="field-name">SWING</span> <input id="swing" type="range" min="50" max="75" step="1"><output id="swingValue"></output></label><p id="swingNote"></p></div></div>
+<div class="panel"><span class="eyebrow">PRACTICE CLOCK</span><label><span class="field-name">COUNT-IN BARS</span> <input id="countIn" type="number" min="0" max="8" value="0"></label><label><span class="field-name">COUNTDOWN / SEC</span> <input id="duration" type="number" min="0" max="3600" value="0"></label><details class="lcars-info"><summary>CLOCK INFO</summary><p>0 = open practice. Count-in is excluded.</p></details></div><details class="lcars-info operation-info"><summary>CONTROL GUIDE</summary><p>Tempo: drag the large number ↑↓ or rotate. Double-tap / double-click or hold to type. Other values: tap to type; drag to adjust.<br>Start sideways to rotate; move farther away for finer control.</p><p id="pending">Changes during playback apply at the next available bar.</p></details></div></div>
+</section>
+<section id="audio" class="page" hidden><div class="section-heading"><div><span class="eyebrow">INDEPENDENT SIGNAL PATHS</span><h2>AUDIO MATRIX</h2></div></div><div id="mixer" class="cards"></div><div class="panel master"><label><span class="field-name">MASTER OUTPUT</span> <input id="master" type="range" min="0" max="1" step=".01"></label><label><span class="field-name">INTERFACE VOLUME</span> <input id="uiVolume" type="range" min="0" max="1" step=".01"></label></div><details class="lcars-info"><summary>AUDIO OPERATIONS</summary><p>Each accent has its own instrument. When stopped, tap an instrument to select and preview it. LEFT / CENTER / RIGHT set exact stereo positions; PAN allows intermediate positions. MUTE silences this channel; SOLO lets you hear it alone. Previews follow the mixer settings.</p></details></section>
+<section id="presets" class="page" hidden><div class="section-heading"><div><span class="eyebrow">YOUR RHYTHM CONFIGURATIONS</span><h2>PRESET MEMORY</h2></div></div><form id="presetForm" class="panel preset-form"><label for="presetName" class="field-name">PRESET NAME</label><input id="presetName" maxlength="80" placeholder="e.g. Triplets · 120 BPM" required><button class="primary">SAVE CURRENT</button></form><section id="sharedPresetPreview" class="panel" hidden aria-label="Incoming shared preset">
+ <span class="eyebrow">INCOMING RHYTHM / SHARE LINK</span>
+ <h3 id="sharedPresetName"></h3><p id="sharedPresetDetails" class="preset-data"></p>
+ <p id="sharedPresetWarning" class="share-warning" hidden>Custom samples are not included. Standard click sounds are used instead.</p>
+ <div class="share-actions"><button type="button" id="sharedPresetLoad" class="primary">LOAD ONCE</button><button type="button" id="sharedPresetSave" class="outline">SAVE PRESET</button><button type="button" id="sharedPresetDismiss" class="outline">DISMISS</button></div>
+ </section><div id="presetList" class="cards"></div></section>
+<section id="diary" class="page" hidden><div class="section-heading"><div><span class="eyebrow">LOCAL TRAINING ARCHIVE</span><h2>PRACTICE LOG</h2></div><output id="entryCount" class="system-field">0 SESSIONS</output></div><details id="diarySetup" class="panel diary-setup-deck" open><summary>SESSION SETUP</summary><div class="diary-setup-body"><div id="diaryControls"></div><details class="lcars-info"><summary>RECORDING INFO</summary><p>Auto log records each Start → Stop session, using your exercise and category at Start. Count-in is excluded. Silent training bars count. Stop ends the entry; restart creates another. Disabling auto log and changing its minimum duration apply to the next session. Sessions shorter than your chosen threshold are discarded and never stored.</p><p>Stop playback and wait for SAVED ON THIS DEVICE before closing. Closing a tab attempts a final save, but abrupt browser/device shutdown can lose the running session. Microphone analysis is an independent opt-in sensor in Metronome Control.</p></details></div></details><div class="preset-actions diary-actions"><button id="manualEntry" class="primary">ADD MANUAL SESSION</button><button id="csvExport">EXPORT CSV / EXCEL</button></div><details class="lcars-info diary-maintenance"><summary>ARCHIVE MAINTENANCE / DELETE RECORDS</summary><p>Remove recent test entries or empty the archive. Both actions require confirmation. Export a JSON backup first if you want to keep your records.</p><div class="diary-maintenance-actions"><button id="diaryClearRecent" type="button">DELETE LAST 60 SEC</button><button id="diaryClearAll" class="diary-erase-action" type="button">ERASE ENTIRE LOG</button></div></details><div id="diaryEditor" class="panel" hidden></div><div id="diaryList" class="cards"></div></section>
+<section id="analytics" class="page" hidden><div class="section-heading"><div><span class="eyebrow">YOUR RECORDED TRAINING DATA</span><h2>PRACTICE ANALYTICS</h2></div></div><div id="analyticsContent"></div><section id="micAnalytics" aria-label="Microphone timing archive"></section></section>
+<section id="settings" class="page" hidden><div class="section-heading"><div><span class="eyebrow">LOCAL / OFFLINE / YOUR DATA</span><h2>SYSTEM ACCESS</h2></div></div><div class="cards"><div class="panel"><h3>DISPLAY THEME</h3><p class="hint">Open the launch console to select Studio Green, Violet Pulse or Red Shift. The chosen palette stays saved on this device and in your backup.</p><button id="openLaunchConsole" type="button" class="primary full">OPEN LAUNCH CONSOLE</button></div><div class="panel interface-panel"><h3>INTERFACE SIZE <output id="scaleReadout">100%</output></h3><div id="scaleButtons" class="scale-buttons" role="group" aria-label="Interface size"></div><details class="lcars-info"><summary>DISPLAY INFO</summary><p>Choose 70–110%. iPhone uses a dedicated compact layout. Saved on this device and included in backups; loading a rhythm preset keeps your display size. Browser-level pinch and double-tap zoom are disabled; use Interface Size to resize the WARP.</p></details></div><div class="panel"><h3>Interface feedback</h3><label><span class="field-name">UI SOUNDS</span> <input id="uiEnabled" type="checkbox"></label><label><span class="field-name">HOVER / TOUCH SOUND</span> <input id="hoverEnabled" type="checkbox"></label><label><span class="field-name">HAPTIC FEEDBACK</span> <input id="haptic" type="checkbox"></label><label><span class="field-name">SHOW START SCREEN</span> <input id="launchScreen" type="checkbox"></label><label><span class="field-name">OVERRIDE DEVICE REDUCED MOTION</span> <input id="forceMotion" type="checkbox"></label><details class="lcars-info"><summary>HAPTICS INFO</summary><p>Haptics use device vibration where supported. iPhone Safari may not provide vibration. The start screen is on by default; disable it to open the metronome directly. Starting through START RHYTHM WARP allows a reliable user-triggered launch sound, unlike browser-blocked autoplay. iOS Reduce Motion disables motion by default; turn on OVERRIDE DEVICE REDUCED MOTION only if you deliberately want the full RHYTHM WARP effects.</p></details></div><div class="panel"><h3>CUSTOM SOUND MEMORY</h3><label id="soundDrop" class="sound-drop"><span>DROP AUDIO HERE / TAP TO UPLOAD</span><input id="soundUpload" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac" multiple></label><div id="customSoundList"></div><details class="lcars-info"><summary>SOUND IMPORT INFO</summary><p>Up to 16 sounds, 2 MB and 5 seconds each. MP3, WAV and other formats your browser can decode. Stored locally and included in JSON backups. Select each sound in Audio Matrix for any channel and accent. Imported sounds play unchanged; volume follows the channel mixer. Stop playback before uploading or deleting.</p></details></div><div class="panel"><h3>Backup & restore</h3><details class="lcars-info"><summary>BACKUP CONTENTS</summary><p>JSON includes settings, presets, practice entries, custom audio files, highlighted microphone sessions and a compact seven-day comparison index. Restore replaces this device’s current configuration.</p></details><button id="export" class="primary full">EXPORT JSON</button><label class="file-button">IMPORT JSON<input id="import" type="file" accept="application/json,.json"></label></div><div class="panel" id="appSharePanel"><h3>SHARE RHYTHM WARP</h3><p class="hint">Scan to open the app. New users need internet on their first visit; installed PWAs can open offline.</p>
+ <div id="appShareQr" class="share-qr" role="img" aria-label="QR code linking to Rhythm Warp"></div>
+ <input id="appShareLink" class="share-url" readonly aria-label="Public app link">
+ <div class="share-actions"><button type="button" id="copyAppShare" class="outline">COPY LINK</button><button type="button" id="nativeAppShare" class="outline">SHARE</button></div>
+ </div><div class="panel"><h3>Offline & storage</h3><p id="offlineStatus">Checking offline installation…</p><p id="storageStatus">Checking local storage…</p><button id="persist" class="outline full">REQUEST PERSISTENT STORAGE</button><button id="update" class="outline full">CHECK FOR UPDATES / RELOAD</button></div><div class="panel"><h3>Rhythm core 2.0.0 RC25.13.5</h3><p id="buildInfo" class="system-field">INSTALLED BUILD: RC25.13.5 / 27.10.2026</p><p id="motionInfo" class="system-field">MOTION STATUS PENDING</p><details id="viewportDiagnostics" class="lcars-info"><summary>IPHONE / VIEWPORT DIAGNOSTICS</summary><p class="hint">For iOS display troubleshooting. Shows the actual paintable viewport versus physical screen size; screenshot these measurements if the lower navigation rail is misplaced.</p><button type="button" id="viewportRefresh" class="outline">REFRESH MEASUREMENTS</button><pre id="viewportMetrics">OPEN TO MEASURE</pre></details><details class="lcars-info"><summary>SYSTEM CAPABILITIES</summary><p>Standard, polyrhythm, polymeter, gap, random gap, offbeat, displacement and tempo ramp. Eight synthesized instruments.</p><p>Practice logs, filtered statistics and CSV export are available. Routines, sticking trainer, voice counting remain planned. Custom sound import and animated charts are available.</p><p>Background audio with a locked display is not guaranteed. Interruptions stop playback; restart manually.</p></details></div></div></section>
+<footer><span>RHYTHM WARP / LOCAL ENGINE</span><span id="saveStatus">LOCAL DATA</span></footer>
+</main></div>
+<div id="notice" role="status" aria-live="polite"></div><dialog id="diaryDeleteDialog" class="lcars-danger-dialog" role="alertdialog" aria-modal="true" aria-labelledby="diaryDangerTitle" aria-describedby="diaryDangerMessage"><div class="lcars-danger-heading"><span>ARCHIVE SAFETY // CONFIRM</span><span>ARCHIVE CONTROL</span></div><div class="lcars-danger-body"><div class="lcars-danger-alert">WARNING / IRREVERSIBLE OPERATION</div><h2 id="diaryDangerTitle">RECORD DELETION AUTHORIZATION</h2><strong id="diaryDangerCount" class="lcars-danger-count"></strong><p id="diaryDangerMessage"></p><p class="lcars-danger-backup">DELETED RECORDS CANNOT BE RECOVERED UNLESS YOU HAVE AN EXPORTED JSON BACKUP.</p></div><div class="lcars-danger-actions"><button id="diaryDangerCancel" type="button">ABORT</button><button id="diaryDangerConfirm" type="button">AUTHORIZE DELETE</button></div></dialog><script src="./vendor/qrcode.js"></script><script src="./vendor/jsQR.js"></script><script type="module" src="./src/app.js"></script>
+</body></html>

@@ -1,0 +1,96 @@
+name: Rhythm PADD V2 checks
+
+on:
+  push:
+    branches:
+      - develop/v2-rhythm-padd
+      - experiment/mic-timing-analysis
+      - experiment/rc25-13-acoustic-grid-reference
+      - 'feature/rc25-gemini-tactical-hud'
+      - 'fix/rc25-4-ios-standalone-bottom-frame'
+      - 'fix/rc25-5-webkit-viewport-clamp'
+      - 'fix/rc25-6-ios-opaque-status-bar-test'
+      - 'fix/rc25-7-view-navigation-audio'
+      - 'feature/rc25-8-voyager-diary-archive'
+      - 'feature/rc25-9-voyager-stats-telemetry'
+      - 'feature/rc25-10-voyager-main-engineering'
+      - 'feature/rc25-11-tactical-view'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  node-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout V2 source
+        uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run tests (no external npm dependencies)
+        run: npm test
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout V2 source
+        uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium firefox
+      - name: Test RC25.1 tactical microphone UI on 320px and iPhone 13
+        run: node tests/rc25-tactical-browser.mjs
+      - name: Test iOS standalone paintable viewport and WebKit reserved strip
+        run: node tests/rc25-iphone-frame-browser.mjs
+      - name: Preview Voyager Diary archive layouts on 320px, iPhone, tablet and desktop
+        run: node tests/diary-archive-browser.mjs
+      - name: Preview Voyager Stats telemetry and filter disclosure at 320px, iPhone, tablet, desktop
+        run: node tests/stats-telemetry-browser.mjs
+      - name: Test RC25.11 Tactical three-view fusion and live sensor markers
+        run: node tests/tactical-fusion-browser.mjs
+      - name: Validate RC25.13 acoustic pilot single-window rendering on phone and desktop
+        run: node tests/acoustic-pilot-browser.mjs
+      - name: Preview Voyager Settings engineering layout and native controls
+        run: node tests/settings-engineering-browser.mjs
+      - name: Validate mobile Audio Matrix and Preset Databank across themes
+        run: node tests/mobile-signal-databank-browser.mjs
+      - name: Test private QR archive transfer and built-in offline decoder
+        run: node tests/archive-qr-browser.mjs
+      - name: Test smartphone tablet and desktop rendering
+        run: node tests/v2-browser-smoke.mjs
+      - name: P7 release validation (offline, backup, SW update, Firefox)
+        run: node tests/v2-release-gates.mjs
+      - name: Keep release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhythm-padd-v2-release-evidence
+          path: artifacts/v2-release/*.png
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Keep layout screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhythm-padd-v2-layout-screenshots
+          path: |
+            artifacts/v2-smoke/*.png
+            artifacts/diary-archive/*.png
+            artifacts/stats-telemetry/*.png
+            artifacts/settings-engineering/*.png
+            artifacts/mobile-signal-databank/*.png
+            artifacts/tactical-fusion/*.png
+          if-no-files-found: ignore
+          retention-days: 7

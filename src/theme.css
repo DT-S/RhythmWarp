@@ -1,0 +1,15 @@
+/* Rhythm Warp – independent Studio Green design tokens. No external resources. */
+:root {
+  color-scheme: dark;
+  --rw-bg: #0e1714;
+  --rw-panel: #14231c;
+  --rw-rail: #283a30;
+  --rw-green-dark: #4d6b55;
+  --rw-sage: #b3df94;
+  --rw-petrol: #92cbd2;
+  --rw-neon: #85f4a3;
+  --rw-text: #f2f0e8;
+  --rw-muted: #9ab0a2;
+  --rw-outline: 3px;
+  --rw-radius-elbow: 84px;
+}

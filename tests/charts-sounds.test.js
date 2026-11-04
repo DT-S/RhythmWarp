@@ -1,0 +1,17 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {dailySeries,sessionSeries} from '../src/charts.js';
+import {validateSounds,encodeBytes,decodeBytes,removeSound} from '../src/custom-sounds.js';
+import {fresh,validate,presetSettings,loadPreset} from '../src/model.js';
+import {AudioEngine} from '../src/audio.js';
+const sound=()=>({id:'user-12345678-1234-1234-1234-123456789abc',name:'My click',duration:.2,data:'AQIDBA=='});
+const entry=(day,peak=100,clean=null)=>({start:new Date(2026,9,day,12).getTime(),seconds:60,peak,clean});
+test('daily charts include zero days, tempo gaps and no invented clean BPM',()=>{const d=dailySeries([entry(15),entry(17,140,130)],3,new Date(2026,9,17));assert.equal(d.length,3);assert.equal(d[1].count,0);assert.equal(d[1].peak,null);assert.equal(d[0].clean,null);assert.equal(d[2].clean,130);});
+test('seven day mean includes earlier filtered-out dates and zero days',()=>{const d=dailySeries([entry(11),entry(17),entry(17,140)],1,new Date(2026,9,17));assert.equal(d[0].count,2);assert.equal(d[0].peak,140);assert.equal(d[0].average,3/7);});
+test('ramp plot draws horizontal holds and vertical transitions',()=>{const d=sessionSeries({seconds:20,history:[{at:0,bpm:100},{at:10,bpm:110}]});assert.deepEqual(d.map(p=>[p.x,p.y]),[[0,100],[10,100],[10,110],[20,110]]);});
+test('custom audio binary encoding round trips',()=>{const bytes=Uint8Array.from({length:20000},(_,i)=>i%256);assert.deepEqual(new Uint8Array(decodeBytes(encodeBytes(bytes.buffer))),bytes);});
+test('custom bank validation rejects duplicates, oversize and invalid contents',()=>{assert.equal(validateSounds([sound()]).length,1);for(const bank of [[sound(),sound()],[{...sound(),duration:6}],[{...sound(),data:'bad!'}],[{...sound(),data:'AAAA'.repeat(800000)}]])assert.throws(()=>validateSounds(bank));});
+test('v5 backup includes sounds once and restores preset assignments',()=>{const s=fresh();s.customSounds=[sound()];s.channels[0].sounds[0]=sound().id;s.presets=[{name:'User click',settings:presetSettings(s)}];assert.equal(s.presets[0].settings.customSounds.length,0);const restored=validate(JSON.parse(JSON.stringify(s)));assert.deepEqual(restored,s);assert.deepEqual(loadPreset(restored,restored.presets[0]).customSounds,s.customSounds);const bad=structuredClone(s);bad.customSounds=[];assert.throws(()=>validate(bad));});
+test('deleting custom sound resets live and saved assignments',()=>{const s=fresh();s.customSounds=[sound()];s.channels[0].sounds[1]=sound().id;s.presets=[{name:'P',settings:presetSettings(s)}];removeSound(s,sound().id);assert.equal(s.channels[0].sounds[1],'click');assert.equal(s.presets[0].settings.channels[0].sounds[1],'click');assert.equal(validate(s).customSounds.length,0);});
+test('audio engine uses uploaded buffer directly at scheduled time',()=>{const engine=new AudioEngine(),buffer={},calls=[];engine.buffers.set(sound().id,buffer);engine.tracks=[{gain:{}}];engine.ctx={createBufferSource:()=>({connect(){},start(t){calls.push([this.buffer,t]);}})};engine.click({channel:0,state:0,sound:sound().id},10);assert.deepEqual(calls,[[buffer,10]]);});
+test('backup audio preparation fails without replacing existing buffers',async()=>{const engine=new AudioEngine();engine.buffers.set(sound().id,'original');engine.ctx={decodeAudioData:async()=>{throw Error('bad codec');}};await assert.rejects(engine.prepareCustom([sound()]));assert.equal(engine.buffers.get(sound().id),'original');});

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#0e1714"/>
+<title>Rhythm Warp – Designstudie</title>
+<link rel="stylesheet" href="../src/theme.css"/>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--rw-bg);color:var(--rw-text);font-family:Inter,system-ui,sans-serif}
+.layout{min-height:100vh;display:grid;grid-template-columns:clamp(98px,18vw,210px) 1fr;grid-template-rows:95px 1fr 34px;gap:12px 20px;padding:18px}
+header{position:relative;grid-column:1/-1;display:grid;grid-template-columns:clamp(98px,18vw,210px) 1fr;gap:20px}
+.curve{position:relative;min-height:80px;background:var(--rw-rail);border:var(--rw-outline) solid var(--rw-neon);border-right:0;border-bottom:0;border-radius:var(--rw-radius-elbow) 0 0 0}
+.curve:after{content:"";position:absolute;left:38%;top:32%;right:0;bottom:0;background:var(--rw-bg);border-top:var(--rw-outline) solid var(--rw-neon);border-left:var(--rw-outline) solid var(--rw-neon);border-radius:44px 0 0 0}
+.heading{display:flex;align-items:center;border-top:3px solid var(--rw-neon);background:linear-gradient(180deg,var(--rw-rail) 0 19px,transparent 19px);padding:18px 12px 0}
+.tag{font-size:10px;letter-spacing:.22em;color:var(--rw-petrol);font-weight:800}
+h1{margin:2px 0;font-size:clamp(24px,4.5vw,50px);letter-spacing:.045em;line-height:1.1}
+aside{display:flex;flex-direction:column;gap:8px}
+.nav{border:2px solid var(--rw-green-dark);border-radius:23px 5px 5px 23px;background:#1b2a23;padding:15px 11px;min-height:59px;font-size:12px;font-weight:800;text-align:right;color:var(--rw-text)}
+.nav.on{border-color:var(--rw-neon);box-shadow:inset 4px 0 var(--rw-neon);color:var(--rw-sage);background:#22382b}
+.sidebar-tail{min-height:80px;flex:1;background:var(--rw-rail);border:3px solid var(--rw-green-dark);border-radius:5px 5px 5px 26px}
+main{min-width:0}
+article{background:var(--rw-panel);border:3px solid var(--rw-green-dark);border-radius:44px 9px 9px 25px;padding:clamp(16px,3vw,32px);margin-bottom:12px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:14px}
+h2{margin:8px 0 18px;font-size:clamp(17px,2.5vw,26px)}
+.led{width:8px;height:8px;border-radius:50%;background:var(--rw-neon);box-shadow:0 0 11px var(--rw-neon)}
+.instrument{display:flex;gap:35px;align-items:center;justify-content:center;padding:14px 0 6px;flex-wrap:wrap}
+.dial{position:relative;width:min(65vw,265px);aspect-ratio:1;border:3px solid var(--rw-neon);border-radius:50%;box-shadow:0 0 32px #85f4a311,inset 0 0 30px #85f4a311;background:repeating-conic-gradient(from 0deg,#365544 0deg 1deg,transparent 1deg 22.5deg);display:grid;place-items:center}
+.dial:before{content:"";position:absolute;inset:20px;border:2px dashed var(--rw-petrol);border-radius:50%;opacity:.5}
+.readout{text-align:center;font-size:clamp(54px,8vw,100px);line-height:1;color:var(--rw-sage);font-weight:800;font-variant-numeric:tabular-nums}
+.readout small{display:block;font-size:12px;letter-spacing:.25em;color:var(--rw-petrol)}
+.controls{min-width:130px;display:grid;gap:10px}
+.control{padding:13px 16px;border:2px solid var(--rw-green-dark);border-radius:5px 22px 22px 5px;background:#1b2a23;color:var(--rw-text);font-weight:800;letter-spacing:.07em}
+.control.primary{color:var(--rw-bg);border-color:var(--rw-neon);background:var(--rw-sage)}
+.plot{height:100px;border-radius:8px;background:linear-gradient(#36554440 1px,transparent 1px),linear-gradient(90deg,#36554440 1px,transparent 1px),#101b16;background-size:24px 24px;display:flex;align-items:center;justify-content:space-evenly;overflow:hidden}
+.plot i{width:5px;height:var(--h);background:var(--rw-neon);border-radius:4px;box-shadow:0 0 8px #85f4a355}
+footer{grid-column:1/-1;border-bottom:3px solid var(--rw-neon);border-radius:0 0 0 22px;text-align:right;color:var(--rw-muted);font-size:10px;letter-spacing:.12em;padding:5px 12px}
+.notice{color:var(--rw-muted);font-size:12px;margin-top:12px}
+@media(max-width:650px){.layout{grid-template-columns:76px 1fr;grid-template-rows:76px 1fr 30px;gap:8px;padding:8px}.curve{min-height:60px;border-radius:42px 0 0 0}.curve:after{border-radius:22px 0 0 0}.heading{padding:13px 5px 0}.tag{font-size:8px}aside .nav{font-size:9px;padding:9px 5px;min-height:45px}.sidebar-tail{min-height:35px}article{border-radius:24px 5px 5px 18px;padding:12px}.instrument{gap:12px}.dial{width:min(55vw,210px)}.controls{grid-template-columns:1fr 1fr;width:100%;gap:6px}.control{font-size:10px;padding:8px}h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<header><div class="curve"></div><div class="heading"><div><div class="tag">DRUM TRACK STUDIO / RHYTHM ENGINE</div><h1>RHYTHM WARP</h1></div></div></header>
+<aside><div class="nav on">METRONOME</div><div class="nav">AUDIO MATRIX</div><div class="nav">PRACTICE LOG</div><div class="nav">ANALYTICS</div><div class="nav">SETTINGS</div><div class="sidebar-tail"></div></aside>
+<main><article>
+<div class="topline"><span class="tag">TEMPO / BEAT ENGINE</span><span class="led" aria-hidden="true"></span></div>
+<h2>Metronome Control</h2>
+<div class="instrument"><div class="dial"><div class="readout">120<small>BPM</small></div></div><div class="controls"><span class="control primary">START</span><span class="control">4 / 4</span><span class="control">CIRCULAR</span><span class="control">SUBDIVISION</span></div></div>
+</article>
+<article><div class="topline"><span class="tag">TIMING ANALYSIS</span><span class="led" aria-hidden="true"></span></div><h2>Signal Monitor</h2><div class="plot" aria-hidden="true">
+<i style="--h:12px"></i><i style="--h:36px"></i><i style="--h:23px"></i><i style="--h:51px"></i><i style="--h:68px"></i><i style="--h:27px"></i><i style="--h:75px"></i><i style="--h:47px"></i><i style="--h:30px"></i><i style="--h:64px"></i><i style="--h:19px"></i><i style="--h:45px"></i>
+</div></article><p class="notice">DESIGNSTUDIE / keine aktive Audio- oder Trainingsfunktion</p></main>
+<footer>RHYTHM WARP / OFFLINE RHYTHM ENGINE</footer>
+</div>
+</body>
+</html>

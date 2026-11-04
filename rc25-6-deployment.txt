@@ -1,0 +1,6 @@
+LCARS METRONOME / RC25.6 IOS STATUS BAR TEST
+Branch: fix/rc25-6-ios-opaque-status-bar-test
+Build marker: opaque-statusbar-rc25-6-20261026
+Version: 2.0.0-rc.25.6
+Expected HTML meta: apple-mobile-web-app-status-bar-style=black
+This file is present ONLY in the RC25.6 branch and confirms which GitHub Pages source is being served.

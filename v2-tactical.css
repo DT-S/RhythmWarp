@@ -1,0 +1,582 @@
+/* =====================================================================
+  RC25.11 // VOYAGER TACTICAL VIEW // FUSED CIRCULAR + LINEAR + SENSOR
+  Scoped to Tactical mode. Real Circular/Linear views retain their geometry.
+  RC16 readability and native controls are deliberately preserved.
+  ===================================================================== */
+#tactical[hidden]{display:none!important}
+#metronome #tacticalViewSwitch{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;
+ margin:4px 0 6px;min-width:0;padding:0;
+}
+#tacticalViewSwitch button{
+ min-width:0;min-height:36px;padding:5px 6px;
+ background:#0b1425;color:var(--padd-blue,#a9cfff);
+ border:1px solid var(--padd-blue,#789ad1);border-radius:0;
+ font:900 12px/1.1 'Arial Narrow',Arial,sans-serif;letter-spacing:.015em;
+}
+#tacticalViewSwitch button:first-child{border-radius:15px 0 0 15px}
+#tacticalViewSwitch button:last-child{border-radius:0 15px 15px 0}
+#tacticalViewSwitch button[aria-pressed=true]{
+ background:var(--padd-lavender,#c5a5ef);color:#060c16;
+ box-shadow:inset 0 -3px var(--padd-peach,#fbb57c);
+}
+#tacticalViewSwitch button:focus-visible,
+#tactical button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+#metronome.tactical-active > .section-heading{margin-bottom:2px}
+#metronome.tactical-active .instrument-layout{display:block!important}
+#metronome.tactical-active .instrument-layout > .instrument{
+ display:block!important;width:100%!important;max-width:100%!important;
+ min-width:0!important;padding:0!important;margin:0!important;
+ border:0!important;background:transparent!important;
+ box-shadow:none!important;
+}
+#metronome.tactical-active .instrument::before,
+#metronome.tactical-active .instrument::after{display:none!important}
+#metronome.tactical-active .instrument > :not(#tactical){display:none!important}
+#metronome.tactical-active #micVisual,
+#metronome.tactical-active #micConsole,
+#metronome.tactical-active .side-controls{display:none!important}
+#metronome.tactical-active.tac-cfg-open #micConsole{display:flex!important}
+#metronome.tactical-active.tac-cfg-open .side-controls{display:block!important}
+#metronome #tactical{
+ --tac-early:#75baff;--tac-grid:#d5a6ff;--tac-late:#ffb566;
+ --tac-extra:#ff786e;--tac-out:#f26b88;
+ --tac-gridline:#315d92;--tac-space:#030b1a;
+ display:flex;flex-direction:column;min-width:0;gap:7px;
+ color:#c9e0ff;
+ font-variant-numeric:tabular-nums;
+}
+#tactical .tac-cockpit,#tactical .tac-plot-panel,#tactical .tac-diagnostics{
+ position:relative;min-width:0;overflow:hidden;
+ padding:0 6px 7px 8px;border:1px solid var(--padd-blue,#98baf1);
+ border-left:9px solid var(--padd-blue,#98baf1);
+ border-radius:17px 17px 15px 0;
+ background:linear-gradient(165deg,#050816,#03050e 65%,#071021);
+ isolation:isolate;
+}
+#tactical .tac-cockpit::before,
+#tactical .tac-plot-panel::before{
+ content:'';position:absolute;inset:28px 0 0;pointer-events:none;opacity:.42;
+ background-image:
+  repeating-linear-gradient(0deg,transparent,transparent 23px,rgba(70,139,218,.075) 24px),
+  repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(70,139,218,.075) 29px);
+ z-index:0;
+}
+#tactical .tac-plot-panel{border-left-color:var(--padd-lavender,#ad9ce4)}
+#tactical .tac-diagnostics{border-left-color:var(--padd-peach,#e3aa8a);
+ border-bottom:6px solid var(--padd-peach,#e3aa8a);padding-bottom:5px}
+#tactical .tac-head{
+ position:relative;z-index:1;display:flex;justify-content:space-between;
+ align-items:center;gap:6px;margin:0 -6px 5px -8px;padding:5px 8px;
+ min-height:26px;background:var(--padd-lavender,#bf9be4);color:#050610;
+ border-radius:11px 11px 8px 0;
+ font:900 12px/1.1 'Arial Narrow',Arial,sans-serif;
+}
+#tactical .tac-head strong{font-size:12px;letter-spacing:.01em}
+#tactical .tac-head output,#tactical .tac-head span{
+ min-width:0;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+#tactical .tac-fusion{
+ position:relative;display:grid;grid-template-columns:minmax(0,41%) minmax(0,59%);
+ min-width:0;gap:0;align-items:center;z-index:2;
+}
+#tactical #tacticalRingDock{
+ position:relative;z-index:2;display:flex;align-items:center;justify-content:center;
+ width:100%;min-width:0;min-height:0;aspect-ratio:1;
+ filter:drop-shadow(0 0 5px rgba(136,170,238,.32));
+}
+#tactical #tacticalRingDock > #dial{
+ display:block!important;position:relative!important;visibility:visible!important;
+ opacity:1!important;width:100%!important;height:auto!important;min-height:0!important;
+ max-width:none!important;max-height:none!important;aspect-ratio:1!important;
+ margin:0!important;grid-area:auto!important;overflow:visible!important;
+}
+#tactical #tacticalRingDock #rings{
+ display:block!important;position:relative!important;
+ width:100%!important;height:100%!important;overflow:visible!important;
+ visibility:visible!important;opacity:1!important;
+}
+#tactical #tacticalRingDock #rings .point.beat-arc{stroke-width:7px!important}
+#tactical #tacticalRingDock #rings .node-label{font-size:25px!important}
+#tactical #tacticalRingDock #tempo{border-width:2px!important}
+#tactical #tacticalRingDock #tempoValue{font-size:23px!important}
+#tactical #tacticalRingDock #tempoLabel,
+#tactical #tacticalRingDock .tempo-buttons{display:none!important}
+#tactical #tacticalRingDock #rampReadout{display:none!important}
+#tactical #tacticalRingOverlay{
+ position:absolute;z-index:5;inset:0;display:block;
+ width:100%;height:100%;overflow:visible;
+ pointer-events:none;
+}
+#tactical .tac-ring-needle{
+ stroke:var(--padd-amber,#ffd385);stroke-width:4;
+ filter:drop-shadow(0 0 7px var(--padd-amber,#ffd385));
+}
+#tactical .tac-ring-playhead{
+ fill:var(--padd-amber,#ffd385);stroke:#fff;stroke-width:2;
+ filter:drop-shadow(0 0 9px var(--padd-amber,#ffd385));
+}
+#tactical .tac-ring-hit{
+ stroke:#fff;stroke-width:.7;
+ filter:drop-shadow(0 0 8px currentColor);
+}
+#tactical .tac-lane-panel{position:relative;min-width:0;padding:3px 0 0}
+#tactical .tac-readouts{
+ display:grid;grid-template-columns:1.35fr 1fr 1fr;
+ gap:3px;margin-bottom:5px;min-width:0;
+}
+#tactical .tac-readouts span{
+ padding:4px 3px;min-width:0;border-left:2px solid var(--padd-blue,#9cc4ff);
+ background:#0a1328;color:#a9c9f6;
+ font:800 10px/1.1 'Arial Narrow',Arial,sans-serif;
+}
+#tactical .tac-readouts strong{display:block;font:900 20px/1.1 Impact,'Arial Narrow',sans-serif;
+ color:#e4d0ff;white-space:nowrap}
+#tactical .tac-lane-shell{
+ position:relative;height:73px;width:100%;min-width:0;
+ overflow:hidden;border:1px solid var(--padd-blue,#8cb7f0);
+ border-radius:0 18px 18px 0;
+ background:radial-gradient(ellipse at 45% 50%,rgba(54,104,182,.23),transparent 75%),#061021;
+ box-shadow:inset 0 0 18px rgba(44,107,178,.21),0 0 6px rgba(108,166,235,.2);
+}
+#tactical #tacticalLane{display:block;width:100%;height:100%}
+#tactical .tac-lane-base{fill:transparent}
+#tactical .tac-lane-grid{stroke:#355f97;stroke-width:1;opacity:.42}
+#tactical .tac-lane-zero{stroke:#86baf8;stroke-width:1;stroke-dasharray:4 5;opacity:.5}
+#tactical .tac-lane-now{stroke:var(--padd-lavender,#c9a6ef);stroke-width:2;
+ filter:drop-shadow(0 0 6px var(--padd-lavender,#c9a6ef))}
+#tactical .tac-lane-quarter{stroke:#aed4ff;stroke-width:1.65;opacity:.92}
+#tactical .tac-lane-sub{stroke:#5680c0;stroke-width:1;opacity:.69}
+#tactical .tac-lane-bar{stroke:var(--padd-lavender,#d6b4f5);stroke-width:2.1;opacity:1;filter:drop-shadow(0 0 3px rgba(159,194,255,.3))}
+#tactical .tac-lane-label{fill:#d0e5ff;font:800 12px ui-monospace,monospace}
+#tactical .tac-hit-stem{stroke-width:2.2;filter:drop-shadow(0 0 5px currentColor)}
+#tactical .tac-hit-head{stroke:#eee;stroke-width:.8;filter:drop-shadow(0 0 6px currentColor)}
+#tactical .tac-time-arrow{display:flex;justify-content:space-between;gap:3px;
+ padding:4px 1px 1px;font:800 9px/1.2 'Arial Narrow',Arial,sans-serif;color:#91b9e4}
+#tactical .tac-commands{position:relative;z-index:1;display:grid;grid-template-columns:.8fr 1.3fr 1fr;
+ gap:3px;margin-top:5px;min-width:0}
+#tactical .tac-commands button,#tactical .tac-commands time{
+ display:flex;align-items:center;justify-content:center;min-width:0;
+ min-height:42px;margin:0;padding:5px;
+ border:1px solid #6a9ada;border-radius:10px;
+ background:#162c54;color:#c8e4ff;
+ font:900 12px/1.1 'Arial Narrow',Arial,sans-serif;
+}
+#tactical .tac-commands #tacticalTap{
+ background:var(--padd-lavender,#bea4df);color:#040b15;border-radius:14px 0 0 14px}
+#tactical .tac-commands .tac-main-start{
+ background:var(--padd-blue,#80b6ee);color:#050a16;font-size:15px}
+#tactical .tac-commands time{font:900 14px/1.1 ui-monospace,monospace}
+#tactical .tac-commands #tacticalCfg{border-radius:0 14px 14px 0}
+#tactical .tac-plot-buttons{position:relative;z-index:2;display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;margin:0 0 5px}
+#tactical .tac-plot-buttons button{
+ min-width:0;min-height:34px;margin:0;padding:5px 3px;
+ border:1px solid #426fbd;border-radius:10px;background:#0b1930;color:#a8d0ff;
+ font:900 11px/1 'Arial Narrow',Arial,sans-serif;
+}
+#tactical .tac-plot-buttons button[aria-pressed=true]{
+ color:#080817;background:var(--padd-lavender,#d1a9f5);
+ box-shadow:inset 0 -3px var(--padd-peach,#ffba82);
+}
+#tactical .tac-plot-buttons button:disabled{opacity:.45}
+#tactical .tac-plot-shell{
+ position:relative;z-index:2;overflow:hidden;min-width:0;height:145px;
+ border-radius:8px;border:1px solid #355991;
+ background:
+ radial-gradient(ellipse at center,rgba(17,65,122,.17),transparent 82%),#030c1b;
+}
+#tactical .tac-plot-shell::before{
+ content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+ background:linear-gradient(90deg,transparent,rgba(58,154,250,.075),transparent);
+ width:40%;transform:translateX(-140%);
+ animation:tac-sweep 5.5s linear infinite;
+}
+@keyframes tac-sweep{to{transform:translateX(370%)}}
+#tactical #tacticalPlot{position:relative;z-index:1;display:block;width:100%;height:100%;overflow:visible}
+#tactical .tac-plot-shell .mic-sensor-grid{stroke:#4474b2;stroke-width:.8;opacity:.43;
+ stroke-dasharray:3 5}
+#tactical .tac-plot-shell .mic-sensor-vertical{opacity:.4}
+#tactical .tac-plot-shell .mic-sensor-reference{stroke:#c5b0f3;stroke-width:1.4;stroke-dasharray:5 4}
+#tactical .tac-plot-shell .mic-tolerance-corridor{fill:#8fb9fa;opacity:.16}
+#tactical .tac-plot-shell .mic-sensor-stem{stroke:var(--tac-grid);stroke-width:1.7;
+ filter:drop-shadow(0 0 3px #9ac8ff)}
+#tactical .tac-plot-shell .mic-sensor-stem.mic-sensor-clipped{stroke:var(--tac-out)}
+#tactical .tac-plot-shell .mic-sensor-dot{
+ fill:var(--tac-grid);stroke:#e2eeff;stroke-width:.65;
+ filter:drop-shadow(0 0 4px var(--tac-grid))}
+#tactical .tac-plot-shell .mic-sensor-dot.mic-sensor-clipped{fill:var(--tac-out)}
+#tactical .tac-plot-shell .mic-sensor-histogram{fill:#7cabea;stroke:#d4b3ff;stroke-width:.6}
+#tactical .tac-plot-shell .mic-sensor-axis{fill:#c0d7f8;font:10px ui-monospace,monospace}
+#tactical .tac-plot-legend{
+ position:relative;z-index:2;display:flex;justify-content:space-between;gap:4px;
+ margin-top:3px;color:#a2c6fa;font:800 9px/1.1 'Arial Narrow',Arial,sans-serif;
+}
+#tactical .tac-diagnostic-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,2fr) minmax(0,.78fr);
+ gap:4px;align-items:stretch}
+#tactical .tac-offset{display:flex;flex-direction:column;justify-content:center;min-width:0;
+ padding:3px;border:1px solid #4a739e;border-radius:8px;
+ background:#0b1528}
+#tactical .tac-offset small{font-size:9px;color:#abd6ff;line-height:1.15}
+#tactical .tac-offset strong{font:900 20px/1.1 ui-monospace,monospace;
+ white-space:nowrap;color:#eedaff;overflow:hidden;text-overflow:ellipsis}
+#tactical .tac-counts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+ gap:2px;min-width:0}
+#tactical .tac-counts>div{
+ display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+ gap:3px;min-width:0;padding:3px 1px;border-bottom:2px solid #375987;
+ background:#0b1427;color:#aaccff;text-align:center
+}
+#tactical .tac-counts span{font:800 8px/1.1 'Arial Narrow',Arial,sans-serif}
+#tactical .tac-counts strong{font:900 14px/1.1 ui-monospace,monospace}
+#tactical .tac-counts [data-lit=true]{box-shadow:inset 0 0 10px rgba(115,177,243,.23)}
+#tactical .tac-counts [data-tac-count=early] strong{color:var(--tac-early)}
+#tactical .tac-counts [data-tac-count=grid] strong{color:var(--tac-grid)}
+#tactical .tac-counts [data-tac-count=late] strong{color:var(--tac-late)}
+#tactical .tac-counts [data-tac-count=extra] strong{color:var(--tac-extra)}
+#tactical .tac-counts [data-tac-count=outside] strong{color:var(--tac-out)}
+#tactical .tac-counts .tac-slots{grid-column:span 1}
+#tactical .tac-counts .tac-slots:nth-last-child(3){grid-column:span 2}
+#tactical .tac-counts .tac-slots:nth-last-child(2){grid-column:span 2}
+#tactical .tac-counts .tac-slots:nth-last-child(1){grid-column:span 1}
+#tactical .tac-mic-action{
+ min-width:0;min-height:48px;margin:0;padding:5px 3px;
+ background:var(--padd-amber,#f6bd73);color:#080a14;
+ border:1px solid #f9ce86;border-radius:12px 0 12px 0;
+ font:900 12px/1.15 'Arial Narrow',Arial,sans-serif;overflow-wrap:anywhere
+}
+#tactical .tac-mic-action[aria-pressed=true]{
+ background:var(--padd-red,#d86770);color:#10040a;
+ box-shadow:0 0 10px rgba(255,94,115,.2)
+}
+@media(max-width:640px){
+ #metronome #tacticalViewSwitch{margin:3px 0 5px}
+ #metronome #tacticalViewSwitch button{min-height:34px;font-size:11px}
+ #metronome.tactical-active .section-heading{min-height:26px;margin:0 0 2px}
+ #metronome.tactical-active .section-heading h2{font-size:13px}
+ #metronome.tactical-active #view{min-height:29px!important;height:29px!important}
+ #metronome #tactical{gap:5px}
+ #tactical .tac-cockpit,#tactical .tac-plot-panel,#tactical .tac-diagnostics{
+  padding:0 4px 5px 6px;border-left-width:7px;border-radius:13px 12px 11px 0;
+ }
+ #tactical .tac-head{margin:0 -4px 4px -6px;min-height:24px;padding:4px 6px}
+ #tactical .tac-head strong{font-size:11px}
+ #tactical .tac-head output,#tactical .tac-head span{font-size:8px}
+ #tactical .tac-fusion{grid-template-columns:minmax(0,42%) minmax(0,58%)}
+ #tactical .tac-readouts{margin-bottom:3px}
+ #tactical .tac-readouts span{font-size:9px;padding:3px 2px}
+ #tactical .tac-readouts strong{font-size:19px}
+ #tactical .tac-lane-shell{height:69px}
+ #tactical .tac-time-arrow{font-size:8px}
+ #tactical .tac-commands{margin-top:4px}
+ #tactical .tac-commands button,#tactical .tac-commands time{min-height:39px}
+ #tactical .tac-plot-buttons button{min-height:30px;font-size:10px}
+ #tactical .tac-plot-shell{height:135px}
+ #tactical .tac-diagnostic-row{grid-template-columns:minmax(0,1fr) minmax(0,1.9fr) minmax(0,.78fr)}
+ #tactical .tac-offset strong{font-size:17px}
+ #tactical .tac-counts span{font-size:7px}
+ #tactical .tac-counts strong{font-size:12px}
+ #tactical .tac-mic-action{font-size:11px}
+}
+@media(max-width:360px){
+ #metronome #tacticalViewSwitch button{font-size:10px;min-height:33px}
+ #tactical .tac-fusion{grid-template-columns:minmax(0,41%) minmax(0,59%)}
+ #tactical #tacticalRingDock #tempoValue{font-size:18px!important}
+ #tactical #tacticalRingDock #rings .node-label{font-size:19px!important}
+ #tactical .tac-readouts strong{font-size:17px}
+ #tactical .tac-lane-shell{height:60px}
+ #tactical .tac-plot-shell{height:121px}
+ #tactical .tac-diagnostic-row{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,.75fr)}
+ #tactical .tac-counts span{font-size:6.5px}
+ #tactical .tac-offset strong{font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){
+ #tactical .tac-plot-shell::before{animation:none!important}
+ #tactical .tac-ring-playhead,#tactical .tac-hit-head,
+ #tactical .tac-ring-hit{filter:none!important}
+}
+
+
+/* RC25.11.1 // iPhone: MIC ENGAGE must not activate RC25.1's two-column
+   classic instrument grid. The old :not(:has(#linear)) selector contributes
+   an extra ID in specificity, which beat the original Tactical override.
+   Keep the entire fusion cockpit on one full-width grid track at ALL sizes. */
+#metronome.tactical-active.mic-telemetry-on .instrument-layout,
+#metronome.tactical-active:not(.mic-telemetry-on) .instrument-layout{
+ display:block!important;width:100%!important;min-width:0!important;
+ grid-template-columns:none!important;
+}
+#metronome.tactical-active.mic-telemetry-on .instrument-layout > .instrument,
+#metronome.tactical-active.mic-telemetry-on .instrument:not(:has(> #linear:not([hidden]))),
+#metronome.tactical-active:not(.mic-telemetry-on) .instrument-layout > .instrument{
+ display:block!important;grid-template-columns:none!important;
+ grid-template-rows:none!important;grid-auto-flow:row!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ padding:0!important;margin:0!important;gap:0!important;
+ align-items:stretch!important;
+}
+#metronome.tactical-active .instrument-layout > .instrument > #tactical{
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ grid-column:auto!important;
+}
+/* Three explicit choices replace the old two-state switch in the UI.
+   Preserve the legacy node only as a compatibility adapter while existing
+   Circular/Linear test contracts migrate to the new buttons. */
+#metronome .section-heading > #view,
+#metronome.mic-telemetry-on .section-heading > #view{
+ display:none!important;
+}
+
+/* Voyager Tactical activation is a one-shot staged console power-up,
+   never the live animation frame or an audio/microphone state change.
+   Animate interior surfaces only, not the size of their boxes or pointer
+   hit targets. This deliberately reuses LCARS view-enter sequencing. */
+@keyframes tactical-rail-on{
+ 0%{opacity:.12;filter:brightness(1.65)}
+ 55%{opacity:1;filter:brightness(1.2)}
+ 100%{opacity:1;filter:brightness(1)}
+}
+@keyframes tactical-core-online{
+ 0%{opacity:0;clip-path:inset(0 97% 0 0);filter:brightness(1.5)}
+ 60%{opacity:1;clip-path:inset(0 0 0 0)}
+ 100%{opacity:1;clip-path:inset(0 0 0 0);filter:brightness(1)}
+}
+@keyframes tactical-lattice-on{
+ 0%{opacity:0}
+ 45%{opacity:.55}
+ 100%{opacity:1}
+}
+@keyframes tactical-node-on{
+ 0%{opacity:0;filter:brightness(2)}
+ 60%{opacity:1;filter:brightness(1.35)}
+ 100%{opacity:1;filter:brightness(1)}
+}
+#metronome #tactical.lcars-view-enter .tac-cockpit,
+#metronome #tactical.lcars-view-enter .tac-plot-panel,
+#metronome #tactical.lcars-view-enter .tac-diagnostics{
+ animation:tactical-rail-on 260ms ease-out both;
+}
+#metronome #tactical.lcars-view-enter .tac-plot-panel{animation-delay:280ms}
+#metronome #tactical.lcars-view-enter .tac-diagnostics{animation-delay:565ms}
+#metronome #tactical.lcars-view-enter .tac-cockpit > .tac-head,
+#metronome #tactical.lcars-view-enter .tac-plot-panel > .tac-head,
+#metronome #tactical.lcars-view-enter .tac-diagnostics > .tac-head{
+ animation:tactical-core-online 245ms cubic-bezier(.2,1,.36,1) 65ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-plot-panel > .tac-head{animation-delay:345ms}
+#metronome #tactical.lcars-view-enter .tac-diagnostics > .tac-head{animation-delay:630ms}
+#metronome #tactical.lcars-view-enter .tac-ring-dock{
+ animation:tactical-lattice-on 340ms ease-out 160ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-ring-dock #rings circle.track:not(.inner-track){
+ --boot-circumference:1333;stroke-dasharray:1333 1333;
+ animation:lcars-launch-ring 370ms cubic-bezier(.22,1,.36,1) 175ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-ring-dock #rings circle.track.inner-track{
+ --boot-circumference:937;stroke-dasharray:937 937;
+ animation:lcars-launch-ring 360ms cubic-bezier(.22,1,.36,1) 270ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-ring-dock #rings g[data-index]{
+ animation:lcars-view-beat 195ms steps(5,end)
+ calc(360ms + var(--view-delay,0ms) * .18) both;
+}
+#metronome #tactical.lcars-view-enter .tac-readouts{
+ animation:tactical-node-on 235ms ease-out 390ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-lane-shell{
+ animation:tactical-core-online 330ms cubic-bezier(.2,1,.36,1) 440ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-time-arrow{
+ animation:tactical-node-on 160ms ease-out 650ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-commands{
+ animation:tactical-node-on 200ms ease-out 675ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-plot-buttons{
+ animation:tactical-node-on 195ms ease-out 505ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-plot-shell{
+ animation:tactical-lattice-on 330ms ease-out 600ms both;
+}
+#metronome #tactical.lcars-view-enter .tac-diagnostic-row{
+ animation:tactical-node-on 210ms ease-out 835ms both;
+}
+@media(prefers-reduced-motion:reduce){
+ html:not([data-lcars-motion="force"]) #metronome #tactical.lcars-view-enter,
+ html:not([data-lcars-motion="force"]) #metronome #tactical.lcars-view-enter *,
+ html:not([data-lcars-motion="force"]) #metronome #tactical.lcars-view-enter::before{
+   animation:none!important;opacity:1!important;clip-path:none!important;
+ }
+}
+
+
+/* RC25.11.6 / SAME WINDOW: familiar LCARS deck buttons sit below the
+   Tactical diagnostics. One drawer expands in the page, no blur or modal. */
+#metronome.tactical-active #tacticalDeckHost{
+ display:flex;flex-direction:column;min-width:0;
+ width:100%;gap:5px;margin:1px 0 0;
+}
+#metronome.tactical-active #tacticalDeckBarMount{
+ min-width:0;width:100%;
+}
+#metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:3px!important;width:100%;margin:0;padding:0;
+}
+#metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button{
+ display:flex!important;min-width:0!important;min-height:39px!important;
+ margin:0!important;padding:4px 7px!important;gap:3px!important;
+ align-items:center;justify-content:space-between;text-align:right;
+ background:var(--padd-blue,#a8c8ff);color:#080913;
+ border:0!important;border-radius:0!important;
+ font:900 11px/1.1 'Arial Narrow',Arial,sans-serif!important;
+ overflow-wrap:anywhere;
+}
+#metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button:first-child{
+ border-radius:17px 0 0 17px!important;
+}
+#metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button:last-child{
+ border-radius:0 17px 17px 0!important;
+ background:var(--padd-tan,#c39cbe);
+}
+#metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button small{
+ display:block!important;font:800 8px/1 ui-monospace,monospace!important;opacity:.8;
+}
+#metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button[aria-expanded=true]{
+ background:var(--padd-amber,#ffd279)!important;color:#090711;
+ box-shadow:inset 0 -4px var(--padd-peach,#ffab87);
+}
+#metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button:focus-visible,
+#metronome.tactical-active #tacticalSettingsBody button:focus-visible{
+ outline:3px solid white;outline-offset:2px;
+}
+#tactical .tac-inline-body[hidden]{display:none!important}
+#metronome.tactical-active #tacticalSettingsBody{
+ display:block;width:100%;min-width:0;max-width:100%;height:auto;
+ padding:9px 7px 11px 10px;margin:0;
+ border:1px solid var(--padd-blue,#89a9ee);
+ border-left:9px solid var(--padd-lavender,#bca0e6);
+ border-bottom:6px solid var(--padd-peach,#efab87);
+ border-radius:19px 5px 16px 0;
+ background:
+ repeating-linear-gradient(90deg,transparent 0 28px,rgba(73,125,211,.06) 29px),
+ repeating-linear-gradient(0deg,transparent 0 23px,rgba(73,125,211,.06) 24px),#040b19;
+ overflow:visible;
+}
+#metronome.tactical-active #tacticalSettingsBody > *{
+ box-sizing:border-box;min-width:0;max-width:100%;
+ margin:0!important;
+}
+#metronome.tactical-active #tacticalSettingsBody #trainingDeck{
+ display:flex!important;flex-direction:column!important;position:relative;
+ width:100%!important;max-width:100%;height:auto!important;
+ gap:8px!important;padding:0!important;
+ grid-template-columns:none!important;
+}
+#metronome.tactical-active #tacticalSettingsBody #trainingDeck>.panel{
+ width:100%!important;max-width:100%;margin:0!important;
+}
+#metronome.tactical-active #tacticalSettingsBody #micConsole{
+ display:block!important;position:relative;
+ width:100%!important;max-width:100%;margin:0!important;
+}
+#metronome.tactical-active #tacticalSettingsBody #mixer{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ width:100%!important;gap:8px!important;margin:0!important;
+}
+#metronome.tactical-active #tacticalSettingsBody #mixer>.panel{
+ min-width:0;margin:0!important;
+}
+#metronome.tactical-active #tacticalSettingsBody > .master{
+ margin:8px 0 0!important;width:100%!important;
+}
+#metronome.tactical-active #tacticalSettingsBody > .lcars-info{
+ margin:8px 0 0!important;
+}
+#metronome.tactical-active #tacticalSettingsBody input,
+#metronome.tactical-active #tacticalSettingsBody select{max-width:100%}
+@media(max-width:640px){
+ #metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button{
+  min-height:37px!important;font-size:10px!important;padding:4px!important;
+ }
+ #metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button small{
+  font-size:7.5px!important;
+ }
+ #metronome.tactical-active #tacticalSettingsBody{padding:6px 5px 10px 7px}
+ #metronome.tactical-active #tacticalSettingsBody #mixer{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+}
+@media(max-width:360px){
+ #metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button{
+  font-size:9px!important;min-height:35px!important;
+ }
+ #metronome.tactical-active #tacticalDeckBarMount .lcars-deck-bar button small{font-size:7px!important}
+}
+
+/* Exact hidden-state precedence beats the generic inline-body display rule. */
+#metronome.tactical-active #tacticalSettingsBody[hidden]{display:none!important}
+#metronome:not(.tactical-active) #tacticalMix{display:none!important}
+@keyframes tac-inline-deploy{
+ from{opacity:0;transform:translateY(-6px)}
+ to{opacity:1;transform:translateY(0)}
+}
+#metronome.tactical-active #tacticalSettingsBody:not([hidden]){
+ animation:tac-inline-deploy 220ms cubic-bezier(.2,.9,.25,1) both;
+}
+@media(prefers-reduced-motion:reduce){
+ html:not([data-lcars-motion="force"]) #metronome.tactical-active #tacticalSettingsBody{
+  animation:none!important;
+ }
+}
+
+
+/* Adaptive Tactical Astrometrics: mobile keeps one plot; wide consoles get all three. */
+#tactical .tac-plot-panel{container-type:inline-size}
+#tactical .tac-plot-shell.tac-plot-grid > .tac-plot-cell{display:none}
+#tactical .tac-plot-cell-label{display:block;color:#b7d7ff;font:900 10px/1.25 'Arial Narrow',Arial,sans-serif;padding:3px 6px}
+#tactical .tac-plot-shell.tac-plot-grid > #tacticalPlot{width:100%;height:100%}
+@container (min-width:850px){
+ #tactical .tac-plot-shell.tac-plot-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+  height:170px;padding:5px;box-sizing:border-box;align-items:stretch;
+ }
+ #tactical .tac-plot-shell.tac-plot-grid > #tacticalPlot{height:100%;min-width:0}
+ #tactical .tac-plot-shell.tac-plot-grid > .tac-plot-cell{
+  display:flex;flex-direction:column;min-width:0;min-height:0;
+  border-left:1px solid #355991;
+ }
+ #tactical .tac-plot-cell .tac-plot-chart{display:block;width:100%;height:100%;min-height:0}
+ #tactical .tac-plot-buttons{display:none}
+}
+
+
+/* Selected graph fills the narrow console, without stretching its data domain. */
+#tactical .tac-plot-shell.tac-plot-grid[data-selected="rate"] > #tacticalPlot,
+#tactical .tac-plot-shell.tac-plot-grid[data-selected="distribution"] > #tacticalPlot{display:none}
+#tactical .tac-plot-shell.tac-plot-grid[data-selected="rate"] > .tac-plot-cell:first-of-type,
+#tactical .tac-plot-shell.tac-plot-grid[data-selected="distribution"] > .tac-plot-cell:last-of-type{
+ display:flex;flex-direction:column;width:100%;height:100%;min-height:0;
+}
+#tactical .tac-plot-shell.tac-plot-grid[data-selected="rate"] .tac-plot-chart,
+#tactical .tac-plot-shell.tac-plot-grid[data-selected="distribution"] .tac-plot-chart{
+ width:100%;height:100%;min-height:0;
+}
+@container (min-width:850px){
+ #tactical .tac-plot-shell.tac-plot-grid > #tacticalPlot{display:block!important}
+ #tactical .tac-plot-shell.tac-plot-grid > .tac-plot-cell{
+  display:flex!important;width:auto!important;height:auto!important;
+ }
+}
+
+/* All three live SVGs use identical contrast and telemetry treatment. */
+#tactical .tac-plot-shell .mic-sensor-line{
+ fill:none;stroke:#cda8fb;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+ filter:drop-shadow(0 0 3px rgba(205,168,251,.65));
+}
+#tactical .tac-plot-shell .mic-sensor-reference{stroke:#bfa5f9;opacity:.95}
+#tactical .tac-plot-shell .mic-sensor-histogram{
+ fill:#87bdf5;stroke:#ead8ff;stroke-width:1;opacity:.95;
+}
+#tactical .tac-plot-shell .mic-sensor-axis{fill:#d7eaff}
+#tactical .tac-plot-shell .mic-sensor-dot{fill:#e0b8ff;stroke:#f9f1ff;stroke-width:.8}

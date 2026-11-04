@@ -1,0 +1,441 @@
+/* Rhythm Warp / slimmer left fascia.
+   Scope: layout ONLY. Does not recolor any Studio Green / Violet Pulse / Red Shift theme.
+   Edit these two sidebar variables when fine-tuning. */
+
+/* Square sidebar buttons in all states, including compact iPhone navigation.
+   Keep the full accessible label in the original HTML, show its data-short name. */
+.app-shell > aside nav .nav,
+html[data-app-theme] .app-shell > aside nav .nav,
+.app-shell > aside nav .nav.active,
+.app-shell > aside nav .nav:nth-child(n) {
+  border-radius:0!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  padding:5px 2px!important;
+  font-size:0!important;
+}
+.app-shell > aside nav .nav::after,
+html[data-app-theme] .app-shell > aside nav .nav::after {
+  content:attr(data-short);
+  display:block;
+  position:relative;
+  width:100%;
+  font:900 clamp(8px,1vw,12px)/1.12 Arial,Helvetica,sans-serif;
+  letter-spacing:-.035em;
+  text-align:center;
+  color:inherit!important;
+  white-space:nowrap;
+  border-radius:0!important;
+}
+.app-shell > aside nav .nav::before {
+  border-radius:0!important;
+}
+.app-shell > aside nav .nav small{display:none!important;}
+
+/* The small detached chunk is a purely decorative sibling of .rail.
+   Remove that sibling, not the rail; flexbox extends .rail into its space. */
+.app-shell > aside .rail-end {
+  display:none!important;
+}
+.app-shell > aside .rail {
+  flex:1 1 auto!important;
+  min-height:0!important;
+  border-radius:0!important;
+  box-sizing:border-box;
+}
+/* The legacy semicircular notch was cut for the now-removed lower chunk.
+   Without it, the bottom crossbar and the long side rail meet cleanly. */
+.app-shell::after {
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+}
+
+@media (min-width:641px) {
+  /* 88–166px previously; roughly half as wide on desktop. */
+  .app-shell {
+    --v2-sidebar:clamp(54px,5.8vw,86px);
+  }
+  .app-shell > aside nav .nav::after {
+    font-size:clamp(8.5px,.95vw,12px);
+  }
+}
+@media (min-width:641px) and (max-width:900px) {
+  /* The legacy tablet rule restores an overly wide nav without this override. */
+  .app-shell {
+    --v2-sidebar:clamp(52px,6.3vw,60px);
+  }
+}
+@media (max-width:640px) {
+  /* The 58px iPhone fascia becomes ~36–44px. Buttons keep their height,
+     while short text avoids clipping. Header elbow and title share ONE anchor. */
+  .app-shell {
+    --rw-mobile-sidebar:clamp(36px,10vw,44px);
+    grid-template-columns:var(--rw-mobile-sidebar) minmax(0,1fr)!important;
+    column-gap:clamp(6px,1.6vw,9px)!important;
+  }
+  .app-shell > aside {
+    width:var(--rw-mobile-sidebar)!important;
+    min-width:0!important;
+  }
+  .app-shell > header {
+    --lcars-bus-start:calc(var(--rw-mobile-sidebar) + 30px)!important;
+  }
+  .app-shell > header .elbow {
+    width:calc(var(--rw-mobile-sidebar) + 30px)!important;
+  }
+  .app-shell > header .elbow::after {
+    left:var(--rw-mobile-sidebar)!important;
+  }
+  .app-shell > aside nav .nav {
+    min-height:49px!important;
+  }
+  .app-shell > aside nav .nav::after {
+    font-size:clamp(7.4px,2vw,9.4px)!important;
+    letter-spacing:-.045em!important;
+  }
+}
+
+
+/* RHYTHM WARP / LAUNCH MENU FASCIA
+   Keep the launch menu column identical to the already slim main navigation.
+   Unlike the abandoned rail experiment, this deliberately scales the launch
+   elbow, top/bottom grid column and all four buttons together.
+   All theme labels remain in the DOM and can wrap; no abbreviated fake text.
+   Affected: launch CSS only. Metronome sidebar and engine are untouched. */
+.lcars-start-screen {
+  --rw-launch-sidebar:clamp(54px,5.8vw,86px);
+  --elbow-w:var(--rw-launch-sidebar)!important;
+  --radius-outer:clamp(26px,3.4vw,46px)!important;
+  --radius-inner:clamp(14px,1.8vw,26px)!important;
+}
+.lcars-start-screen .lcars-side-block,
+.lcars-start-screen .lcars-side-block[aria-pressed="true"],
+html[data-app-theme] .lcars-start-screen .lcars-side-block {
+  border-radius:0!important;
+  padding:5px 3px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  overflow:hidden;
+}
+.lcars-start-screen .lcars-side-block small {
+  display:none!important;
+}
+.lcars-start-screen .lcars-side-block > span {
+  display:block;
+  width:100%;
+  max-width:100%;
+  text-align:center!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere;
+  font:900 clamp(8px,.82vw,11px)/1.12 "Arial Narrow",Arial,sans-serif!important;
+  letter-spacing:-.025em!important;
+}
+.lcars-start-screen .lcars-side-filler > span {
+  display:none!important;
+}
+@media(min-width:641px) and (max-width:900px){
+  .lcars-start-screen {--rw-launch-sidebar:clamp(52px,6.3vw,60px);}
+}
+@media(max-width:640px){
+  .lcars-start-screen {
+    --rw-launch-sidebar:clamp(36px,10vw,44px);
+    --radius-outer:clamp(23px,7vw,32px)!important;
+    --radius-inner:clamp(12px,4vw,19px)!important;
+  }
+  .lcars-start-screen .lcars-side-block {
+    min-height:44px!important;
+    padding:3px 2px!important;
+  }
+  .lcars-start-screen .lcars-side-block > span {
+    font-size:clamp(7px,2.12vw,9px)!important;
+    letter-spacing:-.045em!important;
+    line-height:1.1!important;
+  }
+}
+
+/* FRAME JOINS / SHARED GEOMETRY
+   Top, body and bottom share ONE sidebar width and gap. The old cutouts
+   used right:-12px, protruding past their elbow and crossing into the rail. */
+.lcars-start-screen{
+ --rw-launch-gap:clamp(5px,.7vw,8px);
+ --rw-launch-cutout:clamp(14px,calc(var(--elbow-w) * .38),28px);
+ --rw-launch-stroke:3px;
+}
+.lcars-start-screen .lcars-start-top,
+.lcars-start-screen .lcars-start-body,
+.lcars-start-screen .lcars-start-bottom-wrap{
+ grid-template-columns:var(--elbow-w) minmax(0,1fr)!important;
+ column-gap:var(--rw-launch-gap)!important;
+ min-width:0;
+ box-sizing:border-box;
+}
+.lcars-start-screen .lcars-elbow-top::after,
+.lcars-start-screen .lcars-elbow-bottom::after{
+ right:0!important;
+ width:var(--rw-launch-cutout)!important;
+ max-width:100%;
+ box-sizing:border-box;
+ box-shadow:none!important;
+}
+.lcars-start-screen .lcars-elbow-top::after{
+ border-top:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+ border-left:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+ border-right:0!important;
+}
+.lcars-start-screen .lcars-elbow-bottom::after{
+ border-bottom:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+ border-left:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+ border-top:0!important;
+ border-right:0!important;
+}
+/* Short connection strips fill exactly the gap: no negative offsets. */
+.lcars-start-screen .lcars-start-top::before,
+.lcars-start-screen .lcars-start-bottom-wrap::before{
+ content:"";
+ position:absolute;
+ left:var(--elbow-w);
+ width:var(--rw-launch-gap);
+ height:var(--bar-h);
+ background:var(--rw-rail);
+ box-sizing:border-box;
+ z-index:0;
+ pointer-events:none;
+ box-shadow:none!important;
+}
+.lcars-start-screen .lcars-start-top::before{
+ top:0;
+ border-top:var(--rw-launch-stroke) solid var(--rw-edge);
+}
+.lcars-start-screen .lcars-start-bottom-wrap{position:relative;}
+.lcars-start-screen .lcars-start-bottom-wrap::before{
+ bottom:0;
+ border-bottom:var(--rw-launch-stroke) solid var(--rw-edge);
+}
+/* Fractional tracks cannot grow beyond the available segment area. */
+.lcars-start-screen .lcars-top-right,
+.lcars-start-screen .lcars-rail-segments,
+.lcars-start-screen .lcars-bottom-segments{
+ min-width:0;max-width:100%;box-sizing:border-box;
+}
+.lcars-start-screen .lcars-rail-segments{
+ grid-template-columns:minmax(0,1.2fr) minmax(0,.7fr) minmax(0,2.4fr) minmax(0,.9fr) minmax(0,1.1fr);
+}
+.lcars-start-screen .lcars-bottom-segments{
+ grid-template-columns:minmax(0,1.8fr) minmax(0,.8fr) minmax(0,1.4fr) minmax(0,1fr);
+}
+.lcars-start-screen .lcars-rail-segments > .lcars-seg,
+.lcars-start-screen .lcars-bottom-segments > .lcars-seg{
+ min-width:0;max-width:100%;box-sizing:border-box;
+}
+/* Same theme-colored outer line along elbow, joining strip and segment.
+   Internal dividers intentionally stay darker. */
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg{
+ border-top:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg{
+ border-bottom:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4{
+ border-right:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+}
+@media(max-width:640px){
+ .lcars-start-screen{--rw-launch-gap:5px;}
+ .lcars-start-screen .lcars-rail-segments{
+   grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr);
+ }
+ .lcars-start-screen .lcars-bottom-segments{
+   grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);
+ }
+}
+
+
+/* ==========================================================================
+   RHYTHM WARP — PRECISION BORDER & GEOMETRY ALIGNMENT FIX
+   Outer stroke 3px, internal seams 2px, theme-aware; supplied geometry
+   corrections matched to the current student edition.
+   ========================================================================== */
+:root,.app-shell,.lcars-start-screen{
+  --rw-frame-edge-w:3px;
+  --rw-frame-seam-w:2px;
+}
+/* 1. Launch: flush cutouts and consistent outer edges. */
+.lcars-start-screen .lcars-elbow-top {
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-elbow-bottom {
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-elbow-top::after {
+  top:calc(var(--bar-h) - var(--rw-frame-edge-w))!important;
+  bottom:calc(-1 * var(--rw-frame-seam-w))!important;
+  right:0!important;
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;border-bottom:0!important;
+}
+.lcars-start-screen .lcars-elbow-bottom::after {
+  bottom:calc(var(--bar-h) - var(--rw-frame-edge-w))!important;
+  top:calc(-1 * var(--rw-frame-seam-w))!important;
+  right:0!important;
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;border-top:0!important;
+}
+/* Bridge is exactly --rw-launch-gap wide, including both seam borders. */
+.lcars-start-screen .lcars-start-top::before {
+  top:0!important;height:var(--bar-h)!important;
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-start-bottom-wrap::before {
+  bottom:0!important;height:var(--bar-h)!important;
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-rail-segments > .lcars-seg,
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg {
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-bottom-segments > .lcars-seg,
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg {
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
+.lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4,
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4 {
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+}
+/* 2. Main-header elbow and bus share one geometric anchor. */
+.app-shell > header .elbow {
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  box-sizing:border-box!important;
+}
+.app-shell > header .elbow::after {
+  right:0!important;
+  bottom:calc(-1 * var(--rw-frame-seam-w))!important;
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;
+  border-bottom:0!important;
+  box-sizing:border-box!important;
+}
+@media(min-width:641px) {
+  .app-shell > header .elbow {
+    width:calc(var(--v2-sidebar) + var(--v2-gutter))!important;
+  }
+  .app-shell > header .elbow::after {
+    top:calc(clamp(18px,2.2vw,25px) - var(--rw-frame-edge-w))!important;
+    left:calc(var(--v2-sidebar) - var(--rw-frame-edge-w))!important;
+  }
+}
+@media(max-width:640px) {
+  .app-shell > header .elbow {
+    width:var(--lcars-bus-start)!important;
+  }
+  .app-shell > header .elbow::after {
+    top:calc(24px - var(--rw-frame-edge-w))!important;
+    left:calc(var(--rw-mobile-sidebar) - var(--rw-frame-edge-w))!important;
+  }
+}
+.app-shell > header::after {
+  background:var(--rw-rail)!important;
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  box-sizing:border-box!important;
+}
+/* 3. Uninterrupted sidebar outline and undoubled active states. */
+.app-shell > aside nav .nav,
+html[data-app-theme] .app-shell > aside nav .nav,
+.lcars-start-screen .lcars-side-block,
+html[data-app-theme] .lcars-start-screen .lcars-side-block {
+  border-radius:0!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  box-shadow:none!important;
+  box-sizing:border-box!important;
+}
+.app-shell > aside nav .nav.active,
+html[data-app-theme] .app-shell > aside nav .nav.active,
+.lcars-start-screen .lcars-side-block[aria-pressed="true"],
+html[data-app-theme] .lcars-start-screen .lcars-side-block[aria-pressed="true"] {
+  border:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  box-shadow:inset 0 0 0 1px var(--rw-edge)!important;
+}
+.app-shell > aside .rail,
+.lcars-start-screen .lcars-side-filler,
+html[data-app-theme] .lcars-start-screen .lcars-side-filler {
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  box-sizing:border-box!important;
+}
+/* 4. Bottom arc is a real outline, not a clipped gradient. */
+.app-shell::after {
+  background:var(--rw-rail)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-radius:0 16px 16px 32px!important;
+  box-sizing:border-box!important;
+}
+/* 5. Panel-header radius follows the enclosing panel. */
+.app-shell .panel,
+html[data-app-theme] .app-shell .panel {
+  border:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-radius:28px 8px 8px 20px!important;
+  padding:10px 10px 14px 12px!important;
+  overflow:hidden;
+}
+.app-shell .panel > h3,
+.app-shell .panel > .eyebrow,
+:is(#metronome,#audio,#presets,#diary,#analytics,#settings) .panel > :is(h3,.eyebrow) {
+  border-radius:18px 6px 6px 18px!important;
+  border:1px solid var(--rw-outline)!important;
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+}
+@media(min-width:1440px) and (min-height:960px) {
+  #metronome .instrument {
+    background:var(--rw-bg-2)!important;
+    border:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+    border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+    border-radius:32px 8px 8px 32px!important;
+  }
+  #metronome .instrument::before,#metronome .instrument::after {
+    display:none!important;
+  }
+}
+@media(max-width:640px) {
+  #metronome .instrument::before {
+    background:var(--rw-rail)!important;
+    border:1px solid var(--rw-edge)!important;
+  }
+  #metronome .instrument::after {
+    background:var(--rw-edge)!important;
+  }
+}
