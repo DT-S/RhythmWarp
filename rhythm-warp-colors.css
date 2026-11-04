@@ -1,4 +1,4 @@
-/* RHYTHM WARP / STUDIO GREEN COLOR SYSTEM v1
+/* RHYTHM WARP / THREE-PALETTE COLOR SYSTEM v2
    Source of base colors: Drum Track Studio.
    A strictly VISUAL layer: DO NOT change width/height/gap/layout/animations,
    audio scheduling, timing, event handling or the original UI component classes.
@@ -27,6 +27,25 @@
  --rw-danger:#c98d8d;
  --rw-inactive:#4d6b55;
  --rw-inactive-text:#f2f0e8;
+ --rw-selected-bg:#284535;
+ --rw-ring-track:#84ab93;
+ --rw-ring-tertiary:#91b39d;
+ --rw-ring-muted:#789f93;
+ --rw-ring-dark:#15241c;
+ --rw-slide-pill:#294033;
+ --rw-slide-peak:#82b992;
+ --rw-slide-mid:#88bb96;
+ --rw-slide-low:#45654f;
+ --rw-slide-info-mid:#6da8a5;
+ --rw-slide-warn-mid:#ad956f;
+ --rw-slide-warn-low:#5f624c;
+ --rw-matrix-highlight:#d0e9ad;
+ --rw-matrix-led-mid:#7cbb94;
+ --rw-matrix-info-mid:#629d9e;
+ --rw-matrix-warn-mid:#af8f68;
+ --rw-matrix-warn-low:#695b45;
+ --rw-glow:rgba(133,244,163,.12);
+ --rw-sweep:rgba(133,244,163,.08);
  /* Compatibility: old engine/components still read these variables. */
  --bg:var(--rw-bg-1)!important;
  --panel:var(--rw-bg-2)!important;
@@ -40,30 +59,79 @@
  --padd-bg:var(--rw-bg-1)!important;
  --padd-orange:var(--rw-active)!important;
  --padd-amber:var(--rw-active)!important;
- --padd-peach:#a1baa8!important;
- --padd-lavender:#91b39d!important;
+ --padd-peach:var(--rw-ring-tertiary)!important;
+ --padd-lavender:var(--rw-ring-tertiary)!important;
  --padd-blue:var(--rw-info)!important;
- --padd-tan:#7e9f8b!important;
+ --padd-tan:var(--rw-ring-track)!important;
  --padd-red:var(--rw-danger)!important;
  --padd-ice:var(--rw-info)!important;
  --padd-cream:var(--rw-neutral)!important;
  --lcars-mobile-orange:var(--rw-active)!important;
- --lcars-mobile-peach:#a1baa8!important;
+ --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
  --lcars-mobile-blue:var(--rw-info)!important;
- --lcars-mobile-lilac:#91b39d!important;
+ --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
  --rw-neon:var(--rw-edge)!important;
  --rw-panel:var(--rw-bg-2)!important;
  --theme-signal:var(--rw-edge)!important;
 }
-/* Theme selection changes the signature line, NOT the functional color roles.
-   This prevents the old violet/orange themes from leaking into student UI. */
+/* Historical IDs stay stable for saved settings; each ID now has a complete palette. */
+/* VIOLET PULSE – deep ink-violet, lilac rim, luminous soft violet controls. */
 html[data-app-theme="elite"],.lcars-start-screen[data-theme="elite"] {
- --rw-edge:#86ced3;
- --rw-active:#a9d9cf;
+ --rw-bg-0:#0b0815;--rw-bg-1:#120e1e;
+ --rw-bg-2:#211931;--rw-bg-3:#2b213f;
+ --rw-rail:#342647;--rw-outline:#624c7f;
+ --rw-edge:#cd9bff;--rw-outline-soft:rgba(205,155,255,.16);
+ --rw-text:#f6efff;--rw-dim:#d0c1e0;--rw-muted:#ab99be;
+ --rw-ink:#100a18;--rw-active:#ddbaff;
+ --rw-info:#9bbef8;--rw-neutral:#e6d5ec;
+ --rw-custom:#c8a2f0;--rw-warning:#e9bd84;--rw-danger:#e8959d;
+ --rw-inactive:#66537f;--rw-inactive-text:#f6efff;
+ --rw-selected-bg:#49345f;
+ --rw-ring-track:#a186c3;--rw-ring-tertiary:#967abb;
+ --rw-ring-muted:#9876b4;--rw-ring-dark:#251b34;
+ --rw-slide-pill:#362848;--rw-slide-peak:#b38bdc;
+ --rw-slide-mid:#a185c6;--rw-slide-low:#654c83;
+ --rw-slide-info-mid:#7592c9;
+ --rw-slide-warn-mid:#b18b60;--rw-slide-warn-low:#6d5448;
+ --rw-matrix-highlight:#f0d7ff;
+ --rw-matrix-led-mid:#ac82d1;--rw-matrix-info-mid:#779bcd;
+ --rw-matrix-warn-mid:#b18b60;--rw-matrix-warn-low:#6d5448;
+ --rw-glow:rgba(205,155,255,.14);--rw-sweep:rgba(205,155,255,.09);
+ --rw-neon:var(--rw-edge)!important;
+ --padd-peach:var(--rw-ring-tertiary)!important;
+ --padd-lavender:var(--rw-ring-tertiary)!important;
+ --padd-tan:var(--rw-ring-track)!important;
+ --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
+ --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
 }
+/* RED SHIFT – burgundy chassis, ruby neon, warm pale-red actionable surfaces. */
 html[data-app-theme="redalert"],.lcars-start-screen[data-theme="redalert"] {
- --rw-edge:#a5df8a;
- --rw-active:#b9dca3;
+ --rw-bg-0:#12080b;--rw-bg-1:#1a0e12;
+ --rw-bg-2:#2a171e;--rw-bg-3:#362028;
+ --rw-rail:#452732;--rw-outline:#784350;
+ --rw-edge:#ff8294;--rw-outline-soft:rgba(255,130,148,.16);
+ --rw-text:#fff1f0;--rw-dim:#e5c0c4;--rw-muted:#bd9ba1;
+ --rw-ink:#16070b;--rw-active:#ffb8b1;
+ --rw-info:#ffc59e;--rw-neutral:#f4ddcc;
+ --rw-custom:#eaa3af;--rw-warning:#ffd080;--rw-danger:#ff687c;
+ --rw-inactive:#87525c;--rw-inactive-text:#fff1f0;
+ --rw-selected-bg:#63313f;
+ --rw-ring-track:#cc7f89;--rw-ring-tertiary:#c36d79;
+ --rw-ring-muted:#ad646d;--rw-ring-dark:#2f171e;
+ --rw-slide-pill:#462730;--rw-slide-peak:#d98792;
+ --rw-slide-mid:#bd717e;--rw-slide-low:#74404b;
+ --rw-slide-info-mid:#dca17d;
+ --rw-slide-warn-mid:#c59b61;--rw-slide-warn-low:#725342;
+ --rw-matrix-highlight:#ffe0d9;
+ --rw-matrix-led-mid:#d98792;--rw-matrix-info-mid:#dca17d;
+ --rw-matrix-warn-mid:#c59b61;--rw-matrix-warn-low:#725342;
+ --rw-glow:rgba(255,130,148,.14);--rw-sweep:rgba(255,130,148,.09);
+ --rw-neon:var(--rw-edge)!important;
+ --padd-peach:var(--rw-ring-tertiary)!important;
+ --padd-lavender:var(--rw-ring-tertiary)!important;
+ --padd-tan:var(--rw-ring-track)!important;
+ --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
+ --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
 }
 
 /* 02. FRAME: a single uninterrupted visual language on top/left/bottom. */
@@ -120,7 +188,7 @@ html[data-app-theme] .app-shell > aside nav .nav {
 }
 .app-shell > aside nav .nav.active,
 html[data-app-theme] .app-shell > aside nav .nav.active {
- background:#284535!important;
+ background:var(--rw-selected-bg)!important;
  color:var(--rw-active)!important;
  border-color:var(--rw-edge)!important;
  box-shadow:inset 3px 0 0 var(--rw-edge)!important;
@@ -146,7 +214,7 @@ html[data-app-theme] .app-shell > aside nav .nav.active {
  border-left-color:var(--rw-edge)!important;
 }
 .lcars-start-screen .lcars-side-block[aria-pressed="true"] {
- background:#284535!important;
+ background:var(--rw-selected-bg)!important;
  border-color:var(--rw-edge)!important;
  color:var(--rw-active)!important;
  box-shadow:inset 3px 0 0 var(--rw-edge)!important;
@@ -384,23 +452,23 @@ html[data-app-theme] .app-shell .panel {
 /* 08. AUDIO MATRIX: recolor existing fader/LED variables, keep signal logic. */
 #mixer .panel.matrix-channel {
  --matrix-amber:var(--rw-active)!important;
- --matrix-gold:#d0e9ad!important;
+ --matrix-gold:var(--rw-matrix-highlight)!important;
  --matrix-rust:var(--rw-inactive)!important;
- --matrix-lilac:#79a28c!important;
+ --matrix-lilac:var(--rw-ring-tertiary)!important;
  --matrix-ice:var(--rw-info)!important;
  --matrix-cream:var(--rw-neutral)!important;
  --matrix-bg:var(--rw-bg-1)!important;
- --matrix-led-band-1:linear-gradient(#b3df94,#7cbb94,#4d6b55)!important;
- --matrix-led-band-2:linear-gradient(#92cbd2,#629d9e,#355442)!important;
- --matrix-led-band-3:linear-gradient(#d8b37e,#af8f68,#695b45)!important;
+ --matrix-led-band-1:linear-gradient(var(--rw-active),var(--rw-matrix-led-mid),var(--rw-inactive))!important;
+ --matrix-led-band-2:linear-gradient(var(--rw-info),var(--rw-matrix-info-mid),var(--rw-outline))!important;
+ --matrix-led-band-3:linear-gradient(var(--rw-warning),var(--rw-matrix-warn-mid),var(--rw-matrix-warn-low))!important;
  --matrix-led-on:var(--rw-active)!important;
- --matrix-led-highlight:#d0e9ad!important;
- --matrix-led-glow:rgba(133,244,163,.15)!important;
- --matrix-led-peak:rgba(179,223,148,.32)!important;
- --matrix-led-sweep:rgba(133,244,163,.08)!important;
- --matrix-bracket-fill:linear-gradient(#b3df94,#79aa87,#45654f)!important;
+ --matrix-led-highlight:var(--rw-matrix-highlight)!important;
+ --matrix-led-glow:var(--rw-glow)!important;
+ --matrix-led-peak:var(--rw-glow)!important;
+ --matrix-led-sweep:var(--rw-sweep)!important;
+ --matrix-bracket-fill:linear-gradient(var(--rw-active),var(--rw-slide-mid),var(--rw-slide-low))!important;
  --matrix-bracket-rim:var(--rw-outline)!important;
- --matrix-bracket-glow:rgba(133,244,163,.12)!important;
+ --matrix-bracket-glow:var(--rw-glow)!important;
  --matrix-bracket-active:var(--rw-active)!important;
 }
 #mixer .matrix-housing {
@@ -439,7 +507,7 @@ html[data-app-theme] .app-shell .panel {
  --sl-orange:var(--rw-active)!important;
  --sl-gold:var(--rw-active)!important;
  --sl-lavender:var(--rw-info)!important;
- --sl-peach:#91b7a0!important;
+ --sl-peach:var(--rw-ring-tertiary)!important;
  --sl-cream:var(--rw-neutral)!important;
  --sl-dark:var(--rw-bg-1)!important;
  color:var(--rw-text)!important;
@@ -463,19 +531,19 @@ html[data-app-theme] .app-shell .panel {
  border-color:var(--rw-outline)!important;
  box-shadow:none!important;
 }
-.lcars-pill {background:#294033!important;}
+.lcars-pill {background:var(--rw-slide-pill)!important;}
 .lcars-pill.lit.led-gold {
- background:linear-gradient(#b3df94,#82b992,#4d6b55)!important;
+ background:linear-gradient(var(--rw-active),var(--rw-slide-peak),var(--rw-inactive))!important;
 }
 .lcars-pill.lit.led-peach {
- background:linear-gradient(#92cbd2,#6da8a5,#355442)!important;
+ background:linear-gradient(var(--rw-info),var(--rw-slide-info-mid),var(--rw-outline))!important;
 }
 .lcars-pill.lit.led-salmon {
- background:linear-gradient(#d8b37e,#ad956f,#5f624c)!important;
+ background:linear-gradient(var(--rw-warning),var(--rw-slide-warn-mid),var(--rw-slide-warn-low))!important;
 }
 .lcars-pill.lit,.lcars-pill.near-cursor {box-shadow:none!important;}
 .lcars-pill-housing::after {
- background:linear-gradient(90deg,transparent,rgba(133,244,163,.08),transparent)!important;
+ background:linear-gradient(90deg,transparent,var(--rw-sweep),transparent)!important;
 }
 .lcars-bracket {filter:none!important;}
 .lcars-bracket-box {
@@ -486,7 +554,7 @@ html[data-app-theme] .app-shell .panel {
  border-color:var(--rw-edge)!important;
 }
 .lcars-bracket-core {
- background:linear-gradient(#b3df94,#88bb96,#4d6b55)!important;
+ background:linear-gradient(var(--rw-active),var(--rw-slide-mid),var(--rw-inactive))!important;
  color:var(--rw-ink)!important;
  box-shadow:none!important;
 }
@@ -501,7 +569,7 @@ html[data-app-theme] .app-shell .panel {
 .lcars-jump-up,.lcars-jump-down {
  background:var(--rw-info)!important;color:var(--rw-ink)!important;
 }
-.lcars-cap-crescent {background:#6f9da2!important;}
+.lcars-cap-crescent {background:var(--rw-info)!important;}
 .lcars-cap-readout {
  background:var(--rw-bg-1)!important;
  border-color:var(--rw-outline)!important;
@@ -536,11 +604,11 @@ html[data-app-theme] .app-shell .panel {
  text-shadow:none!important;
 }
 #rings .point.state3:not(.playing) {
- fill:#15241c!important;
+ fill:var(--rw-ring-dark)!important;
  stroke:var(--rw-outline)!important;
 }
 #rings .point.state2:not(.playing) {
- fill:#789f93!important;
+ fill:var(--rw-ring-muted)!important;
  stroke:var(--rw-outline)!important;
 }
 
@@ -618,14 +686,51 @@ html[data-app-theme] .app-shell .panel {
 #settings .panel label:has(input[type="checkbox"]):has(input:checked)::after{
  color:var(--rw-ink)!important;
 }
-#rings .track{stroke:#84ab93!important;}
+#rings .track{stroke:var(--rw-ring-track)!important;}
 #rings .inner-track,#rings .dial-ticks{stroke:var(--rw-info)!important;}
 #rings .point.state1:not(.playing){
  fill:var(--rw-info)!important;stroke:var(--rw-outline)!important;
 }
 #rings .point.state2:not(.playing){
- fill:#91b39d!important;stroke:var(--rw-outline)!important;
+ fill:var(--rw-ring-tertiary)!important;stroke:var(--rw-outline)!important;
 }
 #metronome .lcars-cap-crescent,.lcars-slide .lcars-cap-crescent{
  background:var(--rw-info)!important;
 }
+
+
+/* 15. MULTI-PALETTE MATERIALS / launch badge and emblem.
+   Preserve all original geometry and clickable targets. */
+.lcars-start-screen .lcars-start-logo [stroke="#85f4a3"]{stroke:var(--rw-edge)!important;}
+.lcars-start-screen .lcars-start-logo [stroke="#b3df94"]{stroke:var(--rw-active)!important;}
+.lcars-start-screen .lcars-start-logo [stroke="#92cbd2"]{stroke:var(--rw-info)!important;}
+.lcars-start-screen .lcars-start-logo [stroke="#283a30"]{stroke:var(--rw-outline)!important;}
+.lcars-start-screen .lcars-start-logo [stroke="#4d6b55"]{stroke:var(--rw-inactive)!important;}
+.lcars-start-screen .lcars-start-logo [fill="#85f4a3"]{fill:var(--rw-edge)!important;}
+.lcars-start-screen .lcars-start-logo [fill="#14231c"]{fill:var(--rw-bg-2)!important;}
+.lcars-start-screen .lcars-start-logo [fill="#0e1714"]{fill:var(--rw-bg-1)!important;}
+.lcars-start-screen .lcars-start-logo stop:first-child{stop-color:var(--rw-active)!important;}
+.lcars-start-screen .lcars-studio-badge{color:var(--rw-info)!important;}
+.lcars-start-screen .lcars-start-kicker,
+.lcars-start-screen .lcars-sub-title{color:var(--rw-dim)!important;}
+.lcars-start-screen .lcars-side-block.b1 small{color:var(--rw-dim)!important;}
+.lcars-start-screen .lcars-side-block.b2 small{color:var(--rw-dim)!important;}
+.lcars-start-screen .lcars-side-block.b3 small{color:var(--rw-dim)!important;}
+
+/* Every primary material uses the active palette, including selected navigation.
+   Green values are unchanged: #284535 was already the green selected background. */
+.app-shell > aside nav .nav.active,
+html[data-app-theme] .app-shell > aside nav .nav.active,
+.lcars-start-screen .lcars-side-block[aria-pressed="true"]{
+ background:var(--rw-selected-bg)!important;
+}
+.lcars-start-screen .lcars-start-activate{background:var(--rw-active)!important;}
+
+/* Existing settings, analytics, practice and all other panel surfaces already
+   reference --rw-* colors. Extra runtime graph primitives also need to change. */
+#rings .track{stroke:var(--rw-ring-track)!important;}
+#rings .inner-track,#rings .dial-ticks{stroke:var(--rw-info)!important;}
+#rings .point.state2:not(.playing){fill:var(--rw-ring-tertiary)!important;}
+#rings .point.state3:not(.playing){fill:var(--rw-ring-dark)!important;}
+#metronome .lcars-cap-crescent{background:var(--rw-info)!important;}
+.lcars-slide .lcars-cap-crescent{background:var(--rw-info)!important;}
