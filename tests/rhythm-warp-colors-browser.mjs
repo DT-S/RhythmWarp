@@ -32,9 +32,15 @@ const cases=[{width:320,height:740,theme:'voyager'}, {width:393,height:852,theme
  {width:393,height:852,theme:'elite'}, {width:1440,height:900,theme:'redalert'}];
 const rgb=s=>s.match(/\d+/g)?.slice(0,3).map(Number).join(',')||'';
 const themes={
- voyager:{edge:'133,244,163',active:'179,223,148'},
- elite:{edge:'134,206,211',active:'169,217,207'},
- redalert:{edge:'165,223,138',active:'185,220,163'}
+ voyager:{edge:'133,244,163',active:'179,223,148',bg:'14,23,20',panel:'20,35,28',
+  rail:'32,51,40',outline:'53,84,66',inactive:'77,107,85',selected:'40,69,53',
+  neutral:'232,221,190',info:'146,203,210',custom:'140,206,180'},
+ elite:{edge:'205,155,255',active:'221,186,255',bg:'18,14,30',panel:'33,25,49',
+  rail:'52,38,71',outline:'98,76,127',inactive:'102,83,127',selected:'73,52,95',
+  neutral:'230,213,236',info:'155,190,248',custom:'200,162,240'},
+ redalert:{edge:'255,130,148',active:'255,184,177',bg:'26,14,18',panel:'42,23,30',
+  rail:'69,39,50',outline:'120,67,80',inactive:'135,82,92',selected:'99,49,63',
+  neutral:'244,221,204',info:'255,197,158',custom:'234,163,175'}
 };
 try{
  for(const {width,height,theme} of cases){
@@ -57,13 +63,20 @@ try{
      innerSeam:sty('.lcars-rail-segments .lcars-seg').borderBottomColor,
      fillerLeft:sty('.lcars-side-filler').borderLeftColor,
      fillerRight:sty('.lcars-side-filler').borderRightColor,
-     bottomRim:sty('.lcars-bottom-segments .lcars-seg').borderBottomColor
+     bottomRim:sty('.lcars-bottom-segments .lcars-seg').borderBottomColor,
+     logoStroke:sty('.lcars-start-logo [stroke="#85f4a3"]').stroke,
+     selectedTheme:document.documentElement.dataset.appTheme,
+     visibleTheme:$('.lcars-start-screen').dataset.theme
     };
    });
    assert.equal(launch.logoFilter,'none','logo should not cast an uncontrolled glow');
+   assert.equal(launch.selectedTheme,theme,'saved app theme matches chosen palette');
+   assert.equal(launch.visibleTheme,theme,'launch theme matches application theme');
+   assert.equal(rgb(launch.logoStroke),themes[theme].edge,'start emblem must follow theme accent');
+   assert.equal(rgb(launch.lightBackground),themes[theme].bg,'launch background follows chosen theme');
    for(const edge of ['topRim','fillerLeft','fillerRight','bottomRim'])
      assert.equal(rgb(launch[edge]),themes[theme].edge,edge+' uses same outer rim');
-   assert.equal(rgb(launch.innerSeam),'53,84,66','inside separators stay muted');
+   assert.equal(rgb(launch.innerSeam),themes[theme].outline,'inside separators use theme seam');
    await page.screenshot({path:path.join(output,'launch-'+key+'.png')});
    await page.locator('#lcarsInitialize').click();
    await page.waitForFunction(()=>document.querySelector('#lcarsStartup').hidden,null,{timeout:20000});
@@ -86,9 +99,11 @@ try{
    });
    assert.equal(rgb(frame.headerEdge),themes[theme].edge,'top border semantic accent');
    assert.equal(rgb(frame.sideEdge),themes[theme].edge,'left border must match top border');
+   assert.equal(rgb(frame.frameBackground),themes[theme].rail,'frame fill follows theme');
+   assert.equal(rgb(frame.navActive),themes[theme].selected,'selected navigation color follows theme');
    assert.equal(frame.headerShadow,'none','no random glow on header');
-   assert.equal(rgb(frame.panelBackground),'20,35,28','all app panels share same fill');
-   assert.equal(rgb(frame.panelBorder),'53,84,66','panels share same stroke');
+   assert.equal(rgb(frame.panelBackground),themes[theme].panel,'all app panels use theme fill');
+   assert.equal(rgb(frame.panelBorder),themes[theme].outline,'panels share theme stroke');
    assert.ok(frame.leftButton.width>(isMobile?40:80),'navigation width unchanged');
    assert.ok(frame.sideRail.width>(isMobile?40:80),'side rail width unchanged');
    const cap=await page.evaluate(()=>{
@@ -115,9 +130,9 @@ try{
        storage:color('#settings #storageStatus'),
        export:color('#settings #export')};
      });
-     assert.equal(rgb(settings.custom),'140,206,180','custom upload must be teal-green, never purple');
-     assert.equal(rgb(settings.offline),'232,221,190','neutral storage note color');
-     assert.equal(rgb(settings.storage),'146,203,210','info status color');
+     assert.equal(rgb(settings.custom),themes[theme].custom,'custom upload uses the active palette');
+     assert.equal(rgb(settings.offline),themes[theme].neutral,'neutral notice uses the active palette');
+     assert.equal(rgb(settings.storage),themes[theme].info,'info status uses the active palette');
      assert.equal(rgb(settings.export),themes[theme].active,'positive export color');
      // Scan ACTUAL computed styles, not just the upload token, across visible
      // Settings elements and their before/after decorations.
@@ -148,7 +163,7 @@ try{
       }
       return result.slice(0,30);
      });
-     assert.deepEqual(violets,[],key+' Settings must have no rendered purple');
+     if(theme==='voyager') assert.deepEqual(violets,[],key+' Studio Green must contain no purple');
 
     }
     if(tab==='diary'){
@@ -156,14 +171,14 @@ try{
       const el=document.querySelector('#diary .diary-minimum-choices button:not([aria-pressed="true"])');
       return getComputedStyle(el).backgroundColor;
      });
-     assert.equal(rgb(d),'77,107,85','duration options must no longer be violet');
+     assert.equal(rgb(d),themes[theme].inactive,'duration options follow the active palette');
     }
     if(tab==='analytics'){
      const tiles=await page.locator('#analyticsContent .stat-tile').evaluateAll(items=>
       items.map(el=>getComputedStyle(el).backgroundColor));
      assert.ok(tiles.length>=1,'analytics must render real statistic tiles');
      assert.equal(new Set(tiles).size,1,'analytics tiles must not become a rainbow');
-     assert.equal(rgb(tiles[0]),'27,45,36','analytics neutral housing');
+     assert.equal(rgb(tiles[0]),theme==='voyager'?'27,45,36':theme==='elite'?'43,33,63':'54,32,40','analytics neutral housing');
     }
     await page.screenshot({path:path.join(output,tab+'-'+key+'.png')});
    }
