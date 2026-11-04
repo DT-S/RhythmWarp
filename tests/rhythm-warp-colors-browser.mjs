@@ -80,6 +80,41 @@ try{
     };
    });
    assert.equal(launch.logoFilter,'none','logo should not cast an uncontrolled glow');
+   // The actual launch menu must use the SAME narrow fascia as the main UI.
+   // All four theme/BPM controls remain separate, readable, touch-sized buttons.
+   const launchLayout=await page.evaluate(()=>{
+     const $=s=>document.querySelector(s);
+     const width=s=>$(s).getBoundingClientRect().width;
+     const buttons=[...document.querySelectorAll('.lcars-side-block')];
+     return {
+       top:width('.lcars-elbow-top'),
+       body:width('.lcars-left-column'),
+       bottom:width('.lcars-elbow-bottom'),
+       filler:width('.lcars-side-filler'),
+       fullWidth:document.querySelector('.lcars-start-screen').getBoundingClientRect().width,
+       buttons:buttons.map(e=>({
+         w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height,
+         radius:getComputedStyle(e).borderTopLeftRadius,
+         label:e.querySelector('span')?.textContent?.trim()||'',
+         overflows:e.querySelector('span')?.scrollWidth>e.querySelector('span')?.clientWidth+1
+       }))
+     };
+   });
+   const maxWidth=isMobile?44:width<=900?61:86;
+   assert.ok(launchLayout.body<=maxWidth+1,'launch sidebar too wide: '+JSON.stringify(launchLayout));
+   assert.ok(launchLayout.body>=35,'launch sidebar became unusably narrow');
+   for(const item of ['top','bottom','filler'])
+     assert.ok(Math.abs(launchLayout[item]-launchLayout.body)<2,
+       item+' must align with the same slim launch rail');
+   assert.equal(launchLayout.buttons.length,4,'all launch controls remain available');
+   for(const item of launchLayout.buttons){
+     assert.ok(Math.abs(item.w-launchLayout.body)<2,'launch button follows sidebar width');
+     assert.ok(item.h>=40,'launch button stays finger-sized');
+     assert.equal(item.radius,'0px','launch button must be square');
+     assert.ok(item.label.length>0,'launch button has its visible full label');
+     assert.equal(item.overflows,false,'launch label must not clip');
+   }
+
    assert.equal(launch.selectedTheme,theme,'saved app theme matches chosen palette');
    assert.equal(launch.visibleTheme,theme,'launch theme matches application theme');
    assert.equal(rgb(launch.logoStroke),themes[theme].edge,'start emblem must follow theme accent');
