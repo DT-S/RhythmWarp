@@ -250,3 +250,192 @@ html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b
    grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);
  }
 }
+
+
+/* ==========================================================================
+   RHYTHM WARP — PRECISION BORDER & GEOMETRY ALIGNMENT FIX
+   Outer stroke 3px, internal seams 2px, theme-aware; supplied geometry
+   corrections matched to the current student edition.
+   ========================================================================== */
+:root,.app-shell,.lcars-start-screen{
+  --rw-frame-edge-w:3px;
+  --rw-frame-seam-w:2px;
+}
+/* 1. Launch: flush cutouts and consistent outer edges. */
+.lcars-start-screen .lcars-elbow-top {
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-elbow-bottom {
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-elbow-top::after {
+  top:calc(var(--bar-h) - var(--rw-frame-edge-w))!important;
+  bottom:calc(-1 * var(--rw-frame-seam-w))!important;
+  right:0!important;
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;border-bottom:0!important;
+}
+.lcars-start-screen .lcars-elbow-bottom::after {
+  bottom:calc(var(--bar-h) - var(--rw-frame-edge-w))!important;
+  top:calc(-1 * var(--rw-frame-seam-w))!important;
+  right:0!important;
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;border-top:0!important;
+}
+/* Bridge is exactly --rw-launch-gap wide, including both seam borders. */
+.lcars-start-screen .lcars-start-top::before {
+  top:0!important;height:var(--bar-h)!important;
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-start-bottom-wrap::before {
+  bottom:0!important;height:var(--bar-h)!important;
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-rail-segments > .lcars-seg,
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg {
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-bottom-segments > .lcars-seg,
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg {
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+}
+.lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
+.lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4,
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4 {
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+}
+/* 2. Main-header elbow and bus share one geometric anchor. */
+.app-shell > header .elbow {
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  box-sizing:border-box!important;
+}
+.app-shell > header .elbow::after {
+  right:0!important;
+  bottom:calc(-1 * var(--rw-frame-seam-w))!important;
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:0!important;
+  border-bottom:0!important;
+  box-sizing:border-box!important;
+}
+@media(min-width:641px) {
+  .app-shell > header .elbow {
+    width:calc(var(--v2-sidebar) + var(--v2-gutter))!important;
+  }
+  .app-shell > header .elbow::after {
+    top:calc(clamp(18px,2.2vw,25px) - var(--rw-frame-edge-w))!important;
+    left:calc(var(--v2-sidebar) - var(--rw-frame-edge-w))!important;
+  }
+}
+@media(max-width:640px) {
+  .app-shell > header .elbow {
+    width:var(--lcars-bus-start)!important;
+  }
+  .app-shell > header .elbow::after {
+    top:calc(24px - var(--rw-frame-edge-w))!important;
+    left:calc(var(--rw-mobile-sidebar) - var(--rw-frame-edge-w))!important;
+  }
+}
+.app-shell > header::after {
+  background:var(--rw-rail)!important;
+  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  box-sizing:border-box!important;
+}
+/* 3. Uninterrupted sidebar outline and undoubled active states. */
+.app-shell > aside nav .nav,
+html[data-app-theme] .app-shell > aside nav .nav,
+.lcars-start-screen .lcars-side-block,
+html[data-app-theme] .lcars-start-screen .lcars-side-block {
+  border-radius:0!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  box-shadow:none!important;
+  box-sizing:border-box!important;
+}
+.app-shell > aside nav .nav.active,
+html[data-app-theme] .app-shell > aside nav .nav.active,
+.lcars-start-screen .lcars-side-block[aria-pressed="true"],
+html[data-app-theme] .lcars-start-screen .lcars-side-block[aria-pressed="true"] {
+  border:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  box-shadow:inset 0 0 0 1px var(--rw-edge)!important;
+}
+.app-shell > aside .rail,
+.lcars-start-screen .lcars-side-filler,
+html[data-app-theme] .lcars-start-screen .lcars-side-filler {
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  box-sizing:border-box!important;
+}
+/* 4. Bottom arc is a real outline, not a clipped gradient. */
+.app-shell::after {
+  background:var(--rw-rail)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-radius:0 16px 16px 32px!important;
+  box-sizing:border-box!important;
+}
+/* 5. Panel-header radius follows the enclosing panel. */
+.app-shell .panel,
+html[data-app-theme] .app-shell .panel {
+  border:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+  border-radius:28px 8px 8px 20px!important;
+  padding:10px 10px 14px 12px!important;
+  overflow:hidden;
+}
+.app-shell .panel > h3,
+.app-shell .panel > .eyebrow,
+:is(#metronome,#audio,#presets,#diary,#analytics,#settings) .panel > :is(h3,.eyebrow) {
+  border-radius:18px 6px 6px 18px!important;
+  border:1px solid var(--rw-outline)!important;
+  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+}
+@media(min-width:1440px) and (min-height:960px) {
+  #metronome .instrument {
+    background:var(--rw-bg-2)!important;
+    border:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
+    border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+    border-radius:32px 8px 8px 32px!important;
+  }
+  #metronome .instrument::before,#metronome .instrument::after {
+    display:none!important;
+  }
+}
+@media(max-width:640px) {
+  #metronome .instrument::before {
+    background:var(--rw-rail)!important;
+    border:1px solid var(--rw-edge)!important;
+  }
+  #metronome .instrument::after {
+    background:var(--rw-edge)!important;
+  }
+}
