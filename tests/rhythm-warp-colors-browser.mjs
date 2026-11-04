@@ -106,6 +106,51 @@ try{
    for(const item of ['top','bottom','filler'])
      assert.ok(Math.abs(launchLayout[item]-launchLayout.body)<2,
        item+' must align with the same slim launch rail');
+   const joints=await page.evaluate(()=>{
+     const $=s=>document.querySelector(s);
+     const rect=s=>{const r=$(s).getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom,w:r.width,h:r.height};};
+     const gap=s=>parseFloat(getComputedStyle($(s)).columnGap);
+     const pseudo=(selector,part,key)=>getComputedStyle($(selector),part)[key];
+     const border=(selector,edge)=>getComputedStyle($(selector))['border'+edge+'Color'];
+     return {
+       top:rect('.lcars-start-top'),bottom:rect('.lcars-start-bottom-wrap'),
+       topElbow:rect('.lcars-elbow-top'),bottomElbow:rect('.lcars-elbow-bottom'),
+       topSegments:rect('.lcars-rail-segments'),bottomSegments:rect('.lcars-bottom-segments'),
+       lastTop:rect('.lcars-rail-segments .lcars-seg.s5'),
+       lastBottom:rect('.lcars-bottom-segments .lcars-seg.s-b4'),
+       filler:rect('.lcars-side-filler'),
+       gaps:[gap('.lcars-start-top'),gap('.lcars-start-body'),gap('.lcars-start-bottom-wrap')],
+       topRight:pseudo('.lcars-elbow-top','::after','right'),
+       bottomRight:pseudo('.lcars-elbow-bottom','::after','right'),
+       cutouts:[parseFloat(pseudo('.lcars-elbow-top','::after','width')),parseFloat(pseudo('.lcars-elbow-bottom','::after','width'))],
+       joinWidths:[parseFloat(pseudo('.lcars-start-top','::before','width')),parseFloat(pseudo('.lcars-start-bottom-wrap','::before','width'))],
+       strokes:[
+         border('.lcars-rail-segments .lcars-seg','Top'),
+         border('.lcars-bottom-segments .lcars-seg','Bottom'),
+         border('.lcars-rail-segments .lcars-seg.s5','Right'),
+         border('.lcars-bottom-segments .lcars-seg.s-b4','Right')
+       ]
+     };
+   });
+   const eps=1.2;
+   assert.ok(joints.gaps.every(v=>Math.abs(v-joints.gaps[0])<.2),'launch top/body/bottom gaps must match');
+   assert.equal(joints.topRight,'0px','top inner elbow must stay inside its parent');
+   assert.equal(joints.bottomRight,'0px','bottom inner elbow must stay inside its parent');
+   assert.ok(joints.cutouts[0]<=joints.topElbow.w&&joints.cutouts[1]<=joints.bottomElbow.w,
+     'both corner cutouts must fit inside their respective elbows');
+   assert.ok(joints.joinWidths.every(w=>Math.abs(w-joints.gaps[0])<.5),
+     'connection strip width must equal shared gap');
+   assert.ok(Math.abs(joints.topSegments.x-joints.topElbow.right-joints.gaps[0])<eps,
+     'upper rail must start precisely one gap after elbow');
+   assert.ok(Math.abs(joints.bottomSegments.x-joints.bottomElbow.right-joints.gaps[0])<eps,
+     'lower rail must start precisely one gap after elbow');
+   assert.ok(Math.abs(joints.filler.x-joints.topElbow.x)<eps&&
+     Math.abs(joints.filler.x-joints.bottomElbow.x)<eps,
+     'the full-height side filler must align with both elbows');
+   assert.ok(joints.lastTop.right<=joints.top.right+eps,'upper cap cannot overshoot');
+   assert.ok(joints.lastBottom.right<=joints.bottom.right+eps,'lower cap cannot overshoot');
+   for(const color of joints.strokes)
+     assert.equal(rgb(color),themes[theme].edge,'all outer frame rims use selected theme color');
    assert.equal(launchLayout.buttons.length,4,'all launch controls remain available');
    for(const item of launchLayout.buttons){
      assert.ok(Math.abs(item.w-launchLayout.body)<2,'launch button follows sidebar width');
