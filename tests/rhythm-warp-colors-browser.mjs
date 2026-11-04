@@ -31,7 +31,14 @@ const cases=[{width:320,height:740,theme:'voyager'}, {width:393,height:852,theme
  {width:768,height:1024,theme:'voyager'}, {width:1440,height:900,theme:'voyager'},
  {width:393,height:852,theme:'elite'}, {width:1440,height:900,theme:'elite'},
  {width:393,height:852,theme:'redalert'}, {width:1440,height:900,theme:'redalert'}];
-const rgb=s=>s.match(/\d+/g)?.slice(0,3).map(Number).join(',')||'';
+const rgb=s=>{
+ const value=String(s??'').trim();
+ if(/^#[0-9a-f]{6}$/i.test(value)){
+  const nums=[1,3,5].map(i=>parseInt(value.slice(i,i+2),16));
+  return nums.join(',');
+ }
+ return value.match(/\d+/g)?.slice(0,3).map(Number).join(',')||'';
+};
 const themes={
  voyager:{edge:'133,244,163',active:'179,223,148',bg:'14,23,20',panel:'20,35,28',
   rail:'32,51,40',outline:'53,84,66',inactive:'77,107,85',selected:'40,69,53',
