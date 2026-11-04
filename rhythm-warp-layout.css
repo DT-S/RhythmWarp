@@ -1,0 +1,97 @@
+/* Rhythm Warp / slimmer left fascia.
+   Scope: layout ONLY. Does not recolor any Studio Green / Violet Pulse / Red Shift theme.
+   Edit these two sidebar variables when fine-tuning. */
+
+/* Square sidebar buttons in all states, including compact iPhone navigation.
+   Keep the full accessible label in the original HTML, show its data-short name. */
+.app-shell > aside nav .nav,
+html[data-app-theme] .app-shell > aside nav .nav,
+.app-shell > aside nav .nav.active,
+.app-shell > aside nav .nav:nth-child(n) {
+  border-radius:0!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  padding:5px 2px!important;
+  font-size:0!important;
+}
+.app-shell > aside nav .nav::after,
+html[data-app-theme] .app-shell > aside nav .nav::after {
+  content:attr(data-short);
+  display:block;
+  position:relative;
+  width:100%;
+  font:900 clamp(8px,1vw,12px)/1.12 Arial,Helvetica,sans-serif;
+  letter-spacing:-.035em;
+  text-align:center;
+  color:inherit!important;
+  white-space:nowrap;
+  border-radius:0!important;
+}
+.app-shell > aside nav .nav::before {
+  border-radius:0!important;
+}
+.app-shell > aside nav .nav small{display:none!important;}
+
+/* The small detached chunk is a purely decorative sibling of .rail.
+   Remove that sibling, not the rail; flexbox extends .rail into its space. */
+.app-shell > aside .rail-end {
+  display:none!important;
+}
+.app-shell > aside .rail {
+  flex:1 1 auto!important;
+  min-height:0!important;
+  border-radius:0!important;
+  box-sizing:border-box;
+}
+/* The legacy semicircular notch was cut for the now-removed lower chunk.
+   Without it, the bottom crossbar and the long side rail meet cleanly. */
+.app-shell::after {
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+}
+
+@media (min-width:641px) {
+  /* 88–166px previously; roughly half as wide on desktop. */
+  .app-shell {
+    --v2-sidebar:clamp(54px,5.8vw,86px);
+  }
+  .app-shell > aside nav .nav::after {
+    font-size:clamp(8.5px,.95vw,12px);
+  }
+}
+@media (min-width:641px) and (max-width:900px) {
+  /* The legacy tablet rule restores an overly wide nav without this override. */
+  .app-shell {
+    --v2-sidebar:clamp(52px,6.3vw,60px);
+  }
+}
+@media (max-width:640px) {
+  /* The 58px iPhone fascia becomes ~36–44px. Buttons keep their height,
+     while short text avoids clipping. Header elbow and title share ONE anchor. */
+  .app-shell {
+    --rw-mobile-sidebar:clamp(36px,10vw,44px);
+    grid-template-columns:var(--rw-mobile-sidebar) minmax(0,1fr)!important;
+    column-gap:clamp(6px,1.6vw,9px)!important;
+  }
+  .app-shell > aside {
+    width:var(--rw-mobile-sidebar)!important;
+    min-width:0!important;
+  }
+  .app-shell > header {
+    --lcars-bus-start:calc(var(--rw-mobile-sidebar) + 30px)!important;
+  }
+  .app-shell > header .elbow {
+    width:calc(var(--rw-mobile-sidebar) + 30px)!important;
+  }
+  .app-shell > header .elbow::after {
+    left:var(--rw-mobile-sidebar)!important;
+  }
+  .app-shell > aside nav .nav {
+    min-height:49px!important;
+  }
+  .app-shell > aside nav .nav::after {
+    font-size:clamp(7.4px,2vw,9.4px)!important;
+    letter-spacing:-.045em!important;
+  }
+}

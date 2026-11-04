@@ -105,6 +105,11 @@ try{
       navActive:style('.app-shell > aside nav .nav.active').backgroundColor,
       leftButton:rect('.app-shell > aside nav .nav'),
       sideRail:rect('.app-shell > aside .rail'),
+      railEndDisplay:style('.app-shell > aside .rail-end').display,
+      activeButtonRadius:style('.app-shell > aside nav .nav.active').borderTopLeftRadius,
+      navText:style('.app-shell > aside nav .nav.active','::after').content,
+      sidebarWidth:rect('.app-shell > aside').width,
+      elbowWidth:rect('.app-shell > header .elbow').width,
       headerShadow:style('.app-shell > header .elbow').boxShadow
     };
    });
@@ -115,8 +120,14 @@ try{
    assert.equal(frame.headerShadow,'none','no random glow on header');
    assert.equal(rgb(frame.panelBackground),themes[theme].panel,'all app panels use theme fill');
    assert.equal(rgb(frame.panelBorder),themes[theme].outline,'panels share theme stroke');
-   assert.ok(frame.leftButton.width>(isMobile?40:80),'navigation width unchanged');
-   assert.ok(frame.sideRail.width>(isMobile?40:80),'side rail width unchanged');
+   assert.equal(frame.railEndDisplay,'none','detached lower decoration must be removed');
+   assert.equal(frame.activeButtonRadius,'0px','navigation corners must be square');
+   assert.ok(frame.navText.includes('METRO'),'short labels must stay visible');
+   assert.ok(frame.leftButton.height>=44,'sidebar buttons must keep tall touch targets');
+   assert.ok(frame.leftButton.width<=(isMobile?46:90),'sidebar should actually be slimmer');
+   assert.ok(frame.leftButton.width>=(isMobile?34:50),'sidebar must not collapse');
+   assert.ok(Math.abs(frame.sideRail.width-frame.leftButton.width)<2,'filler must fit the same column as buttons');
+   assert.ok(Math.abs(frame.elbowWidth-frame.sidebarWidth-30)<4,'header must join the slimmer rail');
    // Verify the actual empty preset, not the generic system-field selector.
    await page.locator('[data-tab="presets"]').click();
    const emptyPreset=await page.locator('#presetList .system-field')
