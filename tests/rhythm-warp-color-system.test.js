@@ -77,3 +77,15 @@ test('launch CTA, status labels and input colors inherit theme semantic roles',(
  assert.match(css,/html\[data-app-theme\] \.lcars-start-screen \.lcars-activate-wrap \.lcars-start-activate/);
  assert.match(css,/#trainingFields \.system-field/);
 });
+
+test('preset placeholder, plot primitives, tactical and microphone colors are theme-bound',()=>{
+ const css=read('rhythm-warp-colors.css');
+ const charts=read('src/charts.js');
+ assert.match(css,/#presets #presetList > \.system-field/);
+ assert.match(css,/#metronome #trainingFields \.system-field/);
+ assert.match(css,/#tactical \.tac-plot-shell/);
+ assert.match(css,/#micVisual \.mic-sensor-grid/);
+ assert.match(charts,/const color='var\(--rw-plot-'/);
+ for(let i=1;i<=6;i++)assert.ok(css.includes('--rw-plot-'+i+':'));
+ assert.doesNotMatch(charts,/#ffcc88|#cc99ff|#88ccff/);
+});

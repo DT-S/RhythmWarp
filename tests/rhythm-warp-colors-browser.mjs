@@ -110,6 +110,57 @@ try{
    assert.equal(rgb(frame.panelBorder),themes[theme].outline,'panels share theme stroke');
    assert.ok(frame.leftButton.width>(isMobile?40:80),'navigation width unchanged');
    assert.ok(frame.sideRail.width>(isMobile?40:80),'side rail width unchanged');
+   // Verify the actual empty preset, not the generic system-field selector.
+   await page.locator('[data-tab="presets"]').click();
+   const emptyPreset=await page.locator('#presetList .system-field')
+     .evaluate(el=>getComputedStyle(el).backgroundColor);
+   const presetSurfaces={voyager:'27,45,36',elite:'43,33,63',redalert:'54,32,40'};
+   assert.equal(rgb(emptyPreset),presetSurfaces[theme],'empty preset tile must use its theme, not legacy blue');
+   // Render a legitimate synthetic history *inside the test only* to verify
+   // SVG path colors, gradients, chart grid, AND live recoloring without redraw.
+   const plotted=await page.evaluate(async ()=>{
+    const {sessionChart}=await import('./src/charts.js');
+    const root=document.createElement('div');
+    root.id='rw-test-chart-host';
+    root.style.cssText='position:absolute;left:-9999px;top:0;width:550px;';
+    document.body.append(root);
+    try{
+      root.append(sessionChart({seconds:20,history:[{at:0,bpm:100},{at:10,bpm:125}]}));
+      const line=root.querySelector('.chart-line.rw-plot-1');
+      const grid=root.querySelector('.chart-grid-line');
+      const gradient=root.querySelector('stop.rw-plot-1');
+      if(!line||!grid||!gradient)throw new Error('Theme-aware SVG chart missing');
+      const before=getComputedStyle(line).stroke;
+      const beforeStop=getComputedStyle(gradient).stopColor;
+      const gridStroke=getComputedStyle(grid).stroke;
+      const original=document.documentElement.dataset.appTheme;
+      document.documentElement.dataset.appTheme=original==='elite'?'redalert':'elite';
+      const switched=getComputedStyle(line).stroke;
+      document.documentElement.dataset.appTheme=original;
+      return {before,beforeStop,gridStroke,switched};
+    }finally{root.remove();}
+   });
+   assert.equal(rgb(plotted.before),themes[theme].active,'plot line must use theme primary');
+   assert.equal(rgb(plotted.beforeStop),themes[theme].active,'plot gradient must use theme primary');
+   assert.equal(rgb(plotted.gridStroke),themes[theme].outline,'plot grid must use theme outline');
+   assert.notEqual(plotted.switched,plotted.before,'plot must recolor live when palette changes');
+   // Tactical and microphone plot CSS variables must resolve to the same theme.
+   const sensors=await page.evaluate(()=>{
+    const tactical=document.querySelector('#tactical');
+    const css=getComputedStyle(tactical);
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('class','mic-sensor-grid');
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.append(line);
+    document.querySelector('#micVisual').append(svg);
+    const stroke=getComputedStyle(line).stroke;
+    svg.remove();
+    return {grid:stroke,tacticalGrid:css.getPropertyValue('--tac-grid').trim(),
+      tacticalBg:css.getPropertyValue('--tac-space').trim()};
+   });
+   assert.equal(rgb(sensors.grid),themes[theme].outline,'microphone grid must follow theme outline');
+   assert.equal(rgb(sensors.tacticalGrid),themes[theme].info,'tactical hits must follow theme information color');
+   assert.equal(rgb(sensors.tacticalBg),themes[theme].bg==='14,23,20'?'8,16,13':theme==='elite'?'11,8,21':'18,8,11','tactical canvas inherits theme dark background');
    const status=await page.locator('#trainingFields .system-field').evaluate(el=>getComputedStyle(el).backgroundColor);
    assert.equal(rgb(status),themes[theme].info,'metronome status must use theme info color');
    const cap=await page.evaluate(()=>{

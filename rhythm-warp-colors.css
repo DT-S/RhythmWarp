@@ -1050,3 +1050,13 @@ html[data-app-theme] .lcars-start-screen .lcars-boot-bar {
 }
 /* The banner can be inspected for any of the three themes without opening
    a separate screen; only the local theme tokens determine its output. */
+
+/* Preserve the existing semantic INFO status in the real metronome; only the
+   preset-empty state is neutral rather than the inherited legacy blue. */
+#metronome #trainingFields .system-field {
+ background:var(--rw-info)!important;
+ color:var(--rw-ink)!important;
+}
+/* Animated line traces are strokes, not filled polygons. */
+.xy-plot .chart-line,
+.xy-plot .chart-line-pulse {fill:none!important;}
