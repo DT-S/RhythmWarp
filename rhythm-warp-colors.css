@@ -734,3 +734,38 @@ html[data-app-theme] .app-shell > aside nav .nav.active,
 #rings .point.state3:not(.playing){fill:var(--rw-ring-dark)!important;}
 #metronome .lcars-cap-crescent{background:var(--rw-info)!important;}
 .lcars-slide .lcars-cap-crescent{background:var(--rw-info)!important;}
+
+
+/* 16. STARTUP PALETTE CASCADE FIX.
+   The legacy Student-Green stylesheet uses the more specific
+   "html[data-app-theme] .lcars-start-screen" selector with !important.
+   Rebind it to the currently selected semantic palette here so no
+   green backdrop or green inherited --padd-* value survives switching. */
+html[data-app-theme] .lcars-start-screen{
+ --padd-bg:var(--rw-bg-1)!important;
+ --padd-orange:var(--rw-active)!important;
+ --padd-amber:var(--rw-active)!important;
+ --padd-peach:var(--rw-ring-tertiary)!important;
+ --padd-lavender:var(--rw-ring-tertiary)!important;
+ --padd-blue:var(--rw-info)!important;
+ --padd-ice:var(--rw-info)!important;
+ --padd-tan:var(--rw-ring-track)!important;
+ --padd-red:var(--rw-danger)!important;
+ --padd-cream:var(--rw-neutral)!important;
+ background:var(--rw-bg-1)!important;
+ color:var(--rw-text)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-studio-badge{
+ background:var(--rw-bg-2)!important;
+ border-color:var(--rw-outline)!important;
+ color:var(--rw-info)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-subbrand-bar{
+ background:var(--rw-bg-1)!important;
+ border-color:var(--rw-outline)!important;
+ color:var(--rw-dim)!important;
+}
+html[data-app-theme] .lcars-start-screen::after{
+ background:repeating-linear-gradient(to bottom,transparent 0 4px,var(--rw-sweep) 4px 5px)!important;
+ opacity:.2;
+}
