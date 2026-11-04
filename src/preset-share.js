@@ -8,8 +8,10 @@ export const TRAIN_FIELDS=Object.freeze([
  'targetBpm','bpmStep','rampReturn'
 ]);
 const MAX_FRAGMENT=4000;
-const BASE_URL=new URL('../',import.meta.url).href;
-export function appShareUrl(){return BASE_URL;}
+// Canonical public install URL. QR codes must always point to Rhythm Warp,
+// even when the app is previewed from localhost or a temporary address.
+export const APP_SHARE_URL='https://dt-s.github.io/RhythmWarp/';
+export function appShareUrl(){return APP_SHARE_URL;}
 const fallbackSound=name=>Object.hasOwn(SOUNDS,name)?name:'click';
 export function encodeSharedPreset(preset){
  if(!preset||typeof preset.name!=='string'||!preset.settings)throw Error('Invalid preset.');
@@ -27,7 +29,7 @@ export function encodeSharedPreset(preset){
  const encoded=btoa(String.fromCharCode(...new TextEncoder().encode(json)))
   .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
  if(encoded.length>MAX_FRAGMENT)throw Error('Preset exceeds QR link limit.');
- return {url:BASE_URL+'#p='+encoded,hadCustom};
+ return {url:APP_SHARE_URL+'#p='+encoded,hadCustom};
 }
 export function decodeSharedPresetFragment(hash){
  if(typeof hash!=='string'||!hash.startsWith('#p='))throw Error('Not a Rhythm PADD preset link.');

@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {fresh} from '../src/model.js';
 import {
  encodeSharedPreset,decodeSharedPresetFragment,loadSharedPreset,
- uniqueSharedPresetName,appShareUrl,TRAIN_FIELDS
+ uniqueSharedPresetName,appShareUrl,APP_SHARE_URL,TRAIN_FIELDS
 } from '../src/preset-share.js';
 function example(){
  const s=fresh();s.mode='ramp';s.bpm=135;s.beats=7;
@@ -80,4 +80,16 @@ test('QR, preview, and vendor source are in offline bundle and app wiring',()=>{
  assert.match(app,/sharedPresetSave/);
  assert.match(app,/paintQR/);
  assert.match(root('vendor/qrcode.js'),/QRCode/);
+});
+
+test('install QR, copied app link and shared presets all use the canonical Rhythm Warp URL',()=>{
+ const expected='https://dt-s.github.io/RhythmWarp/';
+ assert.equal(APP_SHARE_URL,expected);
+ assert.equal(appShareUrl(),expected);
+ assert.equal(new URL(encodeSharedPreset(example()).url).origin,'https://dt-s.github.io');
+ assert.ok(encodeSharedPreset(example()).url.startsWith(expected+'#p='));
+ const app=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
+ assert.match(app,/const url=appShareUrl\(\);/);
+ assert.match(app,/paintQR\(\$\('#appShareQr'\),url\)/);
+ assert.match(app,/shareActions\(\{url,copyButton:\$\('#copyAppShare'\)/);
 });
