@@ -49,7 +49,9 @@ function plot(host,series,{xLabel,yLabel,labels=[],bars=false,scatter=false}){
  };
  const legend=node('div',undefined,'chart-legend');
  for(const [index,s] of series.entries()){
-  const color=['#ffcc88','#cc99ff','#88ccff','#ff8899','#99ddbb','#eeeeaa'][index%6];const name=node('span',s.name);name.style.borderColor=color;legend.append(name);
+  const seriesIndex=index%6+1;
+  const color='var(--rw-plot-'+seriesIndex+')';
+  const name=node('span',s.name);name.style.borderColor=color;legend.append(name);
   if(!scatter&&(!bars||index)){
    let path='',connected=false,run=[],areaPaths=[];
    const finishArea=()=>{
@@ -68,17 +70,17 @@ function plot(host,series,{xLabel,yLabel,labels=[],bars=false,scatter=false}){
    if(path.trim()){
     const id=`lcars-astrometrics-fill-${++chartGradientSerial}`;
     const gradient=svgNode('linearGradient',{id,x1:'0%',y1:'0%',x2:'0%',y2:'100%'});
-    gradient.append(svgNode('stop',{offset:'0%','stop-color':color,'stop-opacity':'.8'}),
-      svgNode('stop',{offset:'100%','stop-color':color,'stop-opacity':'0'}));
+    gradient.append(svgNode('stop',{offset:'0%','stop-color':color,'stop-opacity':'.8',class:'rw-plot-stop rw-plot-'+seriesIndex}),
+      svgNode('stop',{offset:'100%','stop-color':color,'stop-opacity':'0',class:'rw-plot-stop rw-plot-'+seriesIndex}));
     const defs=svgNode('defs',{});defs.append(gradient);svg.append(defs);
     for(const d of areaPaths)svg.append(svgNode('path',{d,fill:`url(#${id})`,class:'chart-area','aria-hidden':'true'}));
-    svg.append(svgNode('path',{d:path,fill:'none',stroke:color,'stroke-width':3.5,pathLength:1,class:'chart-line'}));
+    svg.append(svgNode('path',{d:path,fill:'none',stroke:color,'stroke-width':3.5,pathLength:1,class:'chart-line rw-plot-'+seriesIndex}));
     // The highlight is a short stretch of the trace, not a roaming circle.
     if(!chartStatic)svg.append(svgNode('path',{d:path,fill:'none',stroke:color,'stroke-width':3,
-      pathLength:1,class:'chart-line-pulse','aria-hidden':'true'}));
+      pathLength:1,class:'chart-line-pulse rw-plot-'+seriesIndex,'aria-hidden':'true'}));
    }
   }
-  for(const p of s.points){if(p.y===null)continue;const mark=bars&&!index?svgNode('rect',{x:x(p.x)-Math.max(1,Math.min(12,(mobile?110:280)/(maxX+1))),y:y(p.y),width:Math.max(2,Math.min(24,(mobile?225:560)/(maxX+1))),height:Math.max(1,bottom-y(p.y)),fill:color,class:'chart-bar'}):svgNode('circle',{cx:x(p.x),cy:y(p.y),r:5,fill:color,class:'chart-dot'});
+  for(const p of s.points){if(p.y===null)continue;const mark=bars&&!index?svgNode('rect',{x:x(p.x)-Math.max(1,Math.min(12,(mobile?110:280)/(maxX+1))),y:y(p.y),width:Math.max(2,Math.min(24,(mobile?225:560)/(maxX+1))),height:Math.max(1,bottom-y(p.y)),fill:color,class:'chart-bar rw-plot-'+seriesIndex}):svgNode('circle',{cx:x(p.x),cy:y(p.y),r:5,fill:color,class:'chart-dot rw-plot-'+seriesIndex});
    mark.style.setProperty('--stagger',`${Math.min(650,140+Math.round(p.x*12))}ms`);
    const description=`${s.name} · ${p.label}`;mark.setAttribute('tabindex','0');mark.setAttribute('role',p.select?'button':'img');if(p.select){mark.addEventListener('click',p.select);mark.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();p.select();}});}mark.setAttribute('aria-label',description);const show=()=>inspect(mark,p,description);
    mark.addEventListener('pointerenter',show);

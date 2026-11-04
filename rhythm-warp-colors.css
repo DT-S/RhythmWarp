@@ -790,3 +790,263 @@ html[data-app-theme] .lcars-start-screen .lcars-start-console {
  background:var(--rw-info)!important;
  color:var(--rw-ink)!important;
 }
+
+/* 17. THEME-COMPLETE UI / PRESET STATUS, SVG PLOTS, SENSOR & LAUNCH.
+   Geometries, animation timing, measurement data and hit targets stay unchanged.
+   Each plotted series uses CSS variables, so an existing graph recolors live. */
+:root,html[data-app-theme],.lcars-start-screen {
+ --rw-plot-1:var(--rw-active);
+ --rw-plot-2:var(--rw-info);
+ --rw-plot-3:var(--rw-neutral);
+ --rw-plot-4:var(--rw-warning);
+ --rw-plot-5:var(--rw-custom);
+ --rw-plot-6:var(--rw-edge);
+ --rw-grid:var(--rw-outline);
+ --rw-plot-bg:var(--rw-bg-0);
+ --rw-plot-crosshair:var(--rw-edge);
+ --rw-mic-ref:var(--rw-active);
+ --rw-mic-clipped:var(--rw-warning);
+ --rw-plot-early:var(--rw-info);
+ --rw-plot-late:var(--rw-warning);
+ --rw-plot-extra:var(--rw-danger);
+}
+/* Empty preset memory is a quiet STATUS, not a blue primary action. */
+#presets #presetList > .system-field,
+#presets #presetList .system-field {
+ background:var(--rw-bg-3)!important;
+ border-color:var(--rw-outline)!important;
+ color:var(--rw-dim)!important;
+ box-shadow:none!important;
+}
+#presets .preset-form .system-field {
+ background:var(--rw-bg-3)!important;
+ color:var(--rw-text)!important;
+}
+/* Other legacy status tiles fall back to a themed surface instead of --ice blue.
+   Explicit semantic statuses (Settings, Analytics) continue to override these. */
+.app-shell .page .system-field {
+ background:var(--rw-bg-3)!important;
+ color:var(--rw-text)!important;
+}
+/* Keep semantic classes deliberately higher priority than the generic status. */
+#settings #offlineStatus {
+ background:var(--rw-neutral)!important;color:var(--rw-ink)!important;
+}
+#settings #storageStatus,#settings #buildInfo,#settings #motionInfo {
+ background:var(--rw-info)!important;color:var(--rw-ink)!important;
+}
+#analyticsContent .chart-readout {
+ background:var(--rw-info)!important;color:var(--rw-ink)!important;
+}
+/* Analytics chart chassis and measured-data marks (including SVG gradient stops). */
+.app-shell .xy-wrap,
+#analyticsContent .xy-wrap,#diary .xy-wrap {
+ background:var(--rw-plot-bg)!important;
+ border-bottom-color:var(--rw-edge)!important;
+}
+.xy-plot-stage,
+#analyticsContent .xy-plot-stage,#diary .xy-plot-stage {
+ background:radial-gradient(circle at 50% 40%,var(--rw-sweep),transparent 72%),var(--rw-plot-bg)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;
+}
+.xy-plot .chart-grid,
+.xy-plot .chart-grid-line {stroke:var(--rw-grid)!important;}
+.xy-plot .axis-label {fill:var(--rw-dim)!important;}
+.xy-plot .chart-probe-line {
+ stroke:var(--rw-plot-crosshair)!important;
+ filter:none!important;
+}
+.xy-plot .chart-dot.chart-inspected,
+.xy-plot .chart-bar.chart-inspected {stroke:var(--rw-neutral)!important;}
+.xy-plot .rw-plot-1 {stroke:var(--rw-plot-1)!important;fill:var(--rw-plot-1)!important;}
+.xy-plot .rw-plot-2 {stroke:var(--rw-plot-2)!important;fill:var(--rw-plot-2)!important;}
+.xy-plot .rw-plot-3 {stroke:var(--rw-plot-3)!important;fill:var(--rw-plot-3)!important;}
+.xy-plot .rw-plot-4 {stroke:var(--rw-plot-4)!important;fill:var(--rw-plot-4)!important;}
+.xy-plot .rw-plot-5 {stroke:var(--rw-plot-5)!important;fill:var(--rw-plot-5)!important;}
+.xy-plot .rw-plot-6 {stroke:var(--rw-plot-6)!important;fill:var(--rw-plot-6)!important;}
+/* Line traces must keep fill:none (not be filled black over the plot). */
+.xy-plot .chart-line.rw-plot-1,.xy-plot .chart-line-pulse.rw-plot-1 {fill:none!important;stroke:var(--rw-plot-1)!important;}
+.xy-plot .chart-line.rw-plot-2,.xy-plot .chart-line-pulse.rw-plot-2 {fill:none!important;stroke:var(--rw-plot-2)!important;}
+.xy-plot .chart-line.rw-plot-3,.xy-plot .chart-line-pulse.rw-plot-3 {fill:none!important;stroke:var(--rw-plot-3)!important;}
+.xy-plot .chart-line.rw-plot-4,.xy-plot .chart-line-pulse.rw-plot-4 {fill:none!important;stroke:var(--rw-plot-4)!important;}
+.xy-plot .chart-line.rw-plot-5,.xy-plot .chart-line-pulse.rw-plot-5 {fill:none!important;stroke:var(--rw-plot-5)!important;}
+.xy-plot .chart-line.rw-plot-6,.xy-plot .chart-line-pulse.rw-plot-6 {fill:none!important;stroke:var(--rw-plot-6)!important;}
+.xy-plot stop.rw-plot-1 {stop-color:var(--rw-plot-1)!important;}
+.xy-plot stop.rw-plot-2 {stop-color:var(--rw-plot-2)!important;}
+.xy-plot stop.rw-plot-3 {stop-color:var(--rw-plot-3)!important;}
+.xy-plot stop.rw-plot-4 {stop-color:var(--rw-plot-4)!important;}
+.xy-plot stop.rw-plot-5 {stop-color:var(--rw-plot-5)!important;}
+.xy-plot stop.rw-plot-6 {stop-color:var(--rw-plot-6)!important;}
+.xy-plot .chart-line-pulse {filter:drop-shadow(0 0 5px var(--rw-glow))!important;}
+.xy-plot-stage.is-scanning::after {
+ background:linear-gradient(90deg,transparent 0%,var(--rw-sweep) 42%,var(--rw-glow) 50%,var(--rw-sweep) 58%,transparent 100%)!important;
+}
+/* Scientific microphone charts, including timing, rate and distribution. */
+#micVisual .mic-chart,
+#micAnalytics .mic-chart {
+ background:var(--rw-plot-bg)!important;border-bottom-color:var(--rw-outline)!important;
+}
+#micVisual .mic-sensor-grid,#micAnalytics .mic-grid {
+ stroke:var(--rw-grid)!important;
+}
+#micVisual .mic-sensor-line,#micAnalytics .mic-trace {
+ stroke:var(--rw-info)!important;fill:none!important;
+}
+#micVisual .mic-sensor-reference,#micAnalytics .mic-zero {
+ stroke:var(--rw-mic-ref)!important;
+}
+#micVisual .mic-sensor-dot,#micAnalytics .mic-hit {
+ fill:var(--rw-active)!important;
+ stroke:var(--rw-info)!important;
+}
+#micVisual .mic-sensor-clipped {
+ fill:var(--rw-mic-clipped)!important;stroke:var(--rw-mic-clipped)!important;
+}
+#micVisual .mic-sensor-stem {
+ stroke:var(--rw-info)!important;
+}
+#micVisual .mic-sensor-histogram,#micAnalytics .mic-hist-bar {
+ fill:var(--rw-info)!important;
+ stroke:var(--rw-outline)!important;
+}
+#micVisual .mic-sensor-axis,#micAnalytics .mic-axis {
+ fill:var(--rw-dim)!important;
+}
+#micVisual .mic-tolerance-corridor {fill:var(--rw-active)!important;}
+#micSensitivity,#micGridDivision,#micInputDelay {
+ background:var(--rw-bg-2)!important;
+ border-color:var(--rw-outline)!important;
+ color:var(--rw-text)!important;
+}
+#metronome #micVisual .hint,#metronome .mic-visual-title {
+ color:var(--rw-dim)!important;
+}
+/* Tactical live plots and lane: eliminate fixed 'electric blue' chassis. */
+#metronome #tactical {
+ --tac-early:var(--rw-plot-early)!important;
+ --tac-grid:var(--rw-info)!important;
+ --tac-late:var(--rw-plot-late)!important;
+ --tac-extra:var(--rw-plot-extra)!important;
+ --tac-out:var(--rw-danger)!important;
+ --tac-gridline:var(--rw-grid)!important;
+ --tac-space:var(--rw-plot-bg)!important;
+ color:var(--rw-text)!important;
+}
+#tactical .tac-cockpit,#tactical .tac-plot-panel,#tactical .tac-diagnostics {
+ background:var(--rw-bg-2)!important;
+ border-color:var(--rw-outline)!important;
+}
+#tactical .tac-cockpit::before,#tactical .tac-plot-panel::before {
+ background-image:
+ repeating-linear-gradient(0deg,transparent,transparent 23px,var(--rw-sweep) 24px),
+ repeating-linear-gradient(90deg,transparent,transparent 28px,var(--rw-sweep) 29px)!important;
+}
+#tactical .tac-head {
+ background:var(--rw-inactive)!important;color:var(--rw-text)!important;
+}
+#tactical .tac-readouts span,#tactical .tac-offset,#tactical .tac-counts>div {
+ background:var(--rw-bg-3)!important;
+ color:var(--rw-dim)!important;
+ border-color:var(--rw-outline)!important;
+}
+#tactical .tac-readouts strong,#tactical .tac-offset strong {
+ color:var(--rw-active)!important;
+}
+#tactical .tac-lane-shell,#tactical .tac-plot-shell,#tactical .tac-plot-cell {
+ background:var(--rw-plot-bg)!important;
+ border-color:var(--rw-outline)!important;
+ box-shadow:none!important;
+}
+#tactical .tac-lane-grid,
+#tactical .tac-plot-shell .mic-sensor-grid {
+ stroke:var(--rw-grid)!important;
+}
+#tactical .tac-lane-zero,#tactical .tac-lane-quarter,
+#tactical .tac-plot-shell .mic-sensor-reference {
+ stroke:var(--rw-active)!important;
+}
+#tactical .tac-lane-sub,#tactical .tac-plot-shell .mic-sensor-line {
+ stroke:var(--rw-info)!important;
+}
+#tactical .tac-lane-now,#tactical .tac-lane-bar {
+ stroke:var(--rw-edge)!important;filter:none!important;
+}
+#tactical .tac-lane-label,#tactical .tac-plot-legend,
+#tactical .tac-plot-shell .mic-sensor-axis {
+ fill:var(--rw-dim)!important;color:var(--rw-dim)!important;
+}
+#tactical .tac-plot-shell .mic-sensor-histogram {
+ fill:var(--rw-info)!important;stroke:var(--rw-outline)!important;
+}
+#tactical .tac-plot-shell .mic-sensor-dot {
+ fill:var(--rw-active)!important;stroke:var(--rw-text)!important;
+}
+#tactical .tac-plot-shell .mic-sensor-dot.mic-sensor-clipped {
+ fill:var(--rw-danger)!important;stroke:var(--rw-danger)!important;
+}
+#tactical .tac-plot-shell .mic-tolerance-corridor {
+ fill:var(--rw-active)!important;opacity:.12;
+}
+#tactical .tac-plot-buttons button,
+#tactical .tac-commands button,#tactical .tac-commands time {
+ background:var(--rw-bg-3)!important;color:var(--rw-text)!important;
+ border-color:var(--rw-outline)!important;
+}
+#tactical .tac-plot-buttons button[aria-pressed="true"],
+#tactical .tac-commands .tac-main-start {
+ background:var(--rw-active)!important;
+ color:var(--rw-ink)!important;
+}
+/* The launch overlay had a stronger, fixed-green CSS rule. Bind its content
+   and decoration to the selected *local* theme, not the default green skin. */
+html[data-app-theme] .lcars-start-screen,
+html[data-app-theme] .lcars-start-screen .lcars-start-console,
+html[data-app-theme] .lcars-start-screen .lcars-top-right {
+ color:var(--rw-text)!important;
+}
+html[data-app-theme] .lcars-start-screen {
+ background:var(--rw-bg-1)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-side-block,
+html[data-app-theme] .lcars-start-screen .lcars-seg,
+html[data-app-theme] .lcars-start-screen .lcars-side-filler {
+ background:var(--rw-rail)!important;
+ color:var(--rw-text)!important;
+ border-color:var(--rw-outline)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-side-block[aria-pressed="true"] {
+ background:var(--rw-selected-bg)!important;
+ color:var(--rw-active)!important;
+ border-color:var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments .lcars-seg {
+ border-top-color:var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments .lcars-seg {
+ border-bottom-color:var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-side-filler {
+ border-left-color:var(--rw-edge)!important;
+ border-right-color:var(--rw-edge)!important;
+ border-bottom-color:var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-top-subbar,
+html[data-app-theme] .lcars-start-screen .lcars-subbrand-bar {
+ background:var(--rw-bg-1)!important;
+ border-color:var(--rw-outline)!important;
+ color:var(--rw-dim)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-console-frame::before,
+html[data-app-theme] .lcars-start-screen .lcars-console-frame::after {
+ border-color:var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-start-kicker::before,
+html[data-app-theme] .lcars-start-screen .lcars-start-kicker::after {
+ background:var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-boot-bar {
+ background:var(--rw-bg-3)!important;
+}
+/* The banner can be inspected for any of the three themes without opening
+   a separate screen; only the local theme tokens determine its output. */
