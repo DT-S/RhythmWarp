@@ -115,10 +115,41 @@ try{
        storage:color('#settings #storageStatus'),
        export:color('#settings #export')};
      });
-     assert.equal(rgb(settings.custom),'196,163,213','custom upload color');
+     assert.equal(rgb(settings.custom),'140,206,180','custom upload must be teal-green, never purple');
      assert.equal(rgb(settings.offline),'232,221,190','neutral storage note color');
      assert.equal(rgb(settings.storage),'146,203,210','info status color');
      assert.equal(rgb(settings.export),themes[theme].active,'positive export color');
+     // Scan ACTUAL computed styles, not just the upload token, across visible
+     // Settings elements and their before/after decorations.
+     const violets=await page.locator('#settings').evaluate(root=>{
+      const result=[];
+      function isPurple(s){
+       const colors=s.match(/rgba?\([^)]+\)/g)||[];
+       return colors.some(c=>{
+        const a=(c.match(/[\d.]+/g)||[]).map(Number);
+        const [r,g,b]=a;
+        const opacity=a.length>3?a[3]:1;
+        return opacity>.05 && r>67 && b>67 && b>g*1.13 && r>g*1.10;
+       });
+      }
+      for(const element of [root,...root.querySelectorAll('*')]){
+       const box=element.getBoundingClientRect();
+       if(box.width<1||box.height<1||getComputedStyle(element).visibility==='hidden')continue;
+       for(const pseudo of [null,'::before','::after']){
+        const st=getComputedStyle(element,pseudo);
+        if(st.display==='none'||st.visibility==='hidden')continue;
+        for(const property of ['backgroundColor','borderTopColor','borderRightColor',
+          'borderBottomColor','borderLeftColor','outlineColor','color','boxShadow']){
+          if(isPurple(st[property]))
+            result.push({element:element.id||element.className||element.tagName,
+              pseudo,property,value:st[property]});
+        }
+       }
+      }
+      return result.slice(0,30);
+     });
+     assert.deepEqual(violets,[],key+' Settings must have no rendered purple');
+
     }
     if(tab==='diary'){
      const d=await page.evaluate(()=>{

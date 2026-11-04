@@ -41,3 +41,10 @@ test('start frame edge continuity and violet control cleanup',()=>{
  assert.ok(css.includes(name),'missing '+name);
  assert.match(css,/border-right-color:var\(--rw-edge\)!important/);
 });
+
+test('custom sound upload uses Studio Green teal and no deliberate purple palette token',()=>{
+ const css=read('rhythm-warp-colors.css');
+ assert.match(css,/--rw-custom:#8cceb4/);
+ assert.doesNotMatch(css,/--rw-custom:#c4a3d5/);
+ assert.match(css,/#settings #soundDrop:focus-within/);
+});

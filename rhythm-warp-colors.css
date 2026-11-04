@@ -22,7 +22,7 @@
  --rw-active:#b3df94;
  --rw-info:#92cbd2;
  --rw-neutral:#e8ddbe;
- --rw-custom:#c4a3d5;
+ --rw-custom:#8cceb4;
  --rw-warning:#d8b37e;
  --rw-danger:#c98d8d;
  --rw-inactive:#4d6b55;
@@ -515,7 +515,7 @@ html[data-app-theme] .app-shell .panel {
 }
 .lcars-telemetry-scanner {background:var(--rw-info)!important;}
 
-/* 11. CUSTOM AUDIO: one intentional purple accent, no stray orange halo. */
+/* 11. CUSTOM AUDIO: muted teal-green separates user uploads from standard actions. */
 #settings #soundDrop {
  outline:2px solid var(--rw-custom)!important;
  outline-offset:0!important;
@@ -579,8 +579,8 @@ html[data-app-theme] .app-shell .panel {
 .lcars-start-screen .lcars-side-filler{
  box-shadow:none!important;filter:none!important;
 }
-/* 14. Historic fixed purple removed from diary controls, checkbox OFF
-   and rhythm rings. Purple survives ONLY on intentionally custom audio. */
+/* 14. Historic fixed violet removed from diary controls, checkbox OFF
+   and rhythm rings; the Settings page has no purple accents. */
 #diary .diary-minimum{
  background:var(--rw-bg-2)!important;
  border-left-color:var(--rw-outline)!important;
