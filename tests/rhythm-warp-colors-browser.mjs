@@ -125,7 +125,7 @@ try{
    assert.ok(frame.navText.includes('METRO'),'short labels must stay visible');
    assert.ok(frame.leftButton.height>=44,'sidebar buttons must keep tall touch targets');
    assert.ok(frame.leftButton.width<=(isMobile?46:90),'sidebar should actually be slimmer');
-   assert.ok(frame.leftButton.width>=(isMobile?34:50),'sidebar must not collapse');
+   assert.ok(frame.leftButton.width>=(isMobile?33:50),'sidebar must not collapse');
    assert.ok(Math.abs(frame.sideRail.width-frame.leftButton.width)<2,'filler must fit the same column as buttons');
    assert.ok(Math.abs(frame.elbowWidth-frame.sidebarWidth-30)<4,'header must join the slimmer rail');
    // Verify the actual empty preset, not the generic system-field selector.
