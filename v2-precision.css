@@ -46,7 +46,7 @@
   left:calc(50% - 2px);
   bottom:-9px;
   width:4px;height:9px;
-  background:var(--padd-orange,#ff9900);
+  background:var(--rw-active,#b3df94);
   border-radius:0 0 3px 3px;
 }
 .precision-slider-label.precision-active .precision-readout {
