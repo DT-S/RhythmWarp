@@ -202,16 +202,25 @@ try{
    assert.equal(rgb(ladder.tick),themes[theme].active,'drag ladder active tick must be themed');
    await page.screenshot({path:path.join(output,'precision-'+key+'.png')});
    await page.mouse.up();
-   // Range-fader readout has separate CSS and must follow the same roles.
-   const fader=await page.evaluate(()=>{
-    const e=document.querySelector('.precision-readout');
-    if(!e)return null;
-    const st=getComputedStyle(e);
-    return {background:st.backgroundColor,ink:st.color,edge:st.borderLeftColor};
+   // The small slider bubble is a separate opt-in component, not mounted
+   // in the default app. Mount a real native range input in a temporary label.
+   const fader=await page.evaluate(async()=>{
+    const {installPrecisionSlider}=await import('./src/precision-slider.js');
+    const label=document.createElement('label');
+    label.style.cssText='position:fixed;left:0;top:0;width:180px;height:60px;';
+    const input=document.createElement('input');
+    input.type='range';input.min='0';input.max='1';input.step='.01';input.value='.5';
+    label.append(input);document.body.append(label);
+    try {
+     installPrecisionSlider(input);
+     const e=label.querySelector('.precision-readout');
+     const st=getComputedStyle(e),stem=getComputedStyle(e,'::after');
+     return {background:st.backgroundColor,ink:st.color,edge:st.borderLeftColor,stem:stem.backgroundColor};
+    }finally{label.remove();}
    });
-   assert.ok(fader,'precision fader readout exists');
-   assert.equal(rgb(fader.background),themes[theme].active,'fader bubble color must be themed');
-   assert.equal(rgb(fader.edge),themes[theme].edge,'fader bubble rim must be themed');
+   assert.equal(rgb(fader.background),themes[theme].active,'native fader bubble follows theme primary');
+   assert.equal(rgb(fader.edge),themes[theme].edge,'native fader bubble left edge follows theme rim');
+   assert.equal(rgb(fader.stem),themes[theme].active,'native fader bubble pointer follows theme primary');
 
    const cap=await page.evaluate(()=>{
     const el=document.querySelector('#metronome .lcars-cap-value');
