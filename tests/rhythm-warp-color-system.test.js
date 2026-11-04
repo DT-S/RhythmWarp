@@ -89,3 +89,24 @@ test('preset placeholder, plot primitives, tactical and microphone colors are th
  for(let i=1;i<=6;i++)assert.ok(css.includes('--rw-plot-'+i+':'));
  assert.doesNotMatch(charts,/#ffcc88|#cc99ff|#88ccff/);
 });
+
+test('drag precision ladder inherits theme materials, not old orange/purple literals',()=>{
+ const css=read('v2-gesture-guide.css');
+ for(const rule of [
+ 'background:var(--rw-bg-2,#14231c)',
+ 'border-top-color:var(--rw-edge,#85f4a3)',
+ 'color:var(--rw-info,#92cbd2)',
+ 'background:var(--rw-active,#b3df94)',
+ 'background:var(--rw-selected-bg,#284535)',
+ 'border-left:3px solid var(--rw-edge,#85f4a3)'
+ ])assert.ok(css.includes(rule),'Missing theme role: '+rule);
+ for(const color of ['#ff9900','#ffcc66','#cc7777','#cc99cc','#100c17','#332137'])
+  assert.ok(!css.includes(color),'Legacy hard-coded drag color: '+color);
+});
+test('precision fader bubble uses shared active, edge and ink colors',()=>{
+ const css=read('v2-precision.css');
+ assert.match(css,/background:var\(--rw-active,#b3df94\)/);
+ assert.match(css,/border-left:8px solid var\(--rw-edge,#85f4a3\)/);
+ assert.match(css,/color:var\(--rw-ink,#08100d\)/);
+ for(const color of ['#ff9900','#ff9966','#ffcc66'])assert.ok(!css.includes(color));
+});

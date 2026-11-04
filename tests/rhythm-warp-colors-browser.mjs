@@ -170,6 +170,49 @@ try{
    assert.equal(rgb(sensors.tacticalBg),themes[theme].bg==='14,23,20'?'8,16,13':theme==='elite'?'11,8,21':'18,8,11','tactical canvas inherits theme dark background');
    const status=await page.locator('#trainingFields .system-field').evaluate(el=>getComputedStyle(el).backgroundColor);
    assert.equal(rgb(status),themes[theme].info,'metronome status must use theme info color');
+   // Check the REAL precision ladder after dragging tempo. This morph lives
+   // under document.body and does not inherit scoped page-local CSS.
+   await page.locator('[data-tab="metronome"]').click();
+   const drag=page.locator('#tempoValue');
+   await drag.scrollIntoViewIfNeeded();
+   const bbox=await drag.boundingBox();
+   assert.ok(bbox&&bbox.width>0&&bbox.height>0,'tempo drag source visible');
+   const px=bbox.x+bbox.width/2,py=bbox.y+bbox.height/2;
+   await page.mouse.move(px,py);
+   await page.mouse.down();
+   await page.mouse.move(px+22,py+6,{steps:4});
+   await page.waitForFunction(()=>document.querySelector('.gesture-guide')?.classList.contains('is-visible'),null,{timeout:4000});
+   const ladder=await page.evaluate(()=>{
+    const get=s=>getComputedStyle(document.querySelector(s));
+    return {
+     background:get('.gesture-guide.is-visible').backgroundColor,
+     edge:get('.gesture-guide.is-visible').borderTopColor,
+     heading:get('.gesture-guide-heading').color,
+     value:get('.gesture-guide-value').backgroundColor,
+     ink:get('.gesture-guide-value').color,
+     selected:get('.gesture-guide-rung.is-current').backgroundColor,
+     tick:get('.gesture-guide-rung.is-current .gesture-guide-tick').backgroundColor
+    };
+   });
+   assert.equal(rgb(ladder.background),themes[theme].panel,'drag ladder housing must be themed');
+   assert.equal(rgb(ladder.edge),themes[theme].edge,'drag ladder neon rim must be themed');
+   assert.equal(rgb(ladder.heading),themes[theme].info,'drag ladder heading must be themed');
+   assert.equal(rgb(ladder.value),themes[theme].active,'drag ladder central value must be themed');
+   assert.equal(rgb(ladder.selected),themes[theme].selected,'drag ladder selected row must be themed');
+   assert.equal(rgb(ladder.tick),themes[theme].active,'drag ladder active tick must be themed');
+   await page.screenshot({path:path.join(output,'precision-'+key+'.png')});
+   await page.mouse.up();
+   // Range-fader readout has separate CSS and must follow the same roles.
+   const fader=await page.evaluate(()=>{
+    const e=document.querySelector('.precision-readout');
+    if(!e)return null;
+    const st=getComputedStyle(e);
+    return {background:st.backgroundColor,ink:st.color,edge:st.borderLeftColor};
+   });
+   assert.ok(fader,'precision fader readout exists');
+   assert.equal(rgb(fader.background),themes[theme].active,'fader bubble color must be themed');
+   assert.equal(rgb(fader.edge),themes[theme].edge,'fader bubble rim must be themed');
+
    const cap=await page.evaluate(()=>{
     const el=document.querySelector('#metronome .lcars-cap-value');
     if(!el)return null;
