@@ -190,6 +190,11 @@ try{
       navText:style('.app-shell > aside nav .nav.active','::after').content,
       sidebarWidth:rect('.app-shell > aside').width,
       elbowWidth:rect('.app-shell > header .elbow').width,
+      elbowComputedWidth:parseFloat(style('.app-shell > header .elbow').width),
+      busLeft:parseFloat(style('.app-shell > header','::after').left),
+      busLeftBorder:style('.app-shell > header','::after').borderLeftColor,
+      elbowCutoutRight:style('.app-shell > header .elbow','::after').right,
+      elbowCutoutBottom:style('.app-shell > header .elbow','::after').bottom,
       headerShadow:style('.app-shell > header .elbow').boxShadow
     };
    });
@@ -207,7 +212,11 @@ try{
    assert.ok(frame.leftButton.width<=(isMobile?46:90),'sidebar should actually be slimmer');
    assert.ok(frame.leftButton.width>=(isMobile?20:50),'sidebar must not collapse after compact-screen zoom: '+JSON.stringify(frame));
    assert.ok(Math.abs(frame.sideRail.width-frame.leftButton.width)<2,'filler must fit the same column as buttons');
-   assert.ok(Math.abs(frame.elbowWidth-frame.sidebarWidth-30)<4,'header must join the slimmer rail');
+   assert.ok(Math.abs(frame.elbowComputedWidth-frame.busLeft)<1.5,
+     'header elbow must terminate at actual bus start: '+JSON.stringify(frame));
+   assert.equal(frame.elbowCutoutRight,'0px','the main header cutout must stay flush');
+   assert.equal(frame.elbowCutoutBottom,'-2px','main header closes the 2px inner seam');
+   assert.equal(rgb(frame.busLeftBorder),themes[theme].outline,'header bus starts with muted inner seam');
    // Verify the actual empty preset, not the generic system-field selector.
    await page.locator('[data-tab="presets"]').click();
    const emptyPreset=await page.locator('#presetList .system-field')

@@ -6,7 +6,7 @@ test('the sidebar-only layout loads after all color themes and is fully precache
  const html=read('index.html'),sw=read('sw.js');
  assert.ok(html.indexOf('rhythm-warp-layout.css')>html.indexOf('rhythm-warp-colors.css'));
  assert.match(sw,/\.\/rhythm-warp-layout\.css/);
- assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-palettes-v7'/);
+ assert.match(sw,/const CACHE=PREFIX\+'rhythm-warp-palettes-v8'/);
 });
 test('buttons have square corners, rail extends, and detached end is hidden',()=>{
  const css=read('rhythm-warp-layout.css');
@@ -40,4 +40,13 @@ test('outer neon strokes on upper and lower rails share theme token',()=>{
  const css=read('rhythm-warp-layout.css');
  for(const edge of ['top','bottom','right'])
   assert.ok(css.includes('border-'+edge+':var(--rw-launch-stroke) solid var(--rw-edge)!important'));
+});
+
+test('precision border pass uses themed 3px outer and 2px inner stroke',()=>{
+ const css=read('rhythm-warp-layout.css');
+ assert.match(css,/--rw-frame-edge-w:3px/);
+ assert.match(css,/--rw-frame-seam-w:2px/);
+ assert.match(css,/border-bottom:var\(--rw-frame-seam-w\) solid var\(--rw-outline\)!important/);
+ assert.match(css,/border-left:var\(--rw-frame-edge-w\) solid var\(--rw-edge\)!important/);
+ assert.match(css,/width:calc\(var\(--v2-sidebar\) \+ var\(--v2-gutter\)\)!important/);
 });
