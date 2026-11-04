@@ -154,3 +154,99 @@ html[data-app-theme] .lcars-start-screen .lcars-side-block {
     line-height:1.1!important;
   }
 }
+
+/* FRAME JOINS / SHARED GEOMETRY
+   Top, body and bottom share ONE sidebar width and gap. The old cutouts
+   used right:-12px, protruding past their elbow and crossing into the rail. */
+.lcars-start-screen{
+ --rw-launch-gap:clamp(5px,.7vw,8px);
+ --rw-launch-cutout:clamp(14px,calc(var(--elbow-w) * .38),28px);
+ --rw-launch-stroke:3px;
+}
+.lcars-start-screen .lcars-start-top,
+.lcars-start-screen .lcars-start-body,
+.lcars-start-screen .lcars-start-bottom-wrap{
+ grid-template-columns:var(--elbow-w) minmax(0,1fr)!important;
+ column-gap:var(--rw-launch-gap)!important;
+ min-width:0;
+ box-sizing:border-box;
+}
+.lcars-start-screen .lcars-elbow-top::after,
+.lcars-start-screen .lcars-elbow-bottom::after{
+ right:0!important;
+ width:var(--rw-launch-cutout)!important;
+ max-width:100%;
+ box-sizing:border-box;
+ box-shadow:none!important;
+}
+.lcars-start-screen .lcars-elbow-top::after{
+ border-top:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+ border-left:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+ border-right:0!important;
+}
+.lcars-start-screen .lcars-elbow-bottom::after{
+ border-bottom:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+ border-left:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+ border-top:0!important;
+ border-right:0!important;
+}
+/* Short connection strips fill exactly the gap: no negative offsets. */
+.lcars-start-screen .lcars-start-top::before,
+.lcars-start-screen .lcars-start-bottom-wrap::before{
+ content:"";
+ position:absolute;
+ left:var(--elbow-w);
+ width:var(--rw-launch-gap);
+ height:var(--bar-h);
+ background:var(--rw-rail);
+ box-sizing:border-box;
+ z-index:0;
+ pointer-events:none;
+ box-shadow:none!important;
+}
+.lcars-start-screen .lcars-start-top::before{
+ top:0;
+ border-top:var(--rw-launch-stroke) solid var(--rw-edge);
+}
+.lcars-start-screen .lcars-start-bottom-wrap{position:relative;}
+.lcars-start-screen .lcars-start-bottom-wrap::before{
+ bottom:0;
+ border-bottom:var(--rw-launch-stroke) solid var(--rw-edge);
+}
+/* Fractional tracks cannot grow beyond the available segment area. */
+.lcars-start-screen .lcars-top-right,
+.lcars-start-screen .lcars-rail-segments,
+.lcars-start-screen .lcars-bottom-segments{
+ min-width:0;max-width:100%;box-sizing:border-box;
+}
+.lcars-start-screen .lcars-rail-segments{
+ grid-template-columns:minmax(0,1.2fr) minmax(0,.7fr) minmax(0,2.4fr) minmax(0,.9fr) minmax(0,1.1fr);
+}
+.lcars-start-screen .lcars-bottom-segments{
+ grid-template-columns:minmax(0,1.8fr) minmax(0,.8fr) minmax(0,1.4fr) minmax(0,1fr);
+}
+.lcars-start-screen .lcars-rail-segments > .lcars-seg,
+.lcars-start-screen .lcars-bottom-segments > .lcars-seg{
+ min-width:0;max-width:100%;box-sizing:border-box;
+}
+/* Same theme-colored outer line along elbow, joining strip and segment.
+   Internal dividers intentionally stay darker. */
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg{
+ border-top:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg{
+ border-bottom:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+}
+html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
+html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4{
+ border-right:var(--rw-launch-stroke) solid var(--rw-edge)!important;
+}
+@media(max-width:640px){
+ .lcars-start-screen{--rw-launch-gap:5px;}
+ .lcars-start-screen .lcars-rail-segments{
+   grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr);
+ }
+ .lcars-start-screen .lcars-bottom-segments{
+   grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);
+ }
+}
