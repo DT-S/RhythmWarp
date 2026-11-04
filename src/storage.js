@@ -1,9 +1,13 @@
-// Existing state remains in 'data' and is never migrated into analysis records.
+// Rhythm Warp and LCARS Metronome are separate PWAs on the same GitHub Pages
+// origin. IndexedDB is origin-scoped (not path-scoped): never reuse the LCARS DB.
+// A fresh Rhythm Warp database intentionally does NOT import the legacy LCARS DB.
+// Preset QR links and JSON backup import/export are unaffected.
+export const DB_NAME='rhythm-warp';
 let connection;
 export async function db() {
  if(connection)return connection;
  connection=await new Promise((resolve,reject)=>{
-  const r=indexedDB.open('lcars-metronome',2);
+  const r=indexedDB.open(DB_NAME,2);
   r.onupgradeneeded=()=>{
    if(!r.result.objectStoreNames.contains('data'))r.result.createObjectStore('data');
    if(!r.result.objectStoreNames.contains('analysisSessions'))r.result.createObjectStore('analysisSessions',{keyPath:'id'});
