@@ -39,7 +39,7 @@ test('settings opens the existing LCARS launch console and keeps rhythms unchang
  assert.match(app,/function showLaunchConsole\(\)/);
  assert.match(app,/scheduler\.running\|\|starting\|\|restoring/);
  assert.match(app,/startup\.hidden=true;[\s\S]*shell\.inert=false;/);
- assert.match(app,/if\(!originalBoot\|\|!state\.uiEnabled\)return;/);
+ assert.match(app,/if\(!state\.uiEnabled\)return;/);
  assert.match(css,/#metronome \.transport #start/);
  assert.match(css,/\.app-shell > aside nav \.nav:nth-child\(6\)/);
 });

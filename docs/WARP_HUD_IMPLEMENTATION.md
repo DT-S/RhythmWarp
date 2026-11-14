@@ -88,3 +88,50 @@ erneut auf. Launch-Sound und Audio-Initialisierung bleiben auf den Erststart
 beschränkt. Kein Navigations- oder Datenreset; Reduced Motion bleibt wirksam.
 Cacheversion auf v12 erhöht. 339/339 Tests bestehen, einschließlich Replay,
 Timerersetzung, Cleanup und Reduced Motion. Firefox-Sichtprüfung weiterhin offen.
+
+## PR #2 — Browser-CI-Korrekturen
+
+Der vollständige Browserlauf ist inzwischen lokal möglich: Playwright und
+Chromium wurden aus bereits vorhandenem lokalem Cache wiederhergestellt,
+ohne neue Projektabhängigkeit. Der zuvor verwendete optionale CDP-Smoke-Test
+ist für diese Nachweise nicht erforderlich.
+
+- Farbtest: Neon-Rails und gedämpfte Abschlussnähte werden separat geprüft;
+  beide behalten feste Erwartungen je Theme. 8/8 Chromium-Fälle bestanden.
+- Tactical: Ab 850px Containerbreite sind drei Plots gleichzeitig sichtbar.
+  Der Test prüft dort die Plots, statt den absichtlich versteckten Umschalter
+  anzuklicken. Auf schmalen Ansichten bleibt der echte Klicktest erhalten.
+- Audio Matrix: Master- und Kanalfader verwenden jetzt dieselben
+  LED-Zwischenfarben, Klammerfüllungen und Konturen. Alle vier vorhandenen
+  Mobile-Signal-/Databank-Fälle bestehen. Cacheversion auf v13 erhöht.
+- Kontrast: Disclosure-Überschriften wie Diary Setup verwenden helle
+  Theme-Schrift auf der gedämpften Fläche. Der Browser-Kontrasttest hatte
+  hier eine echte zu dunkle Beschriftung gefunden; die 4,5:1-Grenze bleibt
+  unverändert. Die nachfolgenden RC16-/RC17-/Theme-Persistenzprüfungen
+  bestehen in einem gezielten Lauf der unveränderten Testblöcke.
+- Allgemeine Smoke-/Release-Tests: veraltete Produkttexte, schwarze Schrift
+  auf orangefarbenem Balken, Backup-Dateiname und Cachepräfix durch die
+  aktuellen RhythmWarp-Verträge ersetzt. Touchtests warten auf den tatsächlich
+  ausgelösten Kompatibilitätsklick, bevor sie dessen Akzentzustand lesen.
+
+339/339 Node-Tests bestanden. Zusätzlich bestehen Tactical, Acoustic Pilot,
+Settings, QR-Archiv sowie Chromium-Persistenz/Export/Restore, Offline-Neustart,
+Service-Worker-Austausch und Live-Audio-Bedienung. Lokaler Firefox startet,
+stürzt aber bereits beim Erstellen einer leeren Seite ab; dieser Lauf belegt
+keinen Anwendungsfehler und keine Firefox-Abnahme. GitHub-Linux-Prüfung und
+physische iOS-Gerätetests bleiben maßgebliche offene Nachweise.
+
+## Ergänzung — Startsound bei erneuter Theme-Bestätigung
+
+Auf Nutzerwunsch spielt jede ausdrückliche Startbutton-Bestätigung den
+Startsound, auch nach Rückkehr aus Settings. Der bisherige Erststart-Guard
+für Audio wurde an dieser Stelle entfernt. UI-Sounds bleiben abschaltbar;
+Audio-Unlock erfolgt im Benutzerklick, und ein lokaler Guard verhindert
+doppelte Wiedergabe durch den synchronen und asynchronen Ladepfad.
+Scheduler und Rhythmuszustand werden nicht gestartet oder zurückgesetzt.
+
+340 Node-Tests bestehen, einschließlich des realen Startbutton-Handlers mit
+aktivierten/deaktivierten UI-Sounds und mehrfacher Bestätigung. Der gesamte
+Chromium-Smoke-Test ist erfolgreich durchgelaufen. Der um Soundmessungen
+ergänzte Theme-Return-Block wurde zusätzlich bei 390px und 1440px ausgeführt:
+ein Cue pro Bestätigung, START bleibt inaktiv, Theme überlebt Reload.

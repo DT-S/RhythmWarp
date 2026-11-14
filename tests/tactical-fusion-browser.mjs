@@ -171,8 +171,21 @@ try{
    assert.equal(await page.locator('#tacticalDiagnostics [data-tac-count="grid"] strong').textContent(),'1');
    assert.ok(await page.locator('#tacticalPlot .mic-sensor-dot').count()>=1,'plot missing actual synthetic event');
    await page.screenshot({path:path.join(shots,'tactical-hit-'+width+'.png')});
-   await page.locator('#tacticalPlotButtons [data-tac-plot="distribution"]').click();
-   assert.equal(await page.locator('#tacticalPlotButtons [data-tac-plot="distribution"]').getAttribute('aria-pressed'),'true');
+   // Wide consoles show all three plots together, so the selector is hidden.
+   // Test the real responsive presentation instead of clicking a hidden control.
+   const plotPanelWidth=await page.locator('#tactical .tac-plot-panel').evaluate(el=>el.clientWidth);
+   const distribution=page.locator('#tacticalPlotButtons [data-tac-plot="distribution"]');
+   if(plotPanelWidth>=850){
+    assert.equal(await distribution.isVisible(),false,'wide console needs no plot selector');
+    assert.equal(await page.locator('#tacticalPlot').isVisible(),true);
+    const plots=page.locator('#tactical .tac-plot-shell > .tac-plot-cell');
+    assert.equal(await plots.count(),2,'rate and distribution complement timing');
+    for(const plot of await plots.all())assert.equal(await plot.isVisible(),true);
+   }else{
+    await distribution.click();
+    assert.equal(await distribution.getAttribute('aria-pressed'),'true');
+    assert.equal(await page.locator('#tactical .tac-plot-shell > .tac-plot-cell').last().isVisible(),true);
+   }
    await page.locator('#tacticalViewSwitch [data-tac-view="linear"]').click();
    assert.equal(await page.locator('#linear').isVisible(),true,'Linear must survive Tactical');
    await page.locator('#tacticalViewSwitch [data-tac-view="circular"]').click();
