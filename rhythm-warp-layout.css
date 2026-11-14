@@ -207,3 +207,11 @@ html[data-app-theme] .lcars-start-screen .lcars-side-block {
 @media(min-width:641px) {
  .app-shell > header .elbow { width:calc(var(--v2-sidebar) + var(--v2-gutter))!important; }
 }
+/* Phone portrait: keep the caption inside the narrow upper circular chord.
+   Move only the readout contents; ring, drag surface and +/- stay anchored. */
+@media(max-width:640px) and (orientation:portrait) {
+ #metronome:not(.tactical-active) #dial > #tempo:not(.ramp-tempo) > :is(#tempoLabel,#tempoValue,#bpm) {
+  position:relative;
+  top:8px;
+ }
+}
