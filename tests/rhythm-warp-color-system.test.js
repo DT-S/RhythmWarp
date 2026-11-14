@@ -1,22 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8')+(p==='rhythm-warp-colors.css'?readFileSync(new URL('../styles/tokens.css',import.meta.url),'utf8'):'');
 test('one semantic palette loaded LAST and cached offline',()=>{
  const html=read('index.html'),sw=read('sw.js'),css=read('rhythm-warp-colors.css');
  assert.ok(html.indexOf('rhythm-warp-colors.css')>html.indexOf('rhythm-warp.css'));
  assert.match(sw,/\.\/rhythm-warp-colors\.css/);
- assert.match(css,/--rw-bg-0:#08100d/);
- assert.match(css,/--rw-edge:#85f4a3/);
+ assert.match(css,/--rw-bg-0:#040a08/);
+ assert.match(css,/--rw-edge:#00ff88/);
  for(const token of ['--rw-active','--rw-info','--rw-neutral','--rw-custom','--rw-warning','--rw-danger'])
   assert.match(css,new RegExp(token+':#[0-9a-f]{6}'));
 });
-test('equal structural edges, no random frame glow, shape geometry unchanged',()=>{
+test('semantic frame colors stay separate from layout and effects',()=>{
  const css=read('rhythm-warp-colors.css');
  for(const selector of ['.app-shell > header .elbow','.app-shell > aside .rail','.app-shell::after','.lcars-start-screen .lcars-side-filler'])
   assert.ok(css.includes(selector),'missing frame edge '+selector);
  assert.match(css,/border-left-color:var\(--rw-edge\)!important/);
- assert.match(css,/box-shadow:none!important/);
+ assert.doesNotMatch(css,/box-shadow:none!important/);
  assert.doesNotMatch(css,/grid-template-columns|grid-template-rows|min-height:\d+px|width:\d+px|padding:\d+px/);
 });
 test('all three UI themes share semantics and matrix LEDs no longer use orange',()=>{
@@ -44,7 +44,7 @@ test('start frame edge continuity and violet control cleanup',()=>{
 
 test('custom sound upload uses Studio Green teal and no deliberate purple palette token',()=>{
  const css=read('rhythm-warp-colors.css');
- assert.match(css,/--rw-custom:#8cceb4/);
+ assert.match(css,/--rw-custom:#70ecc0/);
  assert.doesNotMatch(css,/--rw-custom:#c4a3d5/);
  assert.match(css,/#settings #soundDrop:focus-within/);
 });
@@ -52,8 +52,8 @@ test('custom sound upload uses Studio Green teal and no deliberate purple palett
 test('three complete semantic themes, distinct colors, unchanged compatibility IDs',()=>{
  const css=read('rhythm-warp-colors.css'), html=read('index.html');
  for(const [id,heading,edge,bg] of [
-  ['elite','VIOLET PULSE','#cd9bff','#120e1e'],
-  ['redalert','RED SHIFT','#ff8294','#1a0e12']]){
+  ['elite','VIOLET PULSE','#d946ef','#06040c'],
+  ['redalert','RED SHIFT','#ff1e42','#0d0406']]){
   assert.match(html,new RegExp('<span>'+heading+'</span>'));
   const marker='.lcars-start-screen[data-theme="'+id+'"]';
   assert.ok(css.includes(marker),'missing launch palette '+id);

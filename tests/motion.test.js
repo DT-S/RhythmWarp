@@ -72,6 +72,48 @@ test('Launch animation is one-shot, cancels on navigation and respects reduced m
  }
 });
 
+test('theme console return rebuilds the still-visible Settings page and respects reduced motion',()=>{
+ const classes=()=>{
+  const values=new Set();
+  return {add:c=>values.add(c),remove:c=>values.delete(c),contains:c=>values.has(c)};
+ };
+ const shell={classList:classes(),offsetWidth:1000};
+ const metronome={id:'metronome',hidden:false,classList:classes()};
+ const settings={id:'settings',hidden:true,classList:classes(),offsetWidth:800};
+ const root={querySelector:()=>shell,querySelectorAll:()=>[metronome,settings],
+  getElementById:id=>id==='metronome'?metronome:settings};
+ const originalMatch=globalThis.matchMedia;
+ const originalSet=globalThis.setTimeout,originalClear=globalThis.clearTimeout;
+ const tasks=new Map();let timer=0;
+ try{
+  globalThis.matchMedia=()=>({matches:false});
+  globalThis.setTimeout=(fn,ms)=>{const id=++timer;tasks.set(id,{fn,ms});return id;};
+  globalThis.clearTimeout=id=>tasks.delete(id);
+  const motion=createMotionController(root);
+  assert.equal(motion.boot(),true);
+  metronome.hidden=true;settings.hidden=false;
+  motion.page('settings');
+  assert.equal(motion.boot(),false,'incidental boot calls remain one-shot');
+  assert.equal(motion.boot({replay:true}),true,'explicit console return may rebuild Settings');
+  assert.ok(shell.classList.contains('lcars-booting'));
+  assert.ok(settings.classList.contains('lcars-page-enter'));
+  assert.equal(settings.hidden,false,'replay never navigates away');
+  assert.equal(tasks.size,2,'one content timer and one chassis timer');
+  assert.equal(motion.boot({replay:true}),true);
+  assert.equal(tasks.size,2,'repeated replay replaces previous cleanup timers');
+  for(const task of [...tasks.values()])task.fn();
+  assert.equal(tasks.size,0);
+  assert.equal(shell.classList.contains('lcars-booting'),false);
+  assert.equal(settings.classList.contains('lcars-page-enter'),false);
+  globalThis.matchMedia=()=>({matches:true});
+  assert.equal(motion.boot({replay:true}),false);
+  assert.equal(tasks.size,0);
+ }finally{
+  globalThis.setTimeout=originalSet;globalThis.clearTimeout=originalClear;
+  if(originalMatch===undefined)delete globalThis.matchMedia;else globalThis.matchMedia=originalMatch;
+ }
+});
+
 test('Launch choreography uses real circular geometry, has reduced-motion escape hatch and is not an idle loop',()=>{
  const css=readFileSync(new URL('../v2-motion.css',import.meta.url),'utf8');
  const app=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');

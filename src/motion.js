@@ -41,14 +41,26 @@ export function createMotionController(root=document){
   shell?.classList.remove('lcars-booting');
  }
  // Called after the initial stored state has been validated and rendered.
- // An ordinary page switch or rerender never replays the boot choreography.
- function boot(){
-  if(bootStarted)return false;
+ // Only an explicit return from the launch console may replay the build.
+ // Ordinary page switches and rerenders never replay the chassis.
+ function boot({replay=false}={}){
+  if(bootStarted&&!replay)return false;
   bootStarted=true;
+  finishBoot();
   const metronome=root.getElementById('metronome');
+  const visiblePage=pages.find(p=>!p.hidden);
   const reduce=prefersReducedMotion();
-  if(!shell||!shouldLaunchBoot({reducedMotion:reduce,metronomeVisible:!!metronome&&!metronome.hidden}))return false;
-  shell.classList.add('lcars-booting');
+  if(!shell||!shouldLaunchBoot({reducedMotion:reduce,
+   metronomeVisible:replay?!!visiblePage:!!metronome&&!metronome.hidden}))return false;
+  run(shell,'lcars-booting');
+  // Settings remains the active page behind the console. Rebuild its content
+  // as well as the chassis without navigating away or changing device state.
+  if(replay&&visiblePage.id!=='metronome'){
+   finishPage(visiblePage);
+   run(visiblePage,'lcars-page-enter');
+   pageTimers.set(visiblePage,setTimeout(()=>finishPage(visiblePage),
+    visiblePage.id==='audio'?LCARS_AUDIO_BUILD_DURATION_MS:LCARS_PAGE_BUILD_DURATION_MS));
+  }
   bootTimer=setTimeout(finishBoot,LCARS_BOOT_DURATION_MS);
   return true;
  }

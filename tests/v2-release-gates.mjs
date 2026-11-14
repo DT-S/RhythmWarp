@@ -15,7 +15,7 @@ const mime={'.js':'text/javascript','.css':'text/css','.html':'text/html',
  '.json':'application/json','.webmanifest':'application/manifest+json',
  '.svg':'image/svg+xml','.png':'image/png','.mp3':'audio/mpeg'};
 let serveOldWorker=false,fail=0;
-const oldWorker="const KEY='lcars-core-/-old-p7-release';self.addEventListener('install',e=>e.waitUntil(caches.open(KEY)));self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));";
+const oldWorker="const KEY='rhythm-warp-/-/-old-p7-release';self.addEventListener('install',e=>e.waitUntil(caches.open(KEY)));self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));";
 const server=createServer((req,res)=>{
  const pathname=new URL(req.url,'http://localhost').pathname;
  if(pathname==='/sw.js'&&serveOldWorker){
@@ -59,7 +59,7 @@ try{
    const cached=await page.evaluate(async()=>{
     const reg=await navigator.serviceWorker.ready;
     const keys=await caches.keys();
-    const cache=await caches.open(keys.find(k=>k.startsWith('lcars-core-')&&k.includes('v2-')&&k!=='lcars-core-/-old-p7-release'));
+    const cache=await caches.open(keys.find(k=>k.startsWith('rhythm-warp-')&&k.includes('rhythm-warp-palettes-v')&&k!=='rhythm-warp-/-/-old-p7-release'));
     return {scope:reg.scope,keys,html:Boolean(await cache.match('./index.html')),
       module: Boolean(await cache.match('./src/app.js')),
       styles: Boolean(await cache.match('./v2-motion.css')),
@@ -75,7 +75,7 @@ try{
    const downloadPromise=page.waitForEvent('download');
    await page.locator('#export').click();
    const download=await downloadPromise;
-   assert.match(download.suggestedFilename(),/^lcars-backup-\d{4}-\d\d-\d\d\.json$/);
+   assert.match(download.suggestedFilename(),/^rhythm-warp-backup-\d{4}-\d\d-\d\d\.json$/);
    const downloadPath=await download.path();
    const {readFile}=await import('node:fs/promises');
    const buffer=await readFile(downloadPath);
@@ -126,7 +126,7 @@ try{
    await page.goto(base,{waitUntil:'networkidle'});
    await initializeLCARS(page);
    await waitReady(page);
-   assert.ok(await page.evaluate(async()=> (await caches.keys()).includes('lcars-core-/-old-p7-release')));
+   assert.ok(await page.evaluate(async()=> (await caches.keys()).includes('rhythm-warp-/-/-old-p7-release')));
    // Updating a controlled offline PWA stages a waiting worker. The
    // original cache stays intact until SYSTEM ACCESS explicitly activates it.
    serveOldWorker=false;
@@ -137,7 +137,7 @@ try{
    await page.waitForFunction(async()=>{
     const reg=await navigator.serviceWorker.getRegistration();
     const keys=await caches.keys();
-    return !!reg?.waiting&&keys.some(k=>k.includes('v2-'))&&keys.includes('lcars-core-/-old-p7-release');
+    return !!reg?.waiting&&keys.some(k=>k.includes('rhythm-warp-palettes-v'))&&keys.includes('rhythm-warp-/-/-old-p7-release');
    },null,{timeout:20000});
    await page.locator('[data-tab="settings"]').click();
    const update=page.locator('#update');

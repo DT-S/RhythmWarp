@@ -668,15 +668,15 @@ initialize.onclick=()=>{
  firstEntry=false;
  // iOS/Firefox require unlocking audio inside the actual Initialize click.
  let opening=Promise.resolve();
- if(originalBoot&&state.uiEnabled){
+ if(state.uiEnabled){
   try{opening=Promise.resolve(unlock());}catch{opening=Promise.resolve();}
  }
  startup.hidden=true;
  shell.inert=false;
- const launched=motion.boot();
- // Re-entering from Settings is a palette operation, not a second
- // music transport startup or a duplicate full launch cue.
- if(!originalBoot||!state.uiEnabled)return;
+ const launched=motion.boot({replay:!originalBoot});
+ // Each explicit launch-console confirmation gets one startup cue.
+ // This never starts the metronome or changes the saved rhythm.
+ if(!state.uiEnabled)return;
  let played=false;
  const playCue=()=>{
   if(played||!state.uiEnabled||audio.ctx?.state!=='running'||

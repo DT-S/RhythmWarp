@@ -62,7 +62,7 @@ try{
    await launch.goto(origin,{waitUntil:'domcontentloaded'});
    await launch.waitForFunction(()=>document.querySelector('#lcarsStartup')?.dataset.ready==='true');
    assert.equal(await launch.locator('#lcarsInitialize').isVisible(),true);
-   assert.equal(await launch.locator('#lcarsStartupHeading').textContent(),'RHYTHM PADD');
+   assert.equal(await launch.locator('#lcarsStartupHeading').textContent(),'RHYTHM WARP');
    assert.equal(await launch.locator('.lcars-side-block').count(),4);
    assert.equal(await launch.locator('.lcars-emblem-wrap svg').count(),1);
    const branding=await launch.evaluate(()=>{
@@ -83,7 +83,7 @@ try{
      availableTextWidth:document.querySelector('.lcars-subbrand-label').clientWidth
     };
    });
-   assert.equal(branding.text,'LCARS METRONOME // RHYTHM SYSTEM');
+   assert.equal(branding.text,'RHYTHM TRAINING // OFFLINE ENGINE');
    assert.ok(branding.label.left>=branding.bar.left-1 &&
              branding.label.right<=branding.bar.right+1,
              'Subtitle must sit entirely within its colored bar');
@@ -92,7 +92,7 @@ try{
    assert.ok(branding.badge.top>=branding.bar.bottom+4,
              'DRUMTRACK STUDIOS must not overlap the subtitle bar');
    assert.ok(branding.bar.top>=branding.heading.bottom+4,
-             'Subtitle must be separated from RHYTHM PADD heading');
+             'Subtitle must be separated from RHYTHM WARP heading');
    const bounds=await launch.locator('#lcarsInitialize').boundingBox();
    assert.ok(bounds&&bounds.width>=100&&bounds.x>=0&&bounds.x+bounds.width<=width+1,
      'INITIALIZE LCARS must fit within the viewport');
@@ -146,7 +146,7 @@ try{
    assert.ok(dims.shell.top>=-2 && dims.shell.bottom<=height+2,`${label}: vertical shell clipping ${JSON.stringify(dims.shell)}`);
    assert.ok(dims.dial.width>120,`${label}: dial not visible`);
    assert.ok(dims.main.width>130,`${label}: content well too narrow`);
-   assert.notEqual(dims.mobileTitle,'none',`${label}: RHYTHM PADD heading invisible`);
+   assert.notEqual(dims.mobileTitle,'none',`${label}: RHYTHM WARP heading invisible`);
    if(width>640){
     assert.equal(dims.css,'auto',`${label}: main must scroll independently`);
     assert.ok(dims.aside.right<=dims.main.left,`${label}: fascia overlaps content`);
@@ -363,7 +363,7 @@ try{
   }finally{await p.close();}
  }
 
- // RC13 mobile: the permanent RHYTHM PADD heading is readable INSIDE the
+ // RC13 mobile: the permanent RHYTHM WARP heading is readable INSIDE the
  // amber/orange top rail, and Linear Start/Tap never require scrolling.
  // Test scale changes too: CSS zoom changes visual and logical geometry.
  for(const [width,height,name] of [
@@ -400,12 +400,12 @@ try{
       layout:document.querySelector('#linear').hidden?'circular':'linear'};
     });
     assert.equal(g.layout,'linear');
-    assert.match(g.titleText,/RHYTHM PADD/);
-    assert.equal(g.railColor,'rgb(0, 0, 0)',
-     `${name}/${scale}: upper bar title must be black on orange`);
+    assert.match(g.titleText,/RHYTHM WARP/);
+    assert.equal(g.railColor,'rgb(242, 240, 232)',
+     `${name}/${scale}: upper bar title must use readable light text on carbon`);
     assert.ok(g.header.height<=40*scale+2,`${name}/${scale}: black header row was not reclaimed ${JSON.stringify(g)}`);
     assert.ok(g.title.top>=g.header.top-2&&g.title.bottom<=g.header.top+26*scale+2,
-     `${name}/${scale}: RHYTHM PADD is not inside the top rail ${JSON.stringify(g)}`);
+     `${name}/${scale}: RHYTHM WARP is not inside the top rail ${JSON.stringify(g)}`);
     assert.ok(g.title.right<=g.header.right+1,`${name}/${scale}: title clipped horizontally ${JSON.stringify(g)}`);
     const anchored=(g.title.left-g.anchor.left)/g.anchor.width;
     assert.ok(Math.abs(anchored-.13)<.025,
@@ -465,7 +465,7 @@ try{
     const fraction=(g.title.left-g.heading.left)/g.heading.width;
     assert.ok(Math.abs(fraction-.13)<.025,
       `${label}/${scale}: title is not bus-anchored: ${JSON.stringify(g)}`);
-    assert.equal(g.color,'rgb(0, 0, 0)');
+    assert.equal(g.color,'rgb(242, 240, 232)');
     assert.ok(g.title.top>=g.heading.top-2&&g.title.bottom<=g.heading.bottom+2,
       `${label}/${scale}: wordmark escaped colored bus vertically: ${JSON.stringify(g)}`);
     assert.ok(g.title.right<=g.heading.left+.79*g.heading.width+2,
@@ -767,6 +767,10 @@ try{
     await touch(cancel?'touchCancel':'touchEnd',[]);
    }
    await swipe(outer,1,0); // tap, accents only
+   // CDP acknowledges touchEnd before Chromium dispatches its compatibility
+   // click. Wait for that real input result rather than sampling too early.
+   await page.waitForFunction(()=>document.querySelector(
+    '#linear .pattern-row[data-channel="0"] button.step[data-index="1"]')?.classList.contains('state3'));
    assert.equal(await outer.locator('button.step[data-index="1"]').getAttribute('class'),'step state3');
    assert.equal(await outer.locator('.step').count(),4,'tap changed outer beat count');
    await swipe(outer,0,-49); // threshold + 39px -> 3 new beats
@@ -1668,8 +1672,8 @@ try{
     const color=getComputedStyle(item).color,bg=getComputedStyle(item).backgroundColor;
     row.remove();return {color,bg};
    });
-   assert.equal(contrast.color,'rgb(0, 0, 0)','stats session selection text is not black');
-   assert.equal(contrast.bg,'rgb(153, 201, 239)','stats session selection must be readable on ice blue');
+   assert.equal(contrast.color,'rgb(242, 240, 232)','stats session selection uses theme text');
+   assert.equal(contrast.bg,'rgb(54, 92, 73)','stats session selection uses inactive theme surface');
    assert.deepEqual(errors,[]);
    await page.screenshot({path:path.join(screenshots,'rc-mobile-type-scale.png')});
    console.log('PASS RC uniform System/Diary typography and high-contrast Stats');
@@ -1684,12 +1688,22 @@ try{
   const themePage=await browser.newPage({viewport:size});
   try{
    await themePage.goto(origin,{waitUntil:'domcontentloaded'});
+   await themePage.evaluate(async()=>{
+    const {AudioEngine}=await import('/src/audio.js');
+    const play=AudioEngine.prototype.ui;
+    window.__warpLaunchCues=0;
+    AudioEngine.prototype.ui=function(name,...args){
+     if(name==='lcars-launch')window.__warpLaunchCues++;
+     return play.call(this,name,...args);
+    };
+   });
    await initializeLCARS(themePage);
+   await themePage.waitForFunction(()=>window.__warpLaunchCues===1);
    await themePage.locator('[data-tab="settings"]').click();
    assert.equal(await themePage.locator('#appTheme').count(),0);
    await themePage.locator('#openLaunchConsole').click();
    await themePage.locator('#lcarsStartup').waitFor({state:'visible'});
-   for(const [theme,color] of [['elite','rgb(161, 139, 232)'],['redalert','rgb(238, 74, 75)']]){
+   for(const [theme,color] of [['elite','rgb(240, 139, 250)'],['redalert','rgb(255, 140, 158)']]){
     await themePage.locator('[data-set-theme="'+theme+'"]').click();
     assert.equal(await themePage.locator('#lcarsStartup').getAttribute('data-theme'),theme);
     const applied=await themePage.evaluate(()=>({
@@ -1702,6 +1716,9 @@ try{
    }
    await themePage.locator('#lcarsInitialize').click();
    assert.equal(await themePage.locator('#lcarsStartup').isVisible(),false);
+   await themePage.waitForFunction(()=>window.__warpLaunchCues===2);
+   assert.equal(await themePage.locator('#start').textContent(),'START',
+     'theme-return sound must not start the metronome');
    await themePage.waitForFunction(async()=>{
     const {read}=await import('/src/storage.js');
     return (await read())?.theme==='redalert';
