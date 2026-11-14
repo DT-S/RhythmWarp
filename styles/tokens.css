@@ -1,0 +1,137 @@
+/* WARP-HUD / CENTRAL SEMANTIC TOKENS
+   Carbon surfaces and neon accents for Drum Track Studio.
+   A strictly VISUAL layer: DO NOT change width/height/gap/layout/animations,
+   audio scheduling, timing, event handling or the original UI component classes.
+   To tune colors manually, edit the semantic tokens below, not 20 legacy CSS files.
+   The old theme IDs (voyager, elite, redalert) are internal compatibility keys. */
+
+/* 01. PALETTE & SEMANTICS */
+:root,html[data-app-theme],.lcars-start-screen {
+ --rw-bg-0:#040a08;
+ --rw-bg-1:#040a08;
+ --rw-bg-2:#0a1712;
+ --rw-bg-3:#10261d;
+ --rw-rail:#0d2119;
+ --rw-outline:#285a43;
+ --rw-edge:#00ff88;
+ --rw-outline-soft:rgba(0,255,136,.14);
+ --rw-text:#f2f0e8;
+ --rw-dim:#aec3b6;
+ --rw-muted:#7f998b;
+ --rw-ink:#040a08;
+ --rw-active:#00ff88;
+ --rw-info:#00e5ff;
+ --rw-neutral:#e8ddbe;
+ --rw-custom:#70ecc0;
+ --rw-warning:#ffbd45;
+ --rw-danger:#ff647c;
+ --rw-inactive:#365c49;
+ --rw-inactive-text:#f2f0e8;
+ --rw-selected-bg:#123e2b;
+ --rw-ring-track:#84ab93;
+ --rw-ring-tertiary:#91b39d;
+ --rw-ring-muted:#789f93;
+ --rw-ring-dark:#15241c;
+ --rw-slide-pill:#294033;
+ --rw-slide-peak:#82b992;
+ --rw-slide-mid:#88bb96;
+ --rw-slide-low:#45654f;
+ --rw-slide-info-mid:#6da8a5;
+ --rw-slide-warn-mid:#ad956f;
+ --rw-slide-warn-low:#5f624c;
+ --rw-matrix-highlight:#d0e9ad;
+ --rw-matrix-led-mid:#7cbb94;
+ --rw-matrix-info-mid:#629d9e;
+ --rw-matrix-warn-mid:#af8f68;
+ --rw-matrix-warn-low:#695b45;
+ --rw-glow:rgba(0,255,136,.12);
+ --rw-sweep:rgba(0,255,136,.08);
+ /* Compatibility: old engine/components still read these variables. */
+ --bg:var(--rw-bg-1)!important;
+ --panel:var(--rw-bg-2)!important;
+ --text:var(--rw-text)!important;
+ --muted:var(--rw-dim)!important;
+ --line:var(--rw-outline)!important;
+ --ice:var(--rw-info)!important;
+ --cream:var(--rw-neutral)!important;
+ --orange:var(--rw-active)!important;
+ --pink:var(--rw-info)!important;
+ --purple:var(--rw-inactive)!important;
+ --salmon:var(--rw-warning)!important;
+ --padd-bg:var(--rw-bg-1)!important;
+ --padd-orange:var(--rw-active)!important;
+ --padd-amber:var(--rw-active)!important;
+ --padd-peach:var(--rw-ring-tertiary)!important;
+ --padd-lavender:var(--rw-ring-tertiary)!important;
+ --padd-blue:var(--rw-info)!important;
+ --padd-tan:var(--rw-ring-track)!important;
+ --padd-red:var(--rw-danger)!important;
+ --padd-ice:var(--rw-info)!important;
+ --padd-cream:var(--rw-neutral)!important;
+ --lcars-mobile-orange:var(--rw-active)!important;
+ --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
+ --lcars-mobile-blue:var(--rw-info)!important;
+ --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
+ --rw-neon:var(--rw-edge)!important;
+ --rw-panel:var(--rw-bg-2)!important;
+ --theme-signal:var(--rw-edge)!important;
+}
+/* Historical IDs stay stable for saved settings; each ID now has a complete palette. */
+/* VIOLET PULSE – deep ink-violet, lilac rim, luminous soft violet controls. */
+html[data-app-theme="elite"],.lcars-start-screen[data-theme="elite"] {
+ --rw-bg-0:#06040c;--rw-bg-1:#06040c;
+ --rw-bg-2:#140d20;--rw-bg-3:#21132f;
+ --rw-rail:#21132f;--rw-outline:#653373;
+ --rw-edge:#d946ef;--rw-outline-soft:rgba(217,70,239,.16);
+ --rw-text:#f6efff;--rw-dim:#d0c1e0;--rw-muted:#ab99be;
+ --rw-ink:#100a18;--rw-active:#f08bfa;
+ --rw-info:#a6a8ff;--rw-neutral:#e6d5ec;
+ --rw-custom:#c8a2f0;--rw-warning:#facc15;--rw-danger:#e8959d;
+ --rw-inactive:#66537f;--rw-inactive-text:#f6efff;
+ --rw-selected-bg:#382047;
+ --rw-ring-track:#a186c3;--rw-ring-tertiary:#967abb;
+ --rw-ring-muted:#9876b4;--rw-ring-dark:#251b34;
+ --rw-slide-pill:#362848;--rw-slide-peak:#b38bdc;
+ --rw-slide-mid:#a185c6;--rw-slide-low:#654c83;
+ --rw-slide-info-mid:#7592c9;
+ --rw-slide-warn-mid:#b18b60;--rw-slide-warn-low:#6d5448;
+ --rw-matrix-highlight:#f0d7ff;
+ --rw-matrix-led-mid:#ac82d1;--rw-matrix-info-mid:#779bcd;
+ --rw-matrix-warn-mid:#b18b60;--rw-matrix-warn-low:#6d5448;
+ --rw-glow:rgba(217,70,239,.14);--rw-sweep:rgba(217,70,239,.09);
+ --rw-neon:var(--rw-edge)!important;
+ --padd-peach:var(--rw-ring-tertiary)!important;
+ --padd-lavender:var(--rw-ring-tertiary)!important;
+ --padd-tan:var(--rw-ring-track)!important;
+ --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
+ --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
+}
+/* RED SHIFT – burgundy chassis, ruby neon, warm pale-red actionable surfaces. */
+html[data-app-theme="redalert"],.lcars-start-screen[data-theme="redalert"] {
+ --rw-bg-0:#0d0406;--rw-bg-1:#0d0406;
+ --rw-bg-2:#1f0c11;--rw-bg-3:#30131c;
+ --rw-rail:#30131c;--rw-outline:#7e3044;
+ --rw-edge:#ff1e42;--rw-outline-soft:rgba(255,30,66,.16);
+ --rw-text:#fff1f0;--rw-dim:#e5c0c4;--rw-muted:#bd9ba1;
+ --rw-ink:#16070b;--rw-active:#ff8c9e;
+ --rw-info:#ffad66;--rw-neutral:#f4ddcc;
+ --rw-custom:#eaa3af;--rw-warning:#ffd166;--rw-danger:#ff687c;
+ --rw-inactive:#87525c;--rw-inactive-text:#fff1f0;
+ --rw-selected-bg:#481a29;
+ --rw-ring-track:#cc7f89;--rw-ring-tertiary:#c36d79;
+ --rw-ring-muted:#ad646d;--rw-ring-dark:#2f171e;
+ --rw-slide-pill:#462730;--rw-slide-peak:#d98792;
+ --rw-slide-mid:#bd717e;--rw-slide-low:#74404b;
+ --rw-slide-info-mid:#dca17d;
+ --rw-slide-warn-mid:#c59b61;--rw-slide-warn-low:#725342;
+ --rw-matrix-highlight:#ffe0d9;
+ --rw-matrix-led-mid:#d98792;--rw-matrix-info-mid:#dca17d;
+ --rw-matrix-warn-mid:#c59b61;--rw-matrix-warn-low:#725342;
+ --rw-glow:rgba(255,30,66,.14);--rw-sweep:rgba(255,30,66,.09);
+ --rw-neon:var(--rw-edge)!important;
+ --padd-peach:var(--rw-ring-tertiary)!important;
+ --padd-lavender:var(--rw-ring-tertiary)!important;
+ --padd-tan:var(--rw-ring-track)!important;
+ --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
+ --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
+}

@@ -1,168 +1,34 @@
-/* RHYTHM WARP / THREE-PALETTE COLOR SYSTEM v2
-   Source of base colors: Drum Track Studio.
-   A strictly VISUAL layer: DO NOT change width/height/gap/layout/animations,
-   audio scheduling, timing, event handling or the original UI component classes.
-   To tune colors manually, edit the semantic tokens below, not 20 legacy CSS files.
-   The old theme IDs (voyager, elite, redalert) are internal compatibility keys. */
+@import url("./styles/tokens.css");
+@import url("./styles/effects.css");
 
-/* 01. PALETTE & SEMANTICS */
-:root,html[data-app-theme],.lcars-start-screen {
- --rw-bg-0:#08100d;
- --rw-bg-1:#0e1714;
- --rw-bg-2:#14231c;
- --rw-bg-3:#1b2d24;
- --rw-rail:#203328;
- --rw-outline:#355442;
- --rw-edge:#85f4a3;
- --rw-outline-soft:rgba(133,244,163,.14);
- --rw-text:#f2f0e8;
- --rw-dim:#aec3b6;
- --rw-muted:#7f998b;
- --rw-ink:#08100d;
- --rw-active:#b3df94;
- --rw-info:#92cbd2;
- --rw-neutral:#e8ddbe;
- --rw-custom:#8cceb4;
- --rw-warning:#d8b37e;
- --rw-danger:#c98d8d;
- --rw-inactive:#4d6b55;
- --rw-inactive-text:#f2f0e8;
- --rw-selected-bg:#284535;
- --rw-ring-track:#84ab93;
- --rw-ring-tertiary:#91b39d;
- --rw-ring-muted:#789f93;
- --rw-ring-dark:#15241c;
- --rw-slide-pill:#294033;
- --rw-slide-peak:#82b992;
- --rw-slide-mid:#88bb96;
- --rw-slide-low:#45654f;
- --rw-slide-info-mid:#6da8a5;
- --rw-slide-warn-mid:#ad956f;
- --rw-slide-warn-low:#5f624c;
- --rw-matrix-highlight:#d0e9ad;
- --rw-matrix-led-mid:#7cbb94;
- --rw-matrix-info-mid:#629d9e;
- --rw-matrix-warn-mid:#af8f68;
- --rw-matrix-warn-low:#695b45;
- --rw-glow:rgba(133,244,163,.12);
- --rw-sweep:rgba(133,244,163,.08);
- /* Compatibility: old engine/components still read these variables. */
- --bg:var(--rw-bg-1)!important;
- --panel:var(--rw-bg-2)!important;
- --text:var(--rw-text)!important;
- --muted:var(--rw-dim)!important;
- --line:var(--rw-outline)!important;
- --ice:var(--rw-info)!important;
- --cream:var(--rw-neutral)!important;
- --orange:var(--rw-active)!important;
- --pink:var(--rw-info)!important;
- --purple:var(--rw-inactive)!important;
- --salmon:var(--rw-warning)!important;
- --padd-bg:var(--rw-bg-1)!important;
- --padd-orange:var(--rw-active)!important;
- --padd-amber:var(--rw-active)!important;
- --padd-peach:var(--rw-ring-tertiary)!important;
- --padd-lavender:var(--rw-ring-tertiary)!important;
- --padd-blue:var(--rw-info)!important;
- --padd-tan:var(--rw-ring-track)!important;
- --padd-red:var(--rw-danger)!important;
- --padd-ice:var(--rw-info)!important;
- --padd-cream:var(--rw-neutral)!important;
- --lcars-mobile-orange:var(--rw-active)!important;
- --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
- --lcars-mobile-blue:var(--rw-info)!important;
- --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
- --rw-neon:var(--rw-edge)!important;
- --rw-panel:var(--rw-bg-2)!important;
- --theme-signal:var(--rw-edge)!important;
-}
-/* Historical IDs stay stable for saved settings; each ID now has a complete palette. */
-/* VIOLET PULSE – deep ink-violet, lilac rim, luminous soft violet controls. */
-html[data-app-theme="elite"],.lcars-start-screen[data-theme="elite"] {
- --rw-bg-0:#0b0815;--rw-bg-1:#120e1e;
- --rw-bg-2:#211931;--rw-bg-3:#2b213f;
- --rw-rail:#342647;--rw-outline:#624c7f;
- --rw-edge:#cd9bff;--rw-outline-soft:rgba(205,155,255,.16);
- --rw-text:#f6efff;--rw-dim:#d0c1e0;--rw-muted:#ab99be;
- --rw-ink:#100a18;--rw-active:#ddbaff;
- --rw-info:#9bbef8;--rw-neutral:#e6d5ec;
- --rw-custom:#c8a2f0;--rw-warning:#e9bd84;--rw-danger:#e8959d;
- --rw-inactive:#66537f;--rw-inactive-text:#f6efff;
- --rw-selected-bg:#49345f;
- --rw-ring-track:#a186c3;--rw-ring-tertiary:#967abb;
- --rw-ring-muted:#9876b4;--rw-ring-dark:#251b34;
- --rw-slide-pill:#362848;--rw-slide-peak:#b38bdc;
- --rw-slide-mid:#a185c6;--rw-slide-low:#654c83;
- --rw-slide-info-mid:#7592c9;
- --rw-slide-warn-mid:#b18b60;--rw-slide-warn-low:#6d5448;
- --rw-matrix-highlight:#f0d7ff;
- --rw-matrix-led-mid:#ac82d1;--rw-matrix-info-mid:#779bcd;
- --rw-matrix-warn-mid:#b18b60;--rw-matrix-warn-low:#6d5448;
- --rw-glow:rgba(205,155,255,.14);--rw-sweep:rgba(205,155,255,.09);
- --rw-neon:var(--rw-edge)!important;
- --padd-peach:var(--rw-ring-tertiary)!important;
- --padd-lavender:var(--rw-ring-tertiary)!important;
- --padd-tan:var(--rw-ring-track)!important;
- --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
- --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
-}
-/* RED SHIFT – burgundy chassis, ruby neon, warm pale-red actionable surfaces. */
-html[data-app-theme="redalert"],.lcars-start-screen[data-theme="redalert"] {
- --rw-bg-0:#12080b;--rw-bg-1:#1a0e12;
- --rw-bg-2:#2a171e;--rw-bg-3:#362028;
- --rw-rail:#452732;--rw-outline:#784350;
- --rw-edge:#ff8294;--rw-outline-soft:rgba(255,130,148,.16);
- --rw-text:#fff1f0;--rw-dim:#e5c0c4;--rw-muted:#bd9ba1;
- --rw-ink:#16070b;--rw-active:#ffb8b1;
- --rw-info:#ffc59e;--rw-neutral:#f4ddcc;
- --rw-custom:#eaa3af;--rw-warning:#ffd080;--rw-danger:#ff687c;
- --rw-inactive:#87525c;--rw-inactive-text:#fff1f0;
- --rw-selected-bg:#63313f;
- --rw-ring-track:#cc7f89;--rw-ring-tertiary:#c36d79;
- --rw-ring-muted:#ad646d;--rw-ring-dark:#2f171e;
- --rw-slide-pill:#462730;--rw-slide-peak:#d98792;
- --rw-slide-mid:#bd717e;--rw-slide-low:#74404b;
- --rw-slide-info-mid:#dca17d;
- --rw-slide-warn-mid:#c59b61;--rw-slide-warn-low:#725342;
- --rw-matrix-highlight:#ffe0d9;
- --rw-matrix-led-mid:#d98792;--rw-matrix-info-mid:#dca17d;
- --rw-matrix-warn-mid:#c59b61;--rw-matrix-warn-low:#725342;
- --rw-glow:rgba(255,130,148,.14);--rw-sweep:rgba(255,130,148,.09);
- --rw-neon:var(--rw-edge)!important;
- --padd-peach:var(--rw-ring-tertiary)!important;
- --padd-lavender:var(--rw-ring-tertiary)!important;
- --padd-tan:var(--rw-ring-track)!important;
- --lcars-mobile-peach:var(--rw-ring-tertiary)!important;
- --lcars-mobile-lilac:var(--rw-ring-tertiary)!important;
-}
-
+/* Component color bindings. Palette values belong exclusively to styles/tokens.css. */
 /* 02. FRAME: a single uninterrupted visual language on top/left/bottom. */
 html,body,.app-shell {background:var(--rw-bg-1)!important;color:var(--rw-text);}
 .lcars-start-screen {
  background:var(--rw-bg-1)!important;color:var(--rw-text)!important;
 }
-/* No random bloom: same green edge and same flat dark finish everywhere. */
+/* Frame surfaces inherit the selected theme. Effects live in styles/effects.css. */
 .app-shell > header .elbow,
 .lcars-start-screen .lcars-elbow-top,
 .lcars-start-screen .lcars-elbow-bottom {
  background:var(--rw-rail)!important;
  border-color:var(--rw-edge)!important;
- box-shadow:none!important;filter:none!important;
+
 }
 .app-shell > header .elbow::after,
 .lcars-start-screen .lcars-elbow-top::after,
 .lcars-start-screen .lcars-elbow-bottom::after {
  background:var(--rw-bg-1)!important;
  border-color:var(--rw-edge)!important;
- box-shadow:none!important;
+
 }
 .app-shell > header::after {
  background:linear-gradient(to bottom,var(--rw-edge) 0 3px,var(--rw-rail) 3px 100%)!important;
- box-shadow:none!important;filter:none!important;
+
 }
 .app-shell::after {
  background:linear-gradient(to bottom,var(--rw-rail) 0 calc(100% - 3px),var(--rw-edge) calc(100% - 3px))!important;
- box-shadow:none!important;filter:none!important;
+
 }
 .app-shell > aside .rail,
 .app-shell > aside .rail-end {
@@ -170,7 +36,7 @@ html,body,.app-shell {background:var(--rw-bg-1)!important;color:var(--rw-text);}
  border-color:var(--rw-outline)!important;
  border-left-color:var(--rw-edge)!important;
  color:var(--rw-dim)!important;
- box-shadow:none!important;filter:none!important;
+
 }
 .app-shell > aside .rail::after,
 .app-shell > aside .rail-end::before {content:none!important;}
@@ -186,7 +52,7 @@ html[data-app-theme] .app-shell > aside nav .nav {
  background:var(--rw-bg-3)!important;
  color:var(--rw-text)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;filter:none!important;
+
 }
 .app-shell > aside nav .nav.active,
 html[data-app-theme] .app-shell > aside nav .nav.active {
@@ -210,7 +76,7 @@ html[data-app-theme] .app-shell > aside nav .nav.active {
  background:var(--rw-rail)!important;
  color:var(--rw-text)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;filter:none!important;
+
 }
 .lcars-start-screen .lcars-side-filler {
  border-left-color:var(--rw-edge)!important;
@@ -226,7 +92,7 @@ html[data-app-theme] .app-shell > aside nav .nav.active {
  background:var(--rw-bg-1)!important;
  border-color:var(--rw-outline)!important;
  color:var(--rw-dim)!important;
- box-shadow:none!important;
+
 }
 .lcars-start-screen .lcars-studio-badge {
  background:var(--rw-bg-2)!important;
@@ -237,10 +103,10 @@ html[data-app-theme] .app-shell > aside nav .nav.active {
  background:var(--rw-active)!important;
  color:var(--rw-ink)!important;
  border-color:var(--rw-edge)!important;
- box-shadow:none!important;filter:none!important;
+
 }
 .lcars-start-screen .lcars-emblem-wrap {
- filter:none!important;
+
 }
 /* A scanline is allowed, but not a different localized glow on each rail. */
 .lcars-start-screen::after {
@@ -252,7 +118,7 @@ html[data-app-theme] .app-shell > aside nav .nav.active {
 html[data-app-theme] .app-shell .panel {
  background:var(--rw-bg-2)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;filter:none!important;
+
 }
 .app-shell .panel:focus-within {
  border-color:var(--rw-edge)!important;
@@ -271,12 +137,12 @@ html[data-app-theme] .app-shell .panel {
 #diary #diarySetup > summary {
  background:var(--rw-inactive)!important;
  color:var(--rw-ink)!important;
- box-shadow:none!important;
+
 }
 .app-shell .section-heading,
 .app-shell .transport {
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;
+
 }
 .app-shell > main .section-heading h2 {
  color:var(--rw-text)!important;
@@ -290,14 +156,14 @@ html[data-app-theme] .app-shell .panel {
 #settings #export {
  background:var(--rw-active)!important;
  color:var(--rw-ink)!important;
- box-shadow:none!important;
+
 }
 .app-shell button.outline,
 #metronome .transport #tap {
  background:var(--rw-bg-3)!important;
  border-color:var(--rw-outline)!important;
  color:var(--rw-text)!important;
- box-shadow:none!important;
+
 }
 #modeButtons button,
 #metronome #tacticalViewSwitch button,
@@ -308,7 +174,7 @@ html[data-app-theme] .app-shell .panel {
 #analyticsContent .chart-modes button {
  background:var(--rw-inactive)!important;
  color:var(--rw-text)!important;
- box-shadow:none!important;
+
 }
 #modeButtons button[aria-pressed="true"],
 #metronome #tacticalViewSwitch button[aria-pressed="true"],
@@ -320,7 +186,7 @@ html[data-app-theme] .app-shell .panel {
 #analyticsContent .session-choices button[aria-pressed="true"] {
  background:var(--rw-active)!important;
  color:var(--rw-ink)!important;
- box-shadow:none!important;
+
 }
 /* Timers and actual instrument data are accents, not panel chrome. */
 #tempoValue,#liveTempo,#tacticalBpm,#tacticalQuarter,#tacticalSub {
@@ -375,7 +241,7 @@ html[data-app-theme] .app-shell .panel {
  background:var(--rw-bg-3)!important;
  color:var(--rw-text)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;
+
 }
 #analyticsContent .stat-tile :is(span,strong) {
  color:var(--rw-text)!important;
@@ -385,7 +251,7 @@ html[data-app-theme] .app-shell .panel {
 }
 #analyticsContent .session-choices button:not([aria-pressed="true"]) {
  background:var(--rw-inactive)!important;color:var(--rw-text)!important;
- box-shadow:none!important;
+
 }
 #analyticsContent .panel .field-name {
  background:var(--rw-bg-3)!important;color:var(--rw-text)!important;
@@ -395,7 +261,7 @@ html[data-app-theme] .app-shell .panel {
  background:var(--rw-info)!important;color:var(--rw-ink)!important;
 }
 #analyticsContent .practice-calendar .calendar-day {
- box-shadow:none!important;
+
 }
 #analyticsContent .practice-calendar .calendar-day[aria-pressed="true"] {
  background:var(--rw-active)!important;color:var(--rw-ink)!important;
@@ -421,7 +287,7 @@ html[data-app-theme] .app-shell .panel {
 #settings #soundDrop {
  background:var(--rw-custom)!important;color:var(--rw-ink)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;
+
 }
 #settings #soundDrop::after {
  background:var(--rw-bg-1)!important;color:var(--rw-custom)!important;
@@ -480,7 +346,7 @@ html[data-app-theme] .app-shell .panel {
 #mixer .matrix-housing.matrix-active,
 #mixer .matrix-housing:focus-within {
  border-color:var(--rw-edge)!important;
- box-shadow:none!important;
+
 }
 /* Actual audio-level LEDs may glow faintly, but not the structural panels. */
 
@@ -496,7 +362,7 @@ html[data-app-theme] .app-shell .panel {
  .app-shell .panel,
  .lcars-start-screen .lcars-elbow-top,
  .lcars-start-screen .lcars-elbow-bottom {
-  box-shadow:none!important;
+
  }
 }
 
@@ -520,18 +386,18 @@ html[data-app-theme] .app-shell .panel {
  border-right-color:var(--rw-outline)!important;
 }
 .lcars-slide-code {color:var(--rw-ink)!important;}
-.lcars-slide-beacon {background:var(--rw-edge)!important;box-shadow:none!important;}
+.lcars-slide-beacon {background:var(--rw-edge)!important;}
 .lcars-slide-track {background:var(--rw-bg-1)!important;}
 .lcars-tick {background:var(--rw-outline)!important;}
 .lcars-tick.lit {background:var(--rw-active)!important;}
-.lcars-tick.at-cursor {background:var(--rw-info)!important;box-shadow:none!important;}
+.lcars-tick.at-cursor {background:var(--rw-info)!important;}
 .lcars-preset:nth-child(3) {color:var(--rw-info)!important;}
 .lcars-preset:nth-child(4) {color:var(--rw-neutral)!important;}
-.lcars-preset.selected {filter:none!important;text-shadow:none!important;}
+.lcars-preset.selected {text-shadow:none!important;}
 .lcars-pill-housing {
  background:var(--rw-bg-2)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;
+
 }
 .lcars-pill {background:var(--rw-slide-pill)!important;}
 .lcars-pill.lit.led-gold {
@@ -543,14 +409,14 @@ html[data-app-theme] .app-shell .panel {
 .lcars-pill.lit.led-salmon {
  background:linear-gradient(var(--rw-warning),var(--rw-slide-warn-mid),var(--rw-slide-warn-low))!important;
 }
-.lcars-pill.lit,.lcars-pill.near-cursor {box-shadow:none!important;}
+.lcars-pill.lit,.lcars-pill.near-cursor {}
 .lcars-pill-housing::after {
  background:linear-gradient(90deg,transparent,var(--rw-sweep),transparent)!important;
 }
-.lcars-bracket {filter:none!important;}
+.lcars-bracket {}
 .lcars-bracket-box {
  background:var(--rw-bg-2)!important;
- box-shadow:none!important;
+
 }
 .lcars-bracket-lip {
  border-color:var(--rw-edge)!important;
@@ -558,9 +424,9 @@ html[data-app-theme] .app-shell .panel {
 .lcars-bracket-core {
  background:linear-gradient(var(--rw-active),var(--rw-slide-mid),var(--rw-inactive))!important;
  color:var(--rw-ink)!important;
- box-shadow:none!important;
+
 }
-.lcars-touch-active .lcars-bracket-core {box-shadow:none!important;}
+.lcars-touch-active .lcars-bracket-core {}
 .lcars-touch-active .lcars-bracket-lip {border-color:var(--rw-edge)!important;}
 .lcars-bracket-micro {
  background:var(--rw-bg-1)!important;color:var(--rw-active)!important;
@@ -575,7 +441,7 @@ html[data-app-theme] .app-shell .panel {
 .lcars-cap-readout {
  background:var(--rw-bg-1)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;
+
 }
 .lcars-cap-value {color:var(--rw-active)!important;text-shadow:none!important;}
 .lcars-slide-telemetry {
@@ -590,7 +456,7 @@ html[data-app-theme] .app-shell .panel {
  outline:2px solid var(--rw-custom)!important;
  outline-offset:0!important;
  border-color:var(--rw-custom)!important;
- box-shadow:none!important;
+
 }
 #settings #soundDrop:focus-within {
  outline-color:var(--rw-edge)!important;
@@ -647,7 +513,7 @@ html[data-app-theme] .app-shell .panel {
 .lcars-start-screen .lcars-rail-segments,
 .lcars-start-screen .lcars-bottom-segments,
 .lcars-start-screen .lcars-side-filler{
- box-shadow:none!important;filter:none!important;
+
 }
 /* 14. Historic fixed violet removed from diary controls, checkbox OFF
    and rhythm rings; the Settings page has no purple accents. */
@@ -660,11 +526,11 @@ html[data-app-theme] .app-shell .panel {
 }
 #diary .diary-minimum-choices button{
  background:var(--rw-inactive)!important;color:var(--rw-text)!important;
- box-shadow:none!important;
+
 }
 #diary .diary-minimum-choices button[aria-pressed="true"]{
  background:var(--rw-neutral)!important;color:var(--rw-ink)!important;
- box-shadow:none!important;
+
 }
 #diary .diary-minimum-note{color:var(--rw-dim)!important;}
 #diary .diary-maintenance{
@@ -780,7 +646,7 @@ html[data-app-theme] .lcars-start-screen .lcars-activate-wrap .lcars-start-activ
  background:var(--rw-active)!important;
  color:var(--rw-ink)!important;
  border-color:var(--rw-edge)!important;
- box-shadow:none!important;
+
 }
 html[data-app-theme] .lcars-start-screen .lcars-start-console {
  border-left-color:var(--rw-outline-soft)!important;
@@ -816,7 +682,7 @@ html[data-app-theme] .lcars-start-screen .lcars-start-console {
  background:var(--rw-bg-3)!important;
  border-color:var(--rw-outline)!important;
  color:var(--rw-dim)!important;
- box-shadow:none!important;
+
 }
 #presets .preset-form .system-field {
  background:var(--rw-bg-3)!important;
@@ -848,14 +714,14 @@ html[data-app-theme] .lcars-start-screen .lcars-start-console {
 #analyticsContent .xy-plot-stage,#diary .xy-plot-stage {
  background:radial-gradient(circle at 50% 40%,var(--rw-sweep),transparent 72%),var(--rw-plot-bg)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;
+
 }
 .xy-plot .chart-grid,
 .xy-plot .chart-grid-line {stroke:var(--rw-grid)!important;}
 .xy-plot .axis-label {fill:var(--rw-dim)!important;}
 .xy-plot .chart-probe-line {
  stroke:var(--rw-plot-crosshair)!important;
- filter:none!important;
+
 }
 .xy-plot .chart-dot.chart-inspected,
 .xy-plot .chart-bar.chart-inspected {stroke:var(--rw-neutral)!important;}
@@ -956,7 +822,7 @@ html[data-app-theme] .lcars-start-screen .lcars-start-console {
 #tactical .tac-lane-shell,#tactical .tac-plot-shell,#tactical .tac-plot-cell {
  background:var(--rw-plot-bg)!important;
  border-color:var(--rw-outline)!important;
- box-shadow:none!important;
+
 }
 #tactical .tac-lane-grid,
 #tactical .tac-plot-shell .mic-sensor-grid {
@@ -970,7 +836,7 @@ html[data-app-theme] .lcars-start-screen .lcars-start-console {
  stroke:var(--rw-info)!important;
 }
 #tactical .tac-lane-now,#tactical .tac-lane-bar {
- stroke:var(--rw-edge)!important;filter:none!important;
+ stroke:var(--rw-edge)!important;
 }
 #tactical .tac-lane-label,#tactical .tac-plot-legend,
 #tactical .tac-plot-shell .mic-sensor-axis {

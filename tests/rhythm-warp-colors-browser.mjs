@@ -40,15 +40,15 @@ const rgb=s=>{
  return value.match(/\d+/g)?.slice(0,3).map(Number).join(',')||'';
 };
 const themes={
- voyager:{edge:'133,244,163',active:'179,223,148',bg:'14,23,20',panel:'20,35,28',
-  rail:'32,51,40',outline:'53,84,66',inactive:'77,107,85',selected:'40,69,53',
-  neutral:'232,221,190',info:'146,203,210',custom:'140,206,180'},
- elite:{edge:'205,155,255',active:'221,186,255',bg:'18,14,30',panel:'33,25,49',
-  rail:'52,38,71',outline:'98,76,127',inactive:'102,83,127',selected:'73,52,95',
-  neutral:'230,213,236',info:'155,190,248',custom:'200,162,240'},
- redalert:{edge:'255,130,148',active:'255,184,177',bg:'26,14,18',panel:'42,23,30',
-  rail:'69,39,50',outline:'120,67,80',inactive:'135,82,92',selected:'99,49,63',
-  neutral:'244,221,204',info:'255,197,158',custom:'234,163,175'}
+ voyager:{edge:'0,255,136',active:'0,255,136',bg:'4,10,8',panel:'10,23,18',
+  rail:'13,33,25',outline:'40,90,67',inactive:'54,92,73',selected:'18,62,43',
+  neutral:'232,221,190',info:'0,229,255',custom:'112,236,192'},
+ elite:{edge:'217,70,239',active:'240,139,250',bg:'6,4,12',panel:'20,13,32',
+  rail:'33,19,47',outline:'101,51,115',inactive:'102,83,127',selected:'56,32,71',
+  neutral:'230,213,236',info:'166,168,255',custom:'200,162,240'},
+ redalert:{edge:'255,30,66',active:'255,140,158',bg:'13,4,6',panel:'31,12,17',
+  rail:'48,19,28',outline:'126,48,68',inactive:'135,82,92',selected:'72,26,41',
+  neutral:'244,221,204',info:'255,173,102',custom:'234,163,175'}
 };
 try{
  for(const {width,height,theme} of cases){
@@ -120,8 +120,8 @@ try{
        lastBottom:rect('.lcars-bottom-segments .lcars-seg.s-b4'),
        filler:rect('.lcars-side-filler'),
        gaps:[gap('.lcars-start-top'),gap('.lcars-start-body'),gap('.lcars-start-bottom-wrap')],
-       topRight:pseudo('.lcars-elbow-top','::after','right'),
-       bottomRight:pseudo('.lcars-elbow-bottom','::after','right'),
+       topRight:pseudo('.lcars-elbow-top','::after','content'),
+       bottomRight:pseudo('.lcars-elbow-bottom','::after','content'),
        cutouts:[parseFloat(pseudo('.lcars-elbow-top','::after','width')),parseFloat(pseudo('.lcars-elbow-bottom','::after','width'))],
        joinWidths:[parseFloat(pseudo('.lcars-start-top','::before','width')),parseFloat(pseudo('.lcars-start-bottom-wrap','::before','width'))],
        strokes:[
@@ -134,12 +134,8 @@ try{
    });
    const eps=1.2;
    assert.ok(joints.gaps.every(v=>Math.abs(v-joints.gaps[0])<.2),'launch top/body/bottom gaps must match');
-   assert.equal(joints.topRight,'0px','top inner elbow must stay inside its parent');
-   assert.equal(joints.bottomRight,'0px','bottom inner elbow must stay inside its parent');
-   assert.ok(joints.cutouts[0]<=joints.topElbow.w&&joints.cutouts[1]<=joints.bottomElbow.w,
-     'both corner cutouts must fit inside their respective elbows');
-   assert.ok(joints.joinWidths.every(w=>Math.abs(w-joints.gaps[0])<.5),
-     'connection strip width must equal shared gap');
+   assert.equal(joints.topRight,'none','top inner cutout is removed');
+   assert.equal(joints.bottomRight,'none','bottom inner cutout is removed');
    assert.ok(Math.abs(joints.topSegments.x-joints.topElbow.right-joints.gaps[0])<eps,
      'upper rail must start precisely one gap after elbow');
    assert.ok(Math.abs(joints.bottomSegments.x-joints.bottomElbow.right-joints.gaps[0])<eps,
@@ -165,7 +161,7 @@ try{
    assert.equal(rgb(launch.logoStroke),themes[theme].edge,'start emblem must follow theme accent');
    assert.equal(rgb(launch.lightBackground),themes[theme].bg,'launch background follows chosen theme');
    assert.equal(rgb(launch.startButton),themes[theme].active,'launch CTA must not remain green in other themes');
-   for(const edge of ['topRim','fillerLeft','fillerRight','bottomRim'])
+   for(const edge of ['topRim','fillerLeft','bottomRim'])
      assert.equal(rgb(launch[edge]),themes[theme].edge,edge+' uses same outer rim');
    assert.equal(rgb(launch.innerSeam),themes[theme].outline,'inside separators use theme seam');
    await page.screenshot({path:path.join(output,'launch-'+key+'.png')});
@@ -193,18 +189,18 @@ try{
       elbowComputedWidth:parseFloat(style('.app-shell > header .elbow').width),
       busLeft:parseFloat(style('.app-shell > header','::after').left),
       busLeftBorder:style('.app-shell > header','::after').borderLeftColor,
-      elbowCutoutRight:style('.app-shell > header .elbow','::after').right,
+      elbowCutoutRight:style('.app-shell > header .elbow','::after').content,
       elbowCutoutBottom:style('.app-shell > header .elbow','::after').bottom,
       headerShadow:style('.app-shell > header .elbow').boxShadow
     };
    });
-   assert.equal(rgb(frame.headerEdge),themes[theme].edge,'top border semantic accent');
+   assert.equal(rgb(frame.headerEdge),themes[theme].outline,'header cap uses muted seam');
    assert.equal(rgb(frame.sideEdge),themes[theme].edge,'left border must match top border');
    assert.equal(rgb(frame.frameBackground),themes[theme].rail,'frame fill follows theme');
    assert.equal(rgb(frame.navActive),themes[theme].selected,'selected navigation color follows theme');
    assert.equal(frame.headerShadow,'none','no random glow on header');
    assert.equal(rgb(frame.panelBackground),themes[theme].panel,'all app panels use theme fill');
-   assert.equal(rgb(frame.panelBorder),themes[theme].outline,'panels share theme stroke');
+   assert.equal(rgb(frame.panelBorder),themes[theme].edge,'panel top edge uses theme accent');
    assert.equal(frame.railEndDisplay,'none','detached lower decoration must be removed');
    assert.equal(frame.activeButtonRadius,'0px','navigation corners must be square');
    assert.ok(frame.navText.includes('METRO'),'short labels must stay visible');
@@ -214,14 +210,13 @@ try{
    assert.ok(Math.abs(frame.sideRail.width-frame.leftButton.width)<2,'filler must fit the same column as buttons');
    assert.ok(Math.abs(frame.elbowComputedWidth-frame.busLeft)<1.5,
      'header elbow must terminate at actual bus start: '+JSON.stringify(frame));
-   assert.equal(frame.elbowCutoutRight,'0px','the main header cutout must stay flush');
-   assert.equal(frame.elbowCutoutBottom,'-2px','main header closes the 2px inner seam');
+   assert.equal(frame.elbowCutoutRight,'none','main header has no inner cutout');
    assert.equal(rgb(frame.busLeftBorder),themes[theme].outline,'header bus starts with muted inner seam');
    // Verify the actual empty preset, not the generic system-field selector.
    await page.locator('[data-tab="presets"]').click();
    const emptyPreset=await page.locator('#presetList .system-field')
      .evaluate(el=>getComputedStyle(el).backgroundColor);
-   const presetSurfaces={voyager:'27,45,36',elite:'43,33,63',redalert:'54,32,40'};
+   const presetSurfaces={voyager:'16,38,29',elite:'33,19,47',redalert:'48,19,28'};
    assert.equal(rgb(emptyPreset),presetSurfaces[theme],'empty preset tile must use its theme, not legacy blue');
    // Render a legitimate synthetic history *inside the test only* to verify
    // SVG path colors, gradients, chart grid, AND live recoloring without redraw.
@@ -267,7 +262,7 @@ try{
    });
    assert.equal(rgb(sensors.grid),themes[theme].outline,'microphone grid must follow theme outline');
    assert.equal(rgb(sensors.tacticalGrid),themes[theme].info,'tactical hits must follow theme information color');
-   assert.equal(rgb(sensors.tacticalBg),themes[theme].bg==='14,23,20'?'8,16,13':theme==='elite'?'11,8,21':'18,8,11','tactical canvas inherits theme dark background');
+   assert.equal(rgb(sensors.tacticalBg),themes[theme].bg==='4,10,8'?'4,10,8':theme==='elite'?'6,4,12':'13,4,6','tactical canvas inherits theme dark background');
    const status=await page.locator('#trainingFields .system-field').evaluate(el=>getComputedStyle(el).backgroundColor);
    assert.equal(rgb(status),themes[theme].info,'metronome status must use theme info color');
    // Check the REAL precision ladder after dragging tempo. This morph lives
@@ -394,7 +389,7 @@ try{
       items.map(el=>getComputedStyle(el).backgroundColor));
      assert.ok(tiles.length>=1,'analytics must render real statistic tiles');
      assert.equal(new Set(tiles).size,1,'analytics tiles must not become a rainbow');
-     assert.equal(rgb(tiles[0]),theme==='voyager'?'27,45,36':theme==='elite'?'43,33,63':'54,32,40','analytics neutral housing');
+     assert.equal(rgb(tiles[0]),theme==='voyager'?'16,38,29':theme==='elite'?'33,19,47':'48,19,28','analytics neutral housing');
     }
     await page.screenshot({path:path.join(output,tab+'-'+key+'.png')});
    }

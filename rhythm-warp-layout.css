@@ -106,8 +106,8 @@ html[data-app-theme] .app-shell > aside nav .nav::after {
 .lcars-start-screen {
   --rw-launch-sidebar:clamp(54px,5.8vw,86px);
   --elbow-w:var(--rw-launch-sidebar)!important;
-  --radius-outer:clamp(26px,3.4vw,46px)!important;
-  --radius-inner:clamp(14px,1.8vw,26px)!important;
+  --radius-outer:2px!important;
+  --radius-inner:0px!important;
 }
 .lcars-start-screen .lcars-side-block,
 .lcars-start-screen .lcars-side-block[aria-pressed="true"],
@@ -141,8 +141,8 @@ html[data-app-theme] .lcars-start-screen .lcars-side-block {
 @media(max-width:640px){
   .lcars-start-screen {
     --rw-launch-sidebar:clamp(36px,10vw,44px);
-    --radius-outer:clamp(23px,7vw,32px)!important;
-    --radius-inner:clamp(12px,4vw,19px)!important;
+    --radius-outer:2px!important;
+    --radius-inner:0px!important;
   }
   .lcars-start-screen .lcars-side-block {
     min-height:44px!important;
@@ -155,287 +155,55 @@ html[data-app-theme] .lcars-start-screen .lcars-side-block {
   }
 }
 
-/* FRAME JOINS / SHARED GEOMETRY
-   Top, body and bottom share ONE sidebar width and gap. The old cutouts
-   used right:-12px, protruding past their elbow and crossing into the rail. */
-.lcars-start-screen{
- --rw-launch-gap:clamp(5px,.7vw,8px);
- --rw-launch-cutout:clamp(14px,calc(var(--elbow-w) * .38),28px);
- --rw-launch-stroke:3px;
-}
-.lcars-start-screen .lcars-start-top,
-.lcars-start-screen .lcars-start-body,
-.lcars-start-screen .lcars-start-bottom-wrap{
+
+/* One frame definition replaces the historical elbow/cutout and border passes.
+   Decorative chamfers never clip an input or pointer target. */
+:root { --rw-frame-edge-w:2px; --rw-frame-seam-w:1px; --rw-corner:2px 14px 2px 14px; }
+.lcars-start-screen { --rw-launch-gap:clamp(5px,.7vw,8px); }
+.lcars-start-screen :is(.lcars-start-top,.lcars-start-body,.lcars-start-bottom-wrap) {
  grid-template-columns:var(--elbow-w) minmax(0,1fr)!important;
- column-gap:var(--rw-launch-gap)!important;
- min-width:0;
+ column-gap:var(--rw-launch-gap)!important; min-width:0;
+}
+.app-shell > header .elbow,
+.lcars-start-screen :is(.lcars-elbow-top,.lcars-elbow-bottom) {
+ border:1px solid var(--rw-outline)!important;
+ border-left:2px solid var(--rw-edge)!important;
+ border-radius:var(--rw-corner)!important;
+ background:var(--rw-bg-2)!important; box-sizing:border-box;
+}
+.app-shell > header .elbow::after,
+.lcars-start-screen :is(.lcars-elbow-top,.lcars-elbow-bottom)::after {
+ content:none!important;
+}
+.app-shell > header::after,.app-shell::after {
+ background:var(--rw-bg-2)!important;
+ border:1px solid var(--rw-outline)!important;
+ border-radius:var(--rw-corner)!important;
  box-sizing:border-box;
 }
-.lcars-start-screen .lcars-elbow-top::after,
-.lcars-start-screen .lcars-elbow-bottom::after{
- right:0!important;
- width:var(--rw-launch-cutout)!important;
- max-width:100%;
- box-sizing:border-box;
- box-shadow:none!important;
-}
-.lcars-start-screen .lcars-elbow-top::after{
- border-top:var(--rw-launch-stroke) solid var(--rw-edge)!important;
- border-left:var(--rw-launch-stroke) solid var(--rw-edge)!important;
- border-right:0!important;
-}
-.lcars-start-screen .lcars-elbow-bottom::after{
- border-bottom:var(--rw-launch-stroke) solid var(--rw-edge)!important;
- border-left:var(--rw-launch-stroke) solid var(--rw-edge)!important;
- border-top:0!important;
- border-right:0!important;
-}
-/* Short connection strips fill exactly the gap: no negative offsets. */
-.lcars-start-screen .lcars-start-top::before,
-.lcars-start-screen .lcars-start-bottom-wrap::before{
- content:"";
- position:absolute;
- left:var(--elbow-w);
- width:var(--rw-launch-gap);
- height:var(--bar-h);
- background:var(--rw-rail);
- box-sizing:border-box;
- z-index:0;
- pointer-events:none;
- box-shadow:none!important;
-}
-.lcars-start-screen .lcars-start-top::before{
- top:0;
- border-top:var(--rw-launch-stroke) solid var(--rw-edge);
-}
-.lcars-start-screen .lcars-start-bottom-wrap{position:relative;}
-.lcars-start-screen .lcars-start-bottom-wrap::before{
- bottom:0;
- border-bottom:var(--rw-launch-stroke) solid var(--rw-edge);
-}
-/* Fractional tracks cannot grow beyond the available segment area. */
-.lcars-start-screen .lcars-top-right,
-.lcars-start-screen .lcars-rail-segments,
-.lcars-start-screen .lcars-bottom-segments{
- min-width:0;max-width:100%;box-sizing:border-box;
-}
-.lcars-start-screen .lcars-rail-segments{
- grid-template-columns:minmax(0,1.2fr) minmax(0,.7fr) minmax(0,2.4fr) minmax(0,.9fr) minmax(0,1.1fr);
-}
-.lcars-start-screen .lcars-bottom-segments{
- grid-template-columns:minmax(0,1.8fr) minmax(0,.8fr) minmax(0,1.4fr) minmax(0,1fr);
-}
-.lcars-start-screen .lcars-rail-segments > .lcars-seg,
-.lcars-start-screen .lcars-bottom-segments > .lcars-seg{
- min-width:0;max-width:100%;box-sizing:border-box;
-}
-/* Same theme-colored outer line along elbow, joining strip and segment.
-   Internal dividers intentionally stay darker. */
-html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg{
- border-top:var(--rw-launch-stroke) solid var(--rw-edge)!important;
-}
-html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg{
- border-bottom:var(--rw-launch-stroke) solid var(--rw-edge)!important;
-}
-html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
-html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4{
- border-right:var(--rw-launch-stroke) solid var(--rw-edge)!important;
-}
-@media(max-width:640px){
- .lcars-start-screen{--rw-launch-gap:5px;}
- .lcars-start-screen .lcars-rail-segments{
-   grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr);
- }
- .lcars-start-screen .lcars-bottom-segments{
-   grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);
- }
-}
-
-
-/* ==========================================================================
-   RHYTHM WARP — PRECISION BORDER & GEOMETRY ALIGNMENT FIX
-   Outer stroke 3px, internal seams 2px, theme-aware; supplied geometry
-   corrections matched to the current student edition.
-   ========================================================================== */
-:root,.app-shell,.lcars-start-screen{
-  --rw-frame-edge-w:3px;
-  --rw-frame-seam-w:2px;
-}
-/* 1. Launch: flush cutouts and consistent outer edges. */
-.lcars-start-screen .lcars-elbow-top {
-  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:0!important;
-  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-}
-.lcars-start-screen .lcars-elbow-bottom {
-  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:0!important;
-  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-}
-.lcars-start-screen .lcars-elbow-top::after {
-  top:calc(var(--bar-h) - var(--rw-frame-edge-w))!important;
-  bottom:calc(-1 * var(--rw-frame-seam-w))!important;
-  right:0!important;
-  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:0!important;border-bottom:0!important;
-}
-.lcars-start-screen .lcars-elbow-bottom::after {
-  bottom:calc(var(--bar-h) - var(--rw-frame-edge-w))!important;
-  top:calc(-1 * var(--rw-frame-seam-w))!important;
-  right:0!important;
-  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:0!important;border-top:0!important;
-}
-/* Bridge is exactly --rw-launch-gap wide, including both seam borders. */
-.lcars-start-screen .lcars-start-top::before {
-  top:0!important;height:var(--bar-h)!important;
-  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-}
-.lcars-start-screen .lcars-start-bottom-wrap::before {
-  bottom:0!important;height:var(--bar-h)!important;
-  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-}
-.lcars-start-screen .lcars-rail-segments > .lcars-seg,
-html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg {
-  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-}
-.lcars-start-screen .lcars-bottom-segments > .lcars-seg,
-html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg {
-  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-}
-.lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
-html[data-app-theme] .lcars-start-screen .lcars-rail-segments > .lcars-seg.s5,
-.lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4,
-html[data-app-theme] .lcars-start-screen .lcars-bottom-segments > .lcars-seg.s-b4 {
-  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-}
-/* 2. Main-header elbow and bus share one geometric anchor. */
-.app-shell > header .elbow {
-  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:0!important;
-  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  box-sizing:border-box!important;
-}
-.app-shell > header .elbow::after {
-  right:0!important;
-  bottom:calc(-1 * var(--rw-frame-seam-w))!important;
-  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:0!important;
-  border-bottom:0!important;
-  box-sizing:border-box!important;
-}
-@media(min-width:641px) {
-  .app-shell > header .elbow {
-    width:calc(var(--v2-sidebar) + var(--v2-gutter))!important;
-  }
-  .app-shell > header .elbow::after {
-    top:calc(clamp(18px,2.2vw,25px) - var(--rw-frame-edge-w))!important;
-    left:calc(var(--v2-sidebar) - var(--rw-frame-edge-w))!important;
-  }
-}
-@media(max-width:640px) {
-  .app-shell > header .elbow {
-    width:var(--lcars-bus-start)!important;
-  }
-  .app-shell > header .elbow::after {
-    top:calc(24px - var(--rw-frame-edge-w))!important;
-    left:calc(var(--rw-mobile-sidebar) - var(--rw-frame-edge-w))!important;
-  }
-}
-.app-shell > header::after {
-  background:var(--rw-rail)!important;
-  border-top:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-left:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  box-sizing:border-box!important;
-}
-/* 3. Uninterrupted sidebar outline and undoubled active states. */
-.app-shell > aside nav .nav,
-html[data-app-theme] .app-shell > aside nav .nav,
-.lcars-start-screen .lcars-side-block,
-html[data-app-theme] .lcars-start-screen .lcars-side-block {
-  border-radius:0!important;
-  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-bottom:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  box-shadow:none!important;
-  box-sizing:border-box!important;
-}
-.app-shell > aside nav .nav.active,
-html[data-app-theme] .app-shell > aside nav .nav.active,
-.lcars-start-screen .lcars-side-block[aria-pressed="true"],
-html[data-app-theme] .lcars-start-screen .lcars-side-block[aria-pressed="true"] {
-  border:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  box-shadow:inset 0 0 0 1px var(--rw-edge)!important;
-}
+.app-shell > header::after { border-top:2px solid var(--rw-edge)!important; }
+.app-shell::after { border-bottom:2px solid var(--rw-edge)!important; }
 .app-shell > aside .rail,
-.lcars-start-screen .lcars-side-filler,
-html[data-app-theme] .lcars-start-screen .lcars-side-filler {
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  box-sizing:border-box!important;
+.lcars-start-screen .lcars-side-filler {
+ border:1px solid var(--rw-outline)!important;
+ border-left:2px solid var(--rw-edge)!important;
 }
-/* 4. Bottom arc is a real outline, not a clipped gradient. */
-.app-shell::after {
-  background:var(--rw-rail)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-bottom:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-top:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-radius:0 16px 16px 32px!important;
-  box-sizing:border-box!important;
+.app-shell .panel,html[data-app-theme] .app-shell .panel {
+ border:1px solid var(--rw-outline)!important;
+ border-top:2px solid var(--rw-edge)!important;
+ border-radius:var(--rw-corner)!important;
 }
-/* 5. Panel-header radius follows the enclosing panel. */
-.app-shell .panel,
-html[data-app-theme] .app-shell .panel {
-  border:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-  border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-  border-radius:28px 8px 8px 20px!important;
-  padding:10px 10px 14px 12px!important;
-  overflow:hidden;
+.app-shell .panel > :is(h3,.eyebrow,summary) {
+ border-radius:2px 10px 2px 2px!important;
 }
-.app-shell .panel > h3,
-.app-shell .panel > .eyebrow,
-:is(#metronome,#audio,#presets,#diary,#analytics,#settings) .panel > :is(h3,.eyebrow) {
-  border-radius:18px 6px 6px 18px!important;
-  border:1px solid var(--rw-outline)!important;
-  border-right:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
+.lcars-start-screen :is(.lcars-seg,.lcars-side-block,.lcars-subbrand-bar,.lcars-studio-badge),
+.app-shell :is(button.nav,button.primary,button.outline) {
+ border-radius:2px 10px 2px 10px!important;
 }
-@media(min-width:1440px) and (min-height:960px) {
-  #metronome .instrument {
-    background:var(--rw-bg-2)!important;
-    border:var(--rw-frame-seam-w) solid var(--rw-outline)!important;
-    border-left:var(--rw-frame-edge-w) solid var(--rw-edge)!important;
-    border-radius:32px 8px 8px 32px!important;
-  }
-  #metronome .instrument::before,#metronome .instrument::after {
-    display:none!important;
-  }
+.lcars-start-screen .lcars-activate-wrap .lcars-start-activate {
+ border-radius:var(--rw-corner)!important;
 }
-@media(max-width:640px) {
-  #metronome .instrument::before {
-    background:var(--rw-rail)!important;
-    border:1px solid var(--rw-edge)!important;
-  }
-  #metronome .instrument::after {
-    background:var(--rw-edge)!important;
-  }
+.lcars-start-screen :is(.lcars-activate-cap,.lcars-side-filler) { border-radius:2px!important; }
+@media(min-width:641px) {
+ .app-shell > header .elbow { width:calc(var(--v2-sidebar) + var(--v2-gutter))!important; }
 }
