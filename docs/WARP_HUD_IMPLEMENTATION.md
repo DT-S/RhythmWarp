@@ -135,3 +135,14 @@ aktivierten/deaktivierten UI-Sounds und mehrfacher Bestätigung. Der gesamte
 Chromium-Smoke-Test ist erfolgreich durchgelaufen. Der um Soundmessungen
 ergänzte Theme-Return-Block wurde zusätzlich bei 390px und 1440px ausgeführt:
 ein Cue pro Bestätigung, START bleibt inaktiv, Theme überlebt Reload.
+
+## Phone-Portrait — Circular-Tempoausrichtung
+
+In der Hochformatansicht bis 640px sitzen Caption und BPM-Wert im normalen
+Circular-Metronom 8 CSS-Pixel tiefer (nach visuellem Nutzerfeedback von 4px
+über 6px auf 8px nachjustiert). Das schafft Abstand zur oberen Rundung,
+ohne Ringkoordinaten, Tempo-Drag-Fläche oder Plus/Minus zu verschieben.
+Tactical und Ramp sind ausgenommen. Tablet und Desktop bleiben unverändert.
+Cacheversion v14. Chromium-Sicht-/Geometrieprüfung bei 320/393/430/768/1440px:
+Caption/Wert nur auf Phones versetzt, übrige Geometrie identisch; Plus und
+Tastatur erhöhen weiterhin korrekt das Tempo. Physischer iPhone-Test offen.
